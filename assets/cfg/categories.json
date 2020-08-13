@@ -1,0 +1,351 @@
+{
+  "code": 200,
+  "data": [
+    {
+      "id": 1,
+      "name": "Cleaning and Laundry Services",
+      "image": "",
+      "description": "",
+      "services": [
+        {
+          "id": 1,
+          "name": "House cleaning and home maid",
+          "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png",
+          "description": "",
+          "category_id": 1,
+          "view_type":"list",
+          "values": [
+            {
+              "id": 1,
+              "name": "House",
+              "image": "",
+              "view_type":"grid",
+              "description": "",
+              "values": [
+                {
+                  "id": 3,
+                  "name": "One floor",
+                  "view_type":"list",
+                  "image": "https://www.kent.co.in/blog/wp-content/uploads/2017/11/Handheld-Vacuum-Cleaner.jpg",
+                  "description": "",
+                  "values": [
+                    {
+                      "id": 23,
+                      "name": "Empty House 35000",
+                      "image": "",
+                      "description": "",
+                      "values": null,"target":[
+                      {
+                        "type" : "input",
+                        "label" : "My label",
+                        "target_value":"label1"
+                      },
+                      {
+                        "type" : "location",
+                        "label" : "Start Location",
+                        "target_value":"start_location"
+                      },
+                      {
+                        "type" : "location",
+                        "label" : "End Location",
+                        "target_value":"end_location"
+                      }
+                    ]
+                    },
+                    {
+                      "id": 56,
+                      "name": "Occupied House 40000",
+                      "image": "",
+                      "description": "",
+                      "values": null,
+                      "target":[
+                        {
+                          "type" : "input",
+                          "label" : "My label",
+                          "target_value":"label1"
+                        },
+                        {
+                          "type" : "location",
+                          "label" : "Start Location",
+                          "target_value":"start_location"
+                        },
+                        {
+                          "type" : "location",
+                          "label" : "End Location",
+                          "target_value":"end_location"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": 4,
+                  "name": "Two floor",
+                  "view_type":"grid",
+                  "image": "https://www.kent.co.in/blog/wp-content/uploads/2017/11/Handheld-Vacuum-Cleaner.jpg",
+                  "description": "",
+                  "values": [
+                    {
+                      "id": 98,
+                      "name": "Empty House 35000",
+                      "image": "",
+                      "description": "",
+                      "values": null,
+                      "target":[
+                        {
+                          "type" : "input",
+                          "label" : "My label",
+                          "target_value":"label1"
+                        },
+                        {
+                          "type" : "location",
+                          "label" : "Start Location",
+                          "target_value":"start_location"
+                        },
+                        {
+                          "type" : "location",
+                          "label" : "End Location",
+                          "target_value":"end_location"
+                        }
+                      ]
+                    },
+                    {
+                      "id": 59,
+                      "name": "Occupied House 40000",
+                      "image": "",
+                      "description": "",
+                      "values": null,
+                      "target":[
+                        {
+                          "type" : "input",
+                          "label" : "My label",
+                          "target_value":"label1"
+                        },
+                        {
+                          "type" : "location",
+                          "label" : "Start Location",
+                          "target_value":"start_location"
+                        },
+                        {
+                          "type" : "location",
+                          "label" : "End Location",
+                          "target_value":"end_location"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": 2,
+              "name": "Apartment",
+              "view_type":"grid",
+              "image": "",
+              "description": "",
+              "values": [
+                {
+                  "id": 123,
+                  "name": "Empty House 35000",
+                  "image": "",
+                  "description": "",
+                  "values": null,
+                  "target":[
+                    {
+                      "type" : "input",
+                      "label" : "My label",
+                      "target_value":"label1"
+                    },
+                    {
+                      "type" : "location",
+                      "label" : "Start Location",
+                      "target_value":"start_location"
+                    },
+                    {
+                      "type" : "location",
+                      "label" : "End Location",
+                      "target_value":"end_location"
+                    }
+                  ]
+                },
+                {
+                  "id": 868,
+                  "name": "Occupied House 40000",
+                  "image": "",
+                  "description": "",
+                  "values": null,
+                  "target":[
+                    {
+                      "type" : "input",
+                      "label" : "My label",
+                      "target_value":"label1"
+                    },
+                    {
+                      "type" : "location",
+                      "label" : "Start Location",
+                      "target_value":"start_location"
+                    },
+                    {
+                      "type" : "location",
+                      "label" : "End Location",
+                      "target_value":"end_location"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": 765,
+          "name": "Carpet and Furniture Cleaning",
+          "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png",
+          "description": "",
+          "category_id": "",
+          "view_type":"grid",
+          "values": [
+            {
+              "id": 861,
+              "name": "Carpet Wash",
+              "image": "",
+              "description": "",
+              "view_type":"list",
+              "values": [
+                {
+                  "id": 1234,
+                  "name": "1250 dinar per meter",
+                  "image": "",
+                  "description": "",
+                  "values": null,
+                  "target":[
+                    {
+                      "type" : "input",
+                      "label" : "My label",
+                      "target_value":"label1"
+                    },
+                    {
+                      "type" : "location",
+                      "label" : "Start Location",
+                      "target_value":"start_location"
+                    },
+                    {
+                      "type" : "location",
+                      "label" : "End Location",
+                      "target_value":"end_location"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": 567,
+              "name": "Sofa Wash",
+              "image": "",
+              "view_type":"list",
+              "description": "",
+              "values": [
+                {
+                  "id": 887,
+                  "name": "10 person sofa set 30000",
+                  "image": "",
+                  "description": "",
+                  "values": null,
+                  "target":[
+                    {
+                      "type" : "input",
+                      "label" : "My label",
+                      "target_value":"label1"
+                    },
+                    {
+                      "type" : "location",
+                      "label" : "Start Location",
+                      "target_value":"start_location"
+                    },
+                    {
+                      "type" : "location",
+                      "label" : "End Location",
+                      "target_value":"end_location"
+                    }
+                  ]
+                },
+                {
+                  "id": 458,
+                  "name": "L shape sofa 25000",
+                  "image": "",
+                  "description": "",
+                  "values": null,
+                  "target":[
+                    {
+                      "type" : "input",
+                      "label" : "My label",
+                      "target_value":"label1"
+                    },
+                    {
+                      "type" : "location",
+                      "label" : "Start Location",
+                      "target_value":"start_location"
+                    },
+                    {
+                      "type" : "location",
+                      "label" : "End Location",
+                      "target_value":"end_location"
+                    }
+                  ]
+                },
+                {
+                  "id": 541,
+                  "name": "7 person sofa set",
+                  "image": "",
+                  "description": "",
+                  "values": null,
+                  "target":[
+                    {
+                      "type" : "input",
+                      "label" : "My label",
+                      "target_value":"label1"
+                    },
+                    {
+                      "type" : "location",
+                      "label" : "Start Location",
+                      "target_value":"start_location"
+                    },
+                    {
+                      "type" : "location",
+                      "label" : "End Location",
+                      "target_value":"end_location"
+                    }
+                  ]
+                },
+                {
+                  "id": 813,
+                  "name": "5 person sofa set",
+                  "image": "",
+                  "description": "",
+                  "values": null,
+                  "target":[
+                    {
+                      "type" : "input",
+                      "label" : "My label",
+                      "target_value":"label1"
+                    },
+                    {
+                      "type" : "location",
+                      "label" : "Start Location",
+                      "target_value":"start_location"
+                    },
+                    {
+                      "type" : "location",
+                      "label" : "End Location",
+                      "target_value":"end_location"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "message": ""
+}
