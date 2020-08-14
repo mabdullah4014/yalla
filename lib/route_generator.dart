@@ -1,6 +1,7 @@
 import 'package:arbi/model/category_response.dart';
 import 'package:arbi/ui/home.dart';
 import 'package:arbi/ui/login.dart';
+import 'package:arbi/ui/map_page.dart';
 import 'package:arbi/ui/select_signup.dart';
 import 'package:arbi/ui/service_detail.dart';
 import 'package:arbi/ui/service_target.dart';
@@ -16,6 +17,7 @@ class RouteGenerator {
   static const String SIGNUP_AS = '/SignupAs';
   static const String DETAIL = '/Detail';
   static const String TARGET = '/Target';
+  static const String MAP = '/Map';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     // Getting arguments passed in while calling Navigator.pushNamed
@@ -39,6 +41,8 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (_) =>
                 ServiceTargetPage(params: args as ServiceTargetPageParam));
+      case MAP:
+        return MaterialPageRoute(builder: (_) => MapPage());
     }
   }
 

@@ -5,6 +5,7 @@ import 'package:arbi/generated/l10n.dart';
 import 'package:arbi/utils/colors.dart';
 import 'package:arbi/utils/utils.dart';
 import 'package:flutter/material.dart';
+
 //import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
@@ -227,9 +228,16 @@ class _LoginPageState extends StateMVC<LoginPage> {
               child: TextFormField(
                   controller: _emailController,
                   onSaved: (input) => _con.user.email = input,
-                  validator: (input) => !input.contains('@')
-                      ? S.of(context).should_be_a_valid_email
-                      : null,
+                  validator: (input) {
+                    if (!input.contains('@')) {
+                      showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                              title:
+                                  Text(S.of(context).should_be_a_valid_email)));
+                    }
+                    return null;
+                  },
                   textAlignVertical: TextAlignVertical.center,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
@@ -243,9 +251,17 @@ class _LoginPageState extends StateMVC<LoginPage> {
               child: TextFormField(
                   controller: _passController,
                   onSaved: (input) => _con.user.password = input,
-                  validator: (input) => input.length < 3
-                      ? S.of(context).should_be_more_than_3_characters
-                      : null,
+                  validator: (input) {
+                    if (input.length < 3) {
+                      showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                              title: Text(S
+                                  .of(context)
+                                  .should_be_more_than_3_characters)));
+                    }
+                    return null;
+                  },
                   textAlignVertical: TextAlignVertical.center,
                   obscureText: true,
                   decoration: InputDecoration(
@@ -260,7 +276,7 @@ class _LoginPageState extends StateMVC<LoginPage> {
     );
   }
 
-  /*static final FacebookLogin facebookSignIn = new FacebookLogin();
+/*static final FacebookLogin facebookSignIn = new FacebookLogin();
 
   String _message = 'Log in/out by pressing the buttons below.';
 

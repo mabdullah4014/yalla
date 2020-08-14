@@ -33,6 +33,16 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `Yalla`
+  String get app_name {
+    return Intl.message(
+      'Yalla',
+      name: 'app_name',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Blog`
   String get blog {
     return Intl.message(
@@ -378,6 +388,66 @@ class S {
     return Intl.message(
       'Are you as business owner?',
       name: 'are_business_owner',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter`
+  String get enter {
+    return Intl.message(
+      'Enter',
+      name: 'enter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter valid`
+  String get enter_valid {
+    return Intl.message(
+      'Enter valid',
+      name: 'enter_valid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Done`
+  String get done {
+    return Intl.message(
+      'Done',
+      name: 'done',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tap map to pin point location`
+  String get tap_for_location {
+    return Intl.message(
+      'Tap map to pin point location',
+      name: 'tap_for_location',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `OK`
+  String get ok {
+    return Intl.message(
+      'OK',
+      name: 'ok',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Submit`
+  String get submit {
+    return Intl.message(
+      'Submit',
+      name: 'submit',
       desc: '',
       args: [],
     );

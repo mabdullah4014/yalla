@@ -1,4 +1,5 @@
 {
+  "app_name": "Yalla",
   "blog": "Blog",
   "how_it_works": "How it works?",
   "terms_and_condition": "Terms & Conditions",
@@ -33,5 +34,11 @@
   "sign_up_fb": "Sign up with Facebook",
   "choose_account_type": "Choose your account type",
   "looking_for_service": "Looking for service?",
-  "are_business_owner": "Are you as business owner?"
+  "are_business_owner": "Are you as business owner?",
+  "enter": "Enter",
+  "enter_valid": "Enter valid",
+  "done": "Done",
+  "tap_for_location": "Tap map to pin point location",
+  "ok": "OK",
+  "submit": "Submit"
 }

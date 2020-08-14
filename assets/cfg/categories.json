@@ -13,19 +13,19 @@
           "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png",
           "description": "",
           "category_id": 1,
-          "view_type":"list",
+          "view_type": "list",
           "values": [
             {
               "id": 1,
               "name": "House",
               "image": "",
-              "view_type":"grid",
+              "view_type": "grid",
               "description": "",
               "values": [
                 {
                   "id": 3,
                   "name": "One floor",
-                  "view_type":"list",
+                  "view_type": "list",
                   "image": "https://www.kent.co.in/blog/wp-content/uploads/2017/11/Handheld-Vacuum-Cleaner.jpg",
                   "description": "",
                   "values": [
@@ -34,23 +34,29 @@
                       "name": "Empty House 35000",
                       "image": "",
                       "description": "",
-                      "values": null,"target":[
-                      {
-                        "type" : "input",
-                        "label" : "My label",
-                        "target_value":"label1"
-                      },
-                      {
-                        "type" : "location",
-                        "label" : "Start Location",
-                        "target_value":"start_location"
-                      },
-                      {
-                        "type" : "location",
-                        "label" : "End Location",
-                        "target_value":"end_location"
-                      }
-                    ]
+                      "values": null,
+                      "target": [
+                        {
+                          "type": "input",
+                          "label": "My label",
+                          "target_value": "label1"
+                        },
+                        {
+                          "type": "checkbox",
+                          "label": "This is my checkbox",
+                          "target_value": "checkbox_1"
+                        },
+                        {
+                          "type": "location",
+                          "label": "Start Location",
+                          "target_value": "start_location"
+                        },
+                        {
+                          "type": "location",
+                          "label": "End Location",
+                          "target_value": "end_location"
+                        }
+                      ]
                     },
                     {
                       "id": 56,
@@ -58,21 +64,21 @@
                       "image": "",
                       "description": "",
                       "values": null,
-                      "target":[
+                      "target": [
                         {
-                          "type" : "input",
-                          "label" : "My label",
-                          "target_value":"label1"
+                          "type": "input",
+                          "label": "My label",
+                          "target_value": "label1"
                         },
                         {
-                          "type" : "location",
-                          "label" : "Start Location",
-                          "target_value":"start_location"
+                          "type": "location",
+                          "label": "Start Location",
+                          "target_value": "start_location"
                         },
                         {
-                          "type" : "location",
-                          "label" : "End Location",
-                          "target_value":"end_location"
+                          "type": "location",
+                          "label": "End Location",
+                          "target_value": "end_location"
                         }
                       ]
                     }
@@ -81,7 +87,7 @@
                 {
                   "id": 4,
                   "name": "Two floor",
-                  "view_type":"grid",
+                  "view_type": "grid",
                   "image": "https://www.kent.co.in/blog/wp-content/uploads/2017/11/Handheld-Vacuum-Cleaner.jpg",
                   "description": "",
                   "values": [
@@ -91,21 +97,21 @@
                       "image": "",
                       "description": "",
                       "values": null,
-                      "target":[
+                      "target": [
                         {
-                          "type" : "input",
-                          "label" : "My label",
-                          "target_value":"label1"
+                          "type": "input",
+                          "label": "My label",
+                          "target_value": "label1"
                         },
                         {
-                          "type" : "location",
-                          "label" : "Start Location",
-                          "target_value":"start_location"
+                          "type": "location",
+                          "label": "Start Location",
+                          "target_value": "start_location"
                         },
                         {
-                          "type" : "location",
-                          "label" : "End Location",
-                          "target_value":"end_location"
+                          "type": "location",
+                          "label": "End Location",
+                          "target_value": "end_location"
                         }
                       ]
                     },
@@ -115,21 +121,21 @@
                       "image": "",
                       "description": "",
                       "values": null,
-                      "target":[
+                      "target": [
                         {
-                          "type" : "input",
-                          "label" : "My label",
-                          "target_value":"label1"
+                          "type": "input",
+                          "label": "My label",
+                          "target_value": "label1"
                         },
                         {
-                          "type" : "location",
-                          "label" : "Start Location",
-                          "target_value":"start_location"
+                          "type": "location",
+                          "label": "Start Location",
+                          "target_value": "start_location"
                         },
                         {
-                          "type" : "location",
-                          "label" : "End Location",
-                          "target_value":"end_location"
+                          "type": "location",
+                          "label": "End Location",
+                          "target_value": "end_location"
                         }
                       ]
                     }
@@ -140,7 +146,7 @@
             {
               "id": 2,
               "name": "Apartment",
-              "view_type":"grid",
+              "view_type": "grid",
               "image": "",
               "description": "",
               "values": [
@@ -150,21 +156,21 @@
                   "image": "",
                   "description": "",
                   "values": null,
-                  "target":[
+                  "target": [
                     {
-                      "type" : "input",
-                      "label" : "My label",
-                      "target_value":"label1"
+                      "type": "input",
+                      "label": "My label",
+                      "target_value": "label1"
                     },
                     {
-                      "type" : "location",
-                      "label" : "Start Location",
-                      "target_value":"start_location"
+                      "type": "location",
+                      "label": "Start Location",
+                      "target_value": "start_location"
                     },
                     {
-                      "type" : "location",
-                      "label" : "End Location",
-                      "target_value":"end_location"
+                      "type": "location",
+                      "label": "End Location",
+                      "target_value": "end_location"
                     }
                   ]
                 },
@@ -174,21 +180,21 @@
                   "image": "",
                   "description": "",
                   "values": null,
-                  "target":[
+                  "target": [
                     {
-                      "type" : "input",
-                      "label" : "My label",
-                      "target_value":"label1"
+                      "type": "input",
+                      "label": "My label",
+                      "target_value": "label1"
                     },
                     {
-                      "type" : "location",
-                      "label" : "Start Location",
-                      "target_value":"start_location"
+                      "type": "location",
+                      "label": "Start Location",
+                      "target_value": "start_location"
                     },
                     {
-                      "type" : "location",
-                      "label" : "End Location",
-                      "target_value":"end_location"
+                      "type": "location",
+                      "label": "End Location",
+                      "target_value": "end_location"
                     }
                   ]
                 }
@@ -202,14 +208,14 @@
           "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png",
           "description": "",
           "category_id": "",
-          "view_type":"grid",
+          "view_type": "grid",
           "values": [
             {
               "id": 861,
               "name": "Carpet Wash",
               "image": "",
               "description": "",
-              "view_type":"list",
+              "view_type": "list",
               "values": [
                 {
                   "id": 1234,
@@ -217,21 +223,21 @@
                   "image": "",
                   "description": "",
                   "values": null,
-                  "target":[
+                  "target": [
                     {
-                      "type" : "input",
-                      "label" : "My label",
-                      "target_value":"label1"
+                      "type": "input",
+                      "label": "My label",
+                      "target_value": "label1"
                     },
                     {
-                      "type" : "location",
-                      "label" : "Start Location",
-                      "target_value":"start_location"
+                      "type": "location",
+                      "label": "Start Location",
+                      "target_value": "start_location"
                     },
                     {
-                      "type" : "location",
-                      "label" : "End Location",
-                      "target_value":"end_location"
+                      "type": "location",
+                      "label": "End Location",
+                      "target_value": "end_location"
                     }
                   ]
                 }
@@ -241,7 +247,7 @@
               "id": 567,
               "name": "Sofa Wash",
               "image": "",
-              "view_type":"list",
+              "view_type": "list",
               "description": "",
               "values": [
                 {
@@ -250,21 +256,21 @@
                   "image": "",
                   "description": "",
                   "values": null,
-                  "target":[
+                  "target": [
                     {
-                      "type" : "input",
-                      "label" : "My label",
-                      "target_value":"label1"
+                      "type": "input",
+                      "label": "My label",
+                      "target_value": "label1"
                     },
                     {
-                      "type" : "location",
-                      "label" : "Start Location",
-                      "target_value":"start_location"
+                      "type": "location",
+                      "label": "Start Location",
+                      "target_value": "start_location"
                     },
                     {
-                      "type" : "location",
-                      "label" : "End Location",
-                      "target_value":"end_location"
+                      "type": "location",
+                      "label": "End Location",
+                      "target_value": "end_location"
                     }
                   ]
                 },
@@ -274,21 +280,21 @@
                   "image": "",
                   "description": "",
                   "values": null,
-                  "target":[
+                  "target": [
                     {
-                      "type" : "input",
-                      "label" : "My label",
-                      "target_value":"label1"
+                      "type": "input",
+                      "label": "My label",
+                      "target_value": "label1"
                     },
                     {
-                      "type" : "location",
-                      "label" : "Start Location",
-                      "target_value":"start_location"
+                      "type": "location",
+                      "label": "Start Location",
+                      "target_value": "start_location"
                     },
                     {
-                      "type" : "location",
-                      "label" : "End Location",
-                      "target_value":"end_location"
+                      "type": "location",
+                      "label": "End Location",
+                      "target_value": "end_location"
                     }
                   ]
                 },
@@ -298,21 +304,21 @@
                   "image": "",
                   "description": "",
                   "values": null,
-                  "target":[
+                  "target": [
                     {
-                      "type" : "input",
-                      "label" : "My label",
-                      "target_value":"label1"
+                      "type": "input",
+                      "label": "My label",
+                      "target_value": "label1"
                     },
                     {
-                      "type" : "location",
-                      "label" : "Start Location",
-                      "target_value":"start_location"
+                      "type": "location",
+                      "label": "Start Location",
+                      "target_value": "start_location"
                     },
                     {
-                      "type" : "location",
-                      "label" : "End Location",
-                      "target_value":"end_location"
+                      "type": "location",
+                      "label": "End Location",
+                      "target_value": "end_location"
                     }
                   ]
                 },
@@ -322,21 +328,21 @@
                   "image": "",
                   "description": "",
                   "values": null,
-                  "target":[
+                  "target": [
                     {
-                      "type" : "input",
-                      "label" : "My label",
-                      "target_value":"label1"
+                      "type": "input",
+                      "label": "My label",
+                      "target_value": "label1"
                     },
                     {
-                      "type" : "location",
-                      "label" : "Start Location",
-                      "target_value":"start_location"
+                      "type": "location",
+                      "label": "Start Location",
+                      "target_value": "start_location"
                     },
                     {
-                      "type" : "location",
-                      "label" : "End Location",
-                      "target_value":"end_location"
+                      "type": "location",
+                      "label": "End Location",
+                      "target_value": "end_location"
                     }
                   ]
                 }

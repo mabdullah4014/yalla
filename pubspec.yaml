@@ -41,10 +41,11 @@ dependencies:
   carousel_slider: ^2.2.1
   font_awesome_flutter: ^8.8.1
   flag: ^3.0.1
+  google_maps_flutter: ^0.5.30
+  modal_bottom_sheet: ^0.2.0+1
 #  flutter_facebook_login: ^3.0.0
 
 dev_dependencies:
-  as2f: ^0.1.2
   flutter_test:
     sdk: flutter
 
