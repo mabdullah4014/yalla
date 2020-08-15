@@ -6,11 +6,12 @@ import 'package:arbi/utils/colors.dart';
 import 'package:arbi/utils/utils.dart';
 import 'package:flutter/material.dart';
 
-//import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 
 import '../route_generator.dart';
+import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title}) : super(key: key);
@@ -122,7 +123,7 @@ class _LoginPageState extends StateMVC<LoginPage> {
   Widget _facebookButton() {
     return InkWell(
         onTap: () {
-//          _fbLogin();
+          _fbLogin();
         },
         child: Container(
           height: 50,
@@ -276,7 +277,7 @@ class _LoginPageState extends StateMVC<LoginPage> {
     );
   }
 
-/*static final FacebookLogin facebookSignIn = new FacebookLogin();
+static final FacebookLogin facebookSignIn = new FacebookLogin();
 
   String _message = 'Log in/out by pressing the buttons below.';
 
@@ -286,7 +287,11 @@ class _LoginPageState extends StateMVC<LoginPage> {
     switch (result.status) {
       case FacebookLoginStatus.loggedIn:
         final FacebookAccessToken accessToken = result.accessToken;
+        final graphResponse = await http.get(
+            'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=${accessToken.token}');
+        print(graphResponse.body);
         _showMessage('''
+         Profile: ${graphResponse.body}
          Logged in!
          Token: ${accessToken.token}
          User id: ${accessToken.userId}
@@ -311,8 +316,26 @@ class _LoginPageState extends StateMVC<LoginPage> {
   }
 
   void _showMessage(String message) {
-    setState(() {
-      _message = message;
-    });
-  }*/
+    showDialog<void>(
+      context: context,
+      barrierDismissible: true, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(S.of(context).login_fb),
+          content: SingleChildScrollView(
+              child: ListBody(children: <Widget>[
+                Text(message)
+              ])),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(S.of(context).ok),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

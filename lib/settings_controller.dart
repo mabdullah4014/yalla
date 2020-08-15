@@ -5,9 +5,9 @@ import 'package:mvc_pattern/mvc_pattern.dart';
 import 'repo/settings_repository.dart' as settingRepo;
 import 'repo/user_repository.dart' as userRepo;
 
-class Controller extends ControllerMVC {
+class SettingsController extends ControllerMVC {
   GlobalKey<ScaffoldState> scaffoldKey;
-  Controller() {
+  SettingsController() {
     this.scaffoldKey = new GlobalKey<ScaffoldState>();
   }
 
@@ -18,11 +18,6 @@ class Controller extends ControllerMVC {
         settingRepo.setting.value = setting;
       });
     });
-//    settingRepo.setCurrentLocation().then((locationData) {
-//      setState(() {
-//        settingRepo.locationData = locationData;
-//      });
-//    });
     userRepo.getCurrentUser().then((user) {
       setState(() {
         userRepo.currentUser.value = user;

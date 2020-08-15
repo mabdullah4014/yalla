@@ -6,7 +6,7 @@ import 'package:global_configuration/global_configuration.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 import 'utils/app_config.dart' as config;
 
-import 'controller.dart';
+import 'settings_controller.dart';
 import 'generated/l10n.dart';
 import 'route_generator.dart';
 
@@ -19,7 +19,7 @@ Future<void> main() async {
 class MyApp extends AppMVC {
   // This widget is the root of your application.
 //  /// Supply 'the Controller' for this application.
-  MyApp({Key key}) : super(con: Controller(), key: key);
+  MyApp({Key key}) : super(con: SettingsController(), key: key);
 
   @override
   Widget build(BuildContext buildContext) {
