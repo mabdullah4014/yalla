@@ -40,5 +40,17 @@
   "done": "Done",
   "tap_for_location": "Tap map to pin point location",
   "ok": "OK",
-  "submit": "Submit"
+  "submit": "Submit",
+  "jobs": "Jobs",
+  "no_jobs": "No Jobs",
+  "profile": "Profile",
+  "business_detail_empty": "Business detail cannot be empty",
+  "business_detail": "Business detail",
+  "account_information": "Account Information",
+  "categories": "Categories",
+  "please_select_more": "Please choose one or more",
+  "cancel": "Cancel",
+  "update": "Update",
+  "error": "Error",
+  "category": "category"
 }

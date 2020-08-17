@@ -42,23 +42,15 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
         resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
         body: SafeArea(
             child: Stack(children: <Widget>[
-          Image.asset(
-            'assets/images/bg.jpg',
-            height: height,
-            width: width,
-            fit: BoxFit.fitHeight,
-          ),
-          BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-              child: Container(
-                  decoration:
-                      new BoxDecoration(color: Colors.black.withOpacity(0.5)))),
+          AppUtils.cityBg(context),
+          AppUtils.cityblur(),
           Align(
               alignment: Alignment.center,
               child: ContainerWithCircle(
-                  Container(
+                  child: Container(
                       padding: EdgeInsets.symmetric(vertical: 5),
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -73,13 +65,13 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
                                 widget.isCustomer
                                     ? S.of(context).signup_customer
                                     : S.of(context).signup_as_yalla, () {
-                              _con.register();
+                              if (_isValidForm()) _con.register();
                             }),
                             _facebookButton(),
                           ])),
-                  Colors.white,
-                  AssetImage(
-                    'assets/images/logo.jpeg',
+                  childBgColor: Colors.white,
+                  imageProvider: AssetImage(
+                    'assets/images/logo_circle.png',
                   ))),
           Positioned(
               top: _defaultPaddingMargin,
@@ -103,23 +95,6 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
           size: 30,
           color: Colors.white,
         ));
-  }
-
-  Widget _submitButton() {
-    return ButtonTheme(
-        minWidth: MediaQuery.of(context).size.width,
-        child: RaisedButton(
-            padding: EdgeInsets.symmetric(vertical: 10),
-            onPressed: () {
-              _con.login();
-            },
-            color: Theme.of(context).primaryColor,
-            child: Text(
-              widget.isCustomer
-                  ? S.of(context).signup_customer
-                  : S.of(context).signup_as_yalla,
-              style: TextStyle(fontSize: 20, color: Colors.white),
-            )));
   }
 
   Widget _facebookButton() {
@@ -259,10 +234,9 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
                 bottom:
                     BorderSide(color: AppColors.darkGreyColor, width: 1.0))),
         child: TextFormField(
+            style: TextStyle(color: Theme.of(context).primaryColor),
             controller: _nameController,
             onSaved: (input) => _con.user.name = input,
-            validator: (input) =>
-                input.isEmpty ? S.of(context).should_be_a_valid_name : null,
             textAlignVertical: TextAlignVertical.center,
             keyboardType: TextInputType.name,
             decoration: InputDecoration(
@@ -282,10 +256,9 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
                   bottom:
                       BorderSide(color: AppColors.darkGreyColor, width: 1.0))),
           child: TextFormField(
+              style: TextStyle(color: Theme.of(context).primaryColor),
               controller: !widget.isCustomer ? _companyNameController : null,
               onSaved: (input) => _con.user.companyName = input,
-              validator: (input) =>
-                  input.isEmpty ? S.of(context).should_be_a_valid_name : null,
               textAlignVertical: TextAlignVertical.center,
               keyboardType: TextInputType.name,
               decoration: InputDecoration(
@@ -380,11 +353,9 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
                 bottom:
                     BorderSide(color: AppColors.darkGreyColor, width: 1.0))),
         child: TextFormField(
+            style: TextStyle(color: Theme.of(context).primaryColor),
             controller: _emailController,
             onSaved: (input) => _con.user.email = input,
-            validator: (input) => !input.contains('@')
-                ? S.of(context).should_be_a_valid_email
-                : null,
             textAlignVertical: TextAlignVertical.center,
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
@@ -402,12 +373,10 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
                 bottom:
                     BorderSide(color: AppColors.darkGreyColor, width: 1.0))),
         child: TextFormField(
+            style: TextStyle(color: Theme.of(context).primaryColor),
             maxLength: 8,
             controller: _phoneController,
             onSaved: (input) => _con.user.phone = input,
-            validator: (input) => input.length < 8
-                ? S.of(context).should_be_a_valid_number
-                : null,
             textAlignVertical: TextAlignVertical.center,
             keyboardType: TextInputType.phone,
             decoration: InputDecoration(
@@ -422,11 +391,9 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
     return Container(
         padding: EdgeInsets.only(left: 5),
         child: TextFormField(
+            style: TextStyle(color: Theme.of(context).primaryColor),
             controller: _passController,
             onSaved: (input) => _con.user.password = input,
-            validator: (input) => input.length < 3
-                ? S.of(context).should_be_more_than_3_characters
-                : null,
             textAlignVertical: TextAlignVertical.center,
             obscureText: true,
             decoration: InputDecoration(
@@ -434,5 +401,33 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
                 hintText: S.of(context).create_password,
                 hintStyle: TextStyle(color: Color(0xffC6C6C6)),
                 border: InputBorder.none)));
+  }
+
+  bool _isValidForm() {
+    if (!widget.isCustomer && _companyNameController.text.isEmpty) {
+      AppUtils.showMessage(
+          context, S.of(context).error, S.of(context).should_be_a_valid_name);
+      return false;
+    } else if (_nameController.text.isEmpty) {
+      AppUtils.showMessage(
+          context, S.of(context).error, S.of(context).should_be_a_valid_name);
+      return false;
+    } else if (_emailController.text.isEmpty ||
+        !_emailController.text.contains('@')) {
+      AppUtils.showMessage(
+          context, S.of(context).error, S.of(context).should_be_a_valid_email);
+      return false;
+    } else if (_phoneController.text.isEmpty ||
+        _phoneController.text.length < 8) {
+      AppUtils.showMessage(
+          context, S.of(context).error, S.of(context).should_be_a_valid_number);
+      return false;
+    } else if (_passController.text.isEmpty ||
+        _passController.text.length < 3) {
+      AppUtils.showMessage(context, S.of(context).error,
+          S.of(context).should_be_more_than_3_characters);
+      return false;
+    }
+    return true;
   }
 }

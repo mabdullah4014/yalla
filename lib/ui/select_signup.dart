@@ -28,17 +28,8 @@ class _SelectSignUpPageState extends StateMVC<SelectSignUpPage> {
         resizeToAvoidBottomPadding: false,
         body: SafeArea(
             child: Stack(children: <Widget>[
-          Image.asset(
-            'assets/images/bg.jpg',
-            height: height,
-            width: width,
-            fit: BoxFit.fitHeight,
-          ),
-          BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-              child: Container(
-                  decoration:
-                      new BoxDecoration(color: Colors.black.withOpacity(0.5)))),
+          AppUtils.cityBg(context),
+          AppUtils.cityblur(),
           Align(
               alignment: Alignment.center,
               child: Column(
@@ -125,7 +116,7 @@ class _SelectSignUpPageState extends StateMVC<SelectSignUpPage> {
 
   Widget _signUpWidget(String description, String buttonText, bool isCustomer) {
     return ContainerWithCircle(
-        Container(
+        child: Container(
             padding: EdgeInsets.symmetric(vertical: 10),
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -140,9 +131,9 @@ class _SelectSignUpPageState extends StateMVC<SelectSignUpPage> {
                         arguments: isCustomer);
                   }),
                 ])),
-        Colors.white,
-        AssetImage(
-          'assets/images/logo.jpeg',
+        childBgColor: Colors.white,
+        imageProvider: AssetImage(
+          'assets/images/logo_circle.png',
         ));
   }
 }

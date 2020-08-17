@@ -33,7 +33,7 @@ class ServiceWidget extends StatelessWidget {
                       errorWidget: (context, url, error) => Icon(Icons.error)),
                   Positioned(
                     child: Container(
-                      color: Colors.black45,
+                      color: Colors.black12,
                     ),
                   ),
                   Positioned(

@@ -19,14 +19,21 @@ class DrawerWidget extends StatelessWidget {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            DrawerHeader(
-              child: Image.asset(
-                'assets/images/logo.jpeg',
-                fit: BoxFit.cover,
+            InkWell(
+              child: DrawerHeader(
+                child: Image.asset(
+                  'assets/images/logo_text.png',
+                  fit: BoxFit.contain,
+                ),
+                padding: EdgeInsets.zero,
+                decoration: BoxDecoration(
+                  color: AppColors.greyColor,
+                ),
+
               ),
-              decoration: BoxDecoration(
-                color: AppColors.greyColor,
-              ),
+              onTap: (){
+                Navigator.of(context).pushNamed(RouteGenerator.PROFILE_PROVIDER);
+              },
             ),
             ListTile(
               title: Text(
@@ -34,14 +41,15 @@ class DrawerWidget extends StatelessWidget {
                 style: TextStyle(color: _DrawerItemColor),
               ),
               onTap: () {
-                Navigator.pop(context);
+//                Navigator.pop(context);
+              Navigator.of(context).pushNamed(RouteGenerator.JOBS);
               },
             ),
             ListTile(
               title: Text(S.of(context).blog,
                   style: TextStyle(color: _DrawerItemColor)),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.of(context).pushNamed(RouteGenerator.PROVIDER_COMPLETE_SIGNUP);
               },
             ),
             ListTile(

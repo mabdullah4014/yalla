@@ -100,25 +100,15 @@ class _ServiceTargetPageState extends StateMVC<ServiceTargetPage> {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
             SizedBox(height: 5),
-            /*Visibility(
-              visible: (targetValuesMap[target.label] != null &&
-                  targetValuesMap[target.label].isNotEmpty),
-              child: Text(
-                (targetValuesMap[target.label] != null &&
-                        targetValuesMap[target.label].isNotEmpty)
-                    ? targetValuesMap[target.label]
-                    : "",
-                style: TextStyle(fontSize: 14),
-              ),
-            )
-            */
-            Text(
-              (targetValuesMap[target.targetValue] != null &&
-                      targetValuesMap[target.targetValue].isNotEmpty)
-                  ? targetValuesMap[target.targetValue]
-                  : "",
-              style: TextStyle(fontSize: 14),
-            )
+            Visibility(
+                visible: (targetValuesMap[target.targetValue] != null &&
+                    targetValuesMap[target.targetValue].isNotEmpty),
+                child: Text(
+                    (targetValuesMap[target.targetValue] != null &&
+                            targetValuesMap[target.targetValue].isNotEmpty)
+                        ? targetValuesMap[target.targetValue]
+                        : "",
+                    style: TextStyle(fontSize: 14)))
           ]),
           IconButton(
               icon: Icon(Icons.add_location,

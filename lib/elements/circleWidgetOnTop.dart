@@ -6,7 +6,7 @@ class ContainerWithCircle extends StatelessWidget {
   final Color childBgColor;
   final ImageProvider imageProvider;
 
-  ContainerWithCircle(this.child, this.childBgColor, this.imageProvider);
+  ContainerWithCircle({this.child, this.childBgColor, this.imageProvider});
 
   static const double _circleRadius = 80.0;
 

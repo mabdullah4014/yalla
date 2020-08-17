@@ -24,9 +24,8 @@ class UserController extends ControllerMVC {
   }
 
   void login() async {
-    if (loginFormKey.currentState.validate()) {
-      loginFormKey.currentState.save();
-      Navigator.of(context).popAndPushNamed(RouteGenerator.MAIN);
+    loginFormKey.currentState.save();
+    Navigator.of(context).popAndPushNamed(RouteGenerator.MAIN);
 //      repository.login(user).then((value) {
 //        if (value != null && value.apiToken != null) {
 //          scaffoldKey.currentState.showSnackBar(
@@ -38,26 +37,23 @@ class UserController extends ControllerMVC {
 //              SnackBar(content: Text(S.current.wrong_email_or_password)));
 //        }
 //      });
-    }
   }
 
   void register() async {
-    if (loginFormKey.currentState.validate()) {
-      loginFormKey.currentState.save();
-      repository.register(user).then((value) {
-        if (value != null && value.apiToken != null) {
-          scaffoldKey.currentState.showSnackBar(SnackBar(
-            content: Text(S.of(context).welcome + value.name),
-          ));
-          Navigator.of(scaffoldKey.currentContext)
-              .pushReplacementNamed('/Pages', arguments: 2);
-        } else {
-          scaffoldKey.currentState.showSnackBar(SnackBar(
-            content: Text(S.of(context).wrong_email_or_password),
-          ));
-        }
-      });
-    }
+    loginFormKey.currentState.save();
+    repository.register(user).then((value) {
+      if (value != null && value.apiToken != null) {
+        scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text(S.of(context).welcome + value.name),
+        ));
+        Navigator.of(scaffoldKey.currentContext)
+            .pushReplacementNamed('/Pages', arguments: 2);
+      } else {
+        scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text(S.of(context).wrong_email_or_password),
+        ));
+      }
+    });
   }
 
 /*void resetPassword() {

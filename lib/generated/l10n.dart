@@ -452,6 +452,126 @@ class S {
       args: [],
     );
   }
+
+  /// `Jobs`
+  String get jobs {
+    return Intl.message(
+      'Jobs',
+      name: 'jobs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No Jobs`
+  String get no_jobs {
+    return Intl.message(
+      'No Jobs',
+      name: 'no_jobs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile`
+  String get profile {
+    return Intl.message(
+      'Profile',
+      name: 'profile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Business detail cannot be empty`
+  String get business_detail_empty {
+    return Intl.message(
+      'Business detail cannot be empty',
+      name: 'business_detail_empty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Business detail`
+  String get business_detail {
+    return Intl.message(
+      'Business detail',
+      name: 'business_detail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Account Information`
+  String get account_information {
+    return Intl.message(
+      'Account Information',
+      name: 'account_information',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Categories`
+  String get categories {
+    return Intl.message(
+      'Categories',
+      name: 'categories',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please choose one or more`
+  String get please_select_more {
+    return Intl.message(
+      'Please choose one or more',
+      name: 'please_select_more',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel`
+  String get cancel {
+    return Intl.message(
+      'Cancel',
+      name: 'cancel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update`
+  String get update {
+    return Intl.message(
+      'Update',
+      name: 'update',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error`
+  String get error {
+    return Intl.message(
+      'Error',
+      name: 'error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `category`
+  String get category {
+    return Intl.message(
+      'category',
+      name: 'category',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -3,6 +3,9 @@ import 'package:arbi/ui/home.dart';
 import 'package:arbi/ui/login.dart';
 import 'package:arbi/ui/map_page.dart';
 import 'package:arbi/ui/map_place_picker.dart';
+import 'package:arbi/ui/provider/jobs_listing.dart';
+import 'package:arbi/ui/provider/profile.dart';
+import 'package:arbi/ui/provider/provider_information.dart';
 import 'package:arbi/ui/select_signup.dart';
 import 'package:arbi/ui/service_detail.dart';
 import 'package:arbi/ui/service_target.dart';
@@ -19,6 +22,9 @@ class RouteGenerator {
   static const String DETAIL = '/Detail';
   static const String TARGET = '/Target';
   static const String MAP = '/Map';
+  static const String JOBS = '/Jobs';
+  static const String PROFILE_PROVIDER = '/ProfileProvider';
+  static const String PROVIDER_COMPLETE_SIGNUP = '/ProviderSignUpComplete';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     // Getting arguments passed in while calling Navigator.pushNamed
@@ -44,6 +50,12 @@ class RouteGenerator {
                 ServiceTargetPage(params: args as ServiceTargetPageParam));
       case MAP:
         return MaterialPageRoute(builder: (_) => MapPlacePicker());
+      case JOBS:
+        return MaterialPageRoute(builder: (_) => JobsListingPage());
+      case PROFILE_PROVIDER:
+        return MaterialPageRoute(builder: (_) => ProviderProfilePage());
+      case PROVIDER_COMPLETE_SIGNUP:
+        return MaterialPageRoute(builder: (_) => ProviderCompleteSignupPage());
     }
   }
 

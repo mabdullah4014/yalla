@@ -43,17 +43,8 @@ class _LoginPageState extends StateMVC<LoginPage> {
           height: height,
           child: Stack(
             children: <Widget>[
-              Image.asset(
-                'assets/images/bg.jpg',
-                height: height,
-                width: width,
-                fit: BoxFit.fitHeight,
-              ),
-              BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                  child: Container(
-                      decoration: new BoxDecoration(
-                          color: Colors.black.withOpacity(0.5)))),
+              AppUtils.cityBg(context),
+              AppUtils.cityblur(),
               Container(
                   padding: EdgeInsets.symmetric(horizontal: 20),
                   child: SingleChildScrollView(
@@ -67,7 +58,9 @@ class _LoginPageState extends StateMVC<LoginPage> {
                         _emailPasswordWidget(),
                         SizedBox(height: 10),
                         AppUtils.submitButton(context, S.of(context).login, () {
-                          _con.login();
+                          if (_isValidForm()) {
+                            _con.login();
+                          }
                         }),
                         SizedBox(height: 10),
                         Container(
@@ -227,18 +220,9 @@ class _LoginPageState extends StateMVC<LoginPage> {
                       bottom:
                           BorderSide(color: AppColors.greyColor, width: 1.0))),
               child: TextFormField(
+                  style: TextStyle(color: Theme.of(context).primaryColor),
                   controller: _emailController,
                   onSaved: (input) => _con.user.email = input,
-                  validator: (input) {
-                    if (!input.contains('@')) {
-                      showDialog(
-                          context: context,
-                          builder: (_) => AlertDialog(
-                              title:
-                                  Text(S.of(context).should_be_a_valid_email)));
-                    }
-                    return null;
-                  },
                   textAlignVertical: TextAlignVertical.center,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
@@ -250,19 +234,9 @@ class _LoginPageState extends StateMVC<LoginPage> {
                       filled: true))),
           Container(
               child: TextFormField(
+                  style: TextStyle(color: Theme.of(context).primaryColor),
                   controller: _passController,
                   onSaved: (input) => _con.user.password = input,
-                  validator: (input) {
-                    if (input.length < 3) {
-                      showDialog(
-                          context: context,
-                          builder: (_) => AlertDialog(
-                              title: Text(S
-                                  .of(context)
-                                  .should_be_more_than_3_characters)));
-                    }
-                    return null;
-                  },
                   textAlignVertical: TextAlignVertical.center,
                   obscureText: true,
                   decoration: InputDecoration(
@@ -277,20 +251,22 @@ class _LoginPageState extends StateMVC<LoginPage> {
     );
   }
 
-static final FacebookLogin facebookSignIn = new FacebookLogin();
+  static final FacebookLogin facebookSignIn = new FacebookLogin();
 
   String _message = 'Log in/out by pressing the buttons below.';
 
   Future<Null> _fbLogin() async {
-    final FacebookLoginResult result = await facebookSignIn.logIn(['email']);
-
-    switch (result.status) {
-      case FacebookLoginStatus.loggedIn:
-        final FacebookAccessToken accessToken = result.accessToken;
-        final graphResponse = await http.get(
-            'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=${accessToken.token}');
-        print(graphResponse.body);
-        _showMessage('''
+    facebookSignIn.loginBehavior = FacebookLoginBehavior.nativeWithFallback;
+    facebookSignIn.logIn(['email']).then((result) {
+      switch (result.status) {
+        case FacebookLoginStatus.loggedIn:
+          final FacebookAccessToken accessToken = result.accessToken;
+          http
+              .get(
+                  'https://graph.facebook.com/v2.12/me?fields=name,first_name,picture,last_name,email&access_token=${accessToken.token}')
+              .then((graphResponse) {
+            print(graphResponse.body);
+            AppUtils.showMessage(context, S.of(context).login_fb, '''
          Profile: ${graphResponse.body}
          Logged in!
          Token: ${accessToken.token}
@@ -299,43 +275,39 @@ static final FacebookLogin facebookSignIn = new FacebookLogin();
          Permissions: ${accessToken.permissions}
          Declined permissions: ${accessToken.declinedPermissions}
          ''');
-        break;
-      case FacebookLoginStatus.cancelledByUser:
-        _showMessage('Login cancelled by the user.');
-        break;
-      case FacebookLoginStatus.error:
-        _showMessage('Something went wrong with the login process.\n'
-            'Here\'s the error Facebook gave us: ${result.errorMessage}');
-        break;
-    }
+          });
+          break;
+        case FacebookLoginStatus.cancelledByUser:
+          AppUtils.showMessage(
+              context, S.of(context).login_fb, 'Login cancelled by the user.');
+          break;
+        case FacebookLoginStatus.error:
+          AppUtils.showMessage(
+              context,
+              S.of(context).login_fb,
+              'Something went wrong with the login process.\n'
+              'Here\'s the error Facebook gave us: ${result.errorMessage}');
+          break;
+      }
+    });
   }
 
   Future<Null> _fbLogOut() async {
     await facebookSignIn.logOut();
-    _showMessage('Logged out.');
+    AppUtils.showMessage(context, S.of(context).login_fb, 'Logged out.');
   }
 
-  void _showMessage(String message) {
-    showDialog<void>(
-      context: context,
-      barrierDismissible: true, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(S.of(context).login_fb),
-          content: SingleChildScrollView(
-              child: ListBody(children: <Widget>[
-                Text(message)
-              ])),
-          actions: <Widget>[
-            FlatButton(
-              child: Text(S.of(context).ok),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+  bool _isValidForm() {
+    if (_emailController.text.isEmpty || !_emailController.text.contains('@')) {
+      AppUtils.showMessage(
+          context, S.of(context).error, S.of(context).should_be_a_valid_email);
+      return false;
+    } else if (_passController.text.isEmpty ||
+        _passController.text.length < 3) {
+      AppUtils.showMessage(context, S.of(context).error,
+          S.of(context).should_be_more_than_3_characters);
+      return false;
+    }
+    return true;
   }
 }

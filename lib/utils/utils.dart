@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:arbi/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -39,5 +40,45 @@ class AppUtils {
               text,
               style: TextStyle(fontSize: 15, color: Colors.white),
             )));
+  }
+
+  static void showMessage(BuildContext context, String title, String message) {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: true, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title, style: TextStyle(color: Colors.black87)),
+          content: Text(message, style: TextStyle(color: Colors.red)),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(S.of(context).ok),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  static Widget cityBg(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+    return Image.asset(
+      'assets/images/city_bg.jpg',
+      height: height,
+      width: width,
+      fit: BoxFit.cover,
+    );
+  }
+
+  static Widget cityblur() {
+    return BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+        child: Container(
+            decoration:
+            new BoxDecoration(color: Colors.black.withOpacity(0.5))));
   }
 }
