@@ -63,6 +63,32 @@ class AppUtils {
     );
   }
 
+  static onLoading(BuildContext context,{String message}) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                        Theme.of(context).primaryColor)),
+                SizedBox(height: 10),
+                Text(message!=null ? message : S.of(context).loading,
+                    style: TextStyle(color: Theme.of(context).primaryColor)),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   static Widget cityBg(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
@@ -79,6 +105,6 @@ class AppUtils {
         filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
         child: Container(
             decoration:
-            new BoxDecoration(color: Colors.black.withOpacity(0.5))));
+                new BoxDecoration(color: Colors.black.withOpacity(0.5))));
   }
 }

@@ -23,8 +23,8 @@ class MapPageState extends State<MapPage> {
   Completer<GoogleMapController> _controller;
   LocationController locationController;
 
-  CameraPosition _qatarLocation = CameraPosition(
-    target: LatLng(25.313258, 51.198361),
+  CameraPosition _iraqLocation = CameraPosition(
+    target: LatLng(33.048134, 43.001309),
     zoom: 9,
   );
 
@@ -47,7 +47,7 @@ class MapPageState extends State<MapPage> {
                 myLocationEnabled: true,
                 compassEnabled: true,
                 mapType: MapType.normal,
-                initialCameraPosition: _qatarLocation,
+                initialCameraPosition: _iraqLocation,
                 onTap: (LatLng latLng) {
                   setState(() {
                     markers.clear();

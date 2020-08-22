@@ -3,12 +3,16 @@ import 'dart:ui';
 import 'package:arbi/controller/user_controller.dart';
 import 'package:arbi/elements/circleWidgetOnTop.dart';
 import 'package:arbi/generated/l10n.dart';
+import 'package:arbi/model/user.dart';
 import 'package:arbi/utils/colors.dart';
+import 'package:arbi/utils/constants.dart';
 import 'package:arbi/utils/utils.dart';
 import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
+
+import '../route_generator.dart';
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key key, this.isCustomer}) : super(key: key);
@@ -16,12 +20,12 @@ class SignUpPage extends StatefulWidget {
   final bool isCustomer;
 
   @override
-  _SignUpPageState createState() => _SignUpPageState();
+  _SignUpPageState createState() => _SignUpPageState(isCustomer);
 }
 
 class _SignUpPageState extends StateMVC<SignUpPage> {
   UserController _con;
-  String flagDropdownValue = 'AE';
+  String flagDropdownValue = 'IQ';
   String codeDropdownValue = '50';
 
   final double _defaultPaddingMargin = 5;
@@ -32,8 +36,9 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
 
-  _SignUpPageState() {
+  _SignUpPageState(bool isCustomer) {
     _con = UserController();
+    _con.user.user_type = isCustomer ? User.CUSTOMER : User.SERVICE_PROVIDER;
   }
 
   @override
@@ -43,46 +48,50 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
     return Scaffold(
         resizeToAvoidBottomPadding: false,
         resizeToAvoidBottomInset: false,
-        body: SafeArea(
-            child: Stack(children: <Widget>[
-          AppUtils.cityBg(context),
-          AppUtils.cityblur(),
-          Align(
-              alignment: Alignment.center,
-              child: ContainerWithCircle(
-                  child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 5),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            _description(),
-                            SizedBox(height: _defaultPaddingMargin),
-                            _form(),
-                            SizedBox(height: _defaultPaddingMargin),
-                            AppUtils.submitButton(
-                                context,
-                                widget.isCustomer
-                                    ? S.of(context).signup_customer
-                                    : S.of(context).signup_as_yalla, () {
-                              if (_isValidForm()) _con.register();
-                            }),
-                            _facebookButton(),
-                          ])),
-                  childBgColor: Colors.white,
-                  imageProvider: AssetImage(
-                    'assets/images/logo_circle.png',
-                  ))),
-          Positioned(
-              top: _defaultPaddingMargin,
-              right: _defaultPaddingMargin,
-              child: _backButton()),
-          Positioned(
-              bottom: 0,
-              left: _defaultPaddingMargin,
-              right: _defaultPaddingMargin,
-              child: _createAccountLabel()),
-        ])));
+        body: Builder(
+            builder: (scaffoldContext) => SafeArea(
+                    child: Stack(children: <Widget>[
+                  AppUtils.cityBg(context),
+                  AppUtils.cityblur(),
+                  Align(
+                      alignment: Alignment.center,
+                      child: ContainerWithCircle(
+                          child: Container(
+                              padding: EdgeInsets.symmetric(vertical: 5),
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    _description(),
+                                    SizedBox(height: _defaultPaddingMargin),
+                                    _form(),
+                                    SizedBox(height: _defaultPaddingMargin),
+                                    AppUtils.submitButton(
+                                        context,
+                                        widget.isCustomer
+                                            ? S.of(context).signup_customer
+                                            : S.of(context).signup_as_yalla,
+                                        () {
+                                      if (_isValidForm())
+                                        FocusScope.of(context).unfocus();
+                                      _doRegister(scaffoldContext, context);
+                                    }),
+                                    _facebookButton(),
+                                  ])),
+                          childBgColor: Colors.white,
+                          imageProvider: AssetImage(
+                            'assets/images/logo_circle.png',
+                          ))),
+                  Positioned(
+                      top: _defaultPaddingMargin,
+                      right: _defaultPaddingMargin,
+                      child: _backButton()),
+                  Positioned(
+                      bottom: 0,
+                      left: _defaultPaddingMargin,
+                      right: _defaultPaddingMargin,
+                      child: _createAccountLabel()),
+                ]))));
   }
 
   Widget _backButton() {
@@ -215,13 +224,9 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
         fit: FlexFit.tight,
       ),
       Flexible(
-        child: _countryCodeDropDown(),
-        fit: FlexFit.tight,
-      ),
-      Flexible(
         child: _phoneNumberField(),
         fit: FlexFit.tight,
-        flex: 3,
+        flex: 4,
       )
     ]);
   }
@@ -258,7 +263,7 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
           child: TextFormField(
               style: TextStyle(color: Theme.of(context).primaryColor),
               controller: !widget.isCustomer ? _companyNameController : null,
-              onSaved: (input) => _con.user.companyName = input,
+              onSaved: (input) => _con.user.business_name = input,
               textAlignVertical: TextAlignVertical.center,
               keyboardType: TextInputType.name,
               decoration: InputDecoration(
@@ -286,7 +291,7 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
                     flagDropdownValue = newValue;
                   });
                 },
-                items: <String>['AE', 'US', 'TT', 'PK']
+                items: <String>['IQ']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
@@ -300,7 +305,7 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
                 }).toList())));
   }
 
-  Widget _countryCodeDropDown() {
+  /*Widget _countryCodeDropDown() {
     return Container(
         padding: EdgeInsets.only(left: 5),
         decoration: BoxDecoration(
@@ -325,7 +330,7 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
             );
           }).toList(),
         )));
-  }
+  }*/
 
   Widget _form() {
     return Container(
@@ -376,7 +381,8 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
             style: TextStyle(color: Theme.of(context).primaryColor),
             maxLength: 8,
             controller: _phoneController,
-            onSaved: (input) => _con.user.phone = input,
+            onSaved: (input) =>
+                _con.user.phone_no = '${Constants.defaultPhoneCode}$input',
             textAlignVertical: TextAlignVertical.center,
             keyboardType: TextInputType.phone,
             decoration: InputDecoration(
@@ -393,7 +399,10 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
         child: TextFormField(
             style: TextStyle(color: Theme.of(context).primaryColor),
             controller: _passController,
-            onSaved: (input) => _con.user.password = input,
+            onSaved: (input) {
+              _con.user.password = input;
+              _con.user.password_confirmation = input;
+            },
             textAlignVertical: TextAlignVertical.center,
             obscureText: true,
             decoration: InputDecoration(
@@ -429,5 +438,30 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
       return false;
     }
     return true;
+  }
+
+  void _doRegister(BuildContext scaffoldContext, BuildContext buildContext) {
+    AppUtils.onLoading(buildContext);
+    _con.register(onUserRegister: (User value) {
+      Navigator.pop(context);
+      if (value != null && value.auth_token != null) {
+        Scaffold.of(scaffoldContext).showSnackBar(
+            SnackBar(content: Text(S.of(buildContext).welcome + value.name)));
+        if (widget.isCustomer)
+          Navigator.of(buildContext).pushReplacementNamed(RouteGenerator.MAIN);
+        else
+          Navigator.of(buildContext)
+              .pushReplacementNamed(RouteGenerator.PROFILE_PROVIDER);
+      } else if (value.status == User.STATUS_INVALID) {
+        _showSnackBar(
+            scaffoldContext, S.of(buildContext).wrong_email_or_password);
+      } else {
+        _showSnackBar(scaffoldContext, S.of(buildContext).unavailable);
+      }
+    });
+  }
+
+  void _showSnackBar(BuildContext scaffoldContext, String message) {
+    Scaffold.of(scaffoldContext).showSnackBar(SnackBar(content: Text(message)));
   }
 }

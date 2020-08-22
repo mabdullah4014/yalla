@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:arbi/controller/user_controller.dart';
 import 'package:arbi/generated/l10n.dart';
+import 'package:arbi/model/user.dart';
 import 'package:arbi/utils/colors.dart';
 import 'package:arbi/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -33,55 +34,89 @@ class _LoginPageState extends StateMVC<LoginPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
+  Widget build(BuildContext buildContext) {
+    final height = MediaQuery.of(buildContext).size.height;
+    final width = MediaQuery.of(buildContext).size.width;
     return Scaffold(
         resizeToAvoidBottomPadding: false,
-        body: SafeArea(
-            child: Container(
-          height: height,
-          child: Stack(
-            children: <Widget>[
-              AppUtils.cityBg(context),
-              AppUtils.cityblur(),
-              Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        SizedBox(height: height * .2),
-                        _title(),
-                        SizedBox(height: 50),
-                        _emailPasswordWidget(),
-                        SizedBox(height: 10),
-                        AppUtils.submitButton(context, S.of(context).login, () {
-                          if (_isValidForm()) {
-                            _con.login();
-                          }
-                        }),
-                        SizedBox(height: 10),
-                        Container(
-                          padding: EdgeInsets.symmetric(vertical: 10),
-                          alignment: Alignment.center,
-                          child: Text(S.of(context).forgot_password,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500)),
-                        ),
-                        _facebookButton(),
-                        SizedBox(height: 10),
-                        _createAccountLabel(),
-                      ],
-                    ),
-                  )),
-              Positioned(top: 10, right: 10, child: _backButton()),
-            ],
-          ),
-        )));
+        body: Builder(
+            builder: (scaffoldContext) => SafeArea(
+                    child: Container(
+                  height: height,
+                  child: Stack(
+                    children: <Widget>[
+                      AppUtils.cityBg(buildContext),
+                      AppUtils.cityblur(),
+                      Container(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                SizedBox(height: height * .2),
+                                _title(),
+                                SizedBox(height: 50),
+                                _emailPasswordWidget(),
+                                SizedBox(height: 10),
+                                AppUtils.submitButton(
+                                    buildContext, S.of(buildContext).login, () {
+                                  FocusScope.of(buildContext).unfocus();
+                                  if (_isValidForm()) {
+                                    AppUtils.onLoading(buildContext);
+                                    _con.login(onUserLogin: (User value) {
+                                      Navigator.pop(buildContext);
+                                      if (value != null &&
+                                          value.auth_token != null) {
+                                        Scaffold.of(scaffoldContext)
+                                            .showSnackBar(SnackBar(
+                                                content: Text(
+                                                    S.of(buildContext).welcome +
+                                                        value.name)));
+                                        if (value.user_type == User.CUSTOMER)
+                                          Navigator.of(buildContext)
+                                              .pushReplacementNamed(
+                                                  RouteGenerator.MAIN);
+                                        else
+                                          Navigator.of(buildContext)
+                                              .pushReplacementNamed(
+                                                  RouteGenerator
+                                                      .PROFILE_PROVIDER);
+                                      } else if (value.status ==
+                                          User.STATUS_INVALID) {
+                                        _showSnackBar(
+                                            scaffoldContext,
+                                            S
+                                                .of(buildContext)
+                                                .wrong_email_or_password);
+                                      } else {
+                                        _showSnackBar(scaffoldContext,
+                                            S.of(buildContext).unavailable);
+                                      }
+                                    });
+                                  }
+                                }),
+                                SizedBox(height: 10),
+                                Container(
+                                  padding: EdgeInsets.symmetric(vertical: 10),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                      S.of(buildContext).forgot_password,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500)),
+                                ),
+                                _facebookButton(),
+                                SizedBox(height: 10),
+                                _createAccountLabel(),
+                              ],
+                            ),
+                          )),
+                      Positioned(top: 10, right: 10, child: _backButton()),
+                    ],
+                  ),
+                ))));
   }
 
   Widget _backButton() {
@@ -93,23 +128,6 @@ class _LoginPageState extends StateMVC<LoginPage> {
           Icons.clear,
           size: 30,
           color: Colors.white,
-        ));
-  }
-
-  Widget _submitButton() {
-    return InkWell(
-        onTap: () {
-          _con.login();
-        },
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.symmetric(vertical: 15),
-          alignment: Alignment.center,
-          color: Theme.of(context).primaryColor,
-          child: Text(
-            S.of(context).login,
-            style: TextStyle(fontSize: 20, color: Colors.white),
-          ),
         ));
   }
 
@@ -251,7 +269,7 @@ class _LoginPageState extends StateMVC<LoginPage> {
     );
   }
 
-  static final FacebookLogin facebookSignIn = new FacebookLogin();
+  static final FacebookLogin facebookSignIn = FacebookLogin();
 
   String _message = 'Log in/out by pressing the buttons below.';
 
@@ -309,5 +327,9 @@ class _LoginPageState extends StateMVC<LoginPage> {
       return false;
     }
     return true;
+  }
+
+  void _showSnackBar(BuildContext scaffoldContext, String message) {
+    Scaffold.of(scaffoldContext).showSnackBar(SnackBar(content: Text(message)));
   }
 }

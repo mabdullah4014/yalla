@@ -1,12 +1,11 @@
-import 'package:arbi/model/category_response.dart';
 import 'package:arbi/ui/home.dart';
 import 'package:arbi/ui/login.dart';
-import 'package:arbi/ui/map_page.dart';
 import 'package:arbi/ui/map_place_picker.dart';
 import 'package:arbi/ui/provider/jobs_listing.dart';
-import 'package:arbi/ui/provider/profile.dart';
+import 'package:arbi/ui/provider/provider_profile.dart';
 import 'package:arbi/ui/provider/provider_information.dart';
 import 'package:arbi/ui/select_signup.dart';
+import 'package:arbi/ui/service_buy.dart';
 import 'package:arbi/ui/service_detail.dart';
 import 'package:arbi/ui/service_target.dart';
 import 'package:arbi/ui/signup.dart';
@@ -25,6 +24,7 @@ class RouteGenerator {
   static const String JOBS = '/Jobs';
   static const String PROFILE_PROVIDER = '/ProfileProvider';
   static const String PROVIDER_COMPLETE_SIGNUP = '/ProviderSignUpComplete';
+  static const String BUY = '/Buy';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     // Getting arguments passed in while calling Navigator.pushNamed
@@ -56,6 +56,10 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => ProviderProfilePage());
       case PROVIDER_COMPLETE_SIGNUP:
         return MaterialPageRoute(builder: (_) => ProviderCompleteSignupPage());
+      case BUY:
+        return MaterialPageRoute(
+            builder: (_) =>
+                ServiceBuyPage(params: args as ServiceBuyPageParam));
     }
   }
 

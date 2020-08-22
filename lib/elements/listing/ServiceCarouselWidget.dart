@@ -1,14 +1,13 @@
 import 'package:arbi/elements/listing/ServiceWidget.dart';
-import 'package:arbi/model/category_response.dart';
+import 'package:arbi/model/cat_response.dart';
 import 'package:arbi/route_generator.dart';
 import 'package:arbi/ui/service_detail.dart';
-import 'package:arbi/utils/route_argument.dart';
 import 'package:flutter/material.dart';
 
 import '../CircularLoadingWidget.dart';
 
 class ServicesCarouselWidget extends StatefulWidget {
-  List<YallaService> servicesList;
+  List<ServiceValue> servicesList;
   String heroTag;
 
   ServicesCarouselWidget({Key key, this.servicesList, this.heroTag})
@@ -36,15 +35,17 @@ class _ServicesCarouselWidgetState extends State<ServicesCarouselWidget> {
                 itemBuilder: (context, index) {
                   return InkWell(
                       onTap: () {
-                        if (widget.servicesList[index].values != null &&
+                        ServiceValue serviceValues = widget.servicesList[index];
+                        if (serviceValues.fixed_price != null &&
+                            serviceValues.fixed_price != 0.0) {
+                        } else if (widget.servicesList[index].values != null &&
                             widget.servicesList[index].values.isNotEmpty) {
                           DetailPageData detailPageData = DetailPageData();
 
                           Navigator.of(context).pushNamed(RouteGenerator.DETAIL,
                               arguments: ServiceDetailPageParam(
                                   services: widget.servicesList[index],
-                                  detailPageData: detailPageData,
-                                  serviceValues: null));
+                                  detailPageData: detailPageData));
                         }
                       },
                       child: ServiceWidget(

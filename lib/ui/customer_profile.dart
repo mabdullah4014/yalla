@@ -1,3 +1,4 @@
+/*
 import 'dart:ui';
 
 import 'package:arbi/controller/user_controller.dart';
@@ -9,32 +10,28 @@ import 'package:flutter/material.dart';
 import 'package:multiselect_formfield/multiselect_formfield.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 
-class ProviderProfilePage extends StatefulWidget {
-  ProviderProfilePage({Key key}) : super(key: key);
+class CustomerProfilePage extends StatefulWidget {
+  CustomerProfilePage({Key key}) : super(key: key);
 
   @override
-  _ProviderProfilePageState createState() => _ProviderProfilePageState();
+  _CustomerProfilePageState createState() => _CustomerProfilePageState();
 }
 
-class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
+class _CustomerProfilePageState extends StateMVC<CustomerProfilePage> {
+
   UserController _con;
-  String flagDropdownValue = 'AE';
+  String flagDropdownValue = 'IQ';
   String codeDropdownValue = '50';
 
   final double _defaultPaddingMargin = 10;
 
-  final TextEditingController _detailController = TextEditingController();
-  final TextEditingController _companyNameController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
 
-  List _myActivities;
-
-  _ProviderProfilePageState() {
+  _CustomerProfilePageState() {
     _con = UserController();
-    _myActivities = [];
   }
 
   @override
@@ -93,8 +90,6 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  _businessDetail(),
-                  _companyNameWidget(),
                   _nameWidget(),
                   _emailWidget(),
                   _phoneNumber(),
@@ -137,7 +132,7 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
             textInputAction: TextInputAction.next,
             onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
             controller: _companyNameController,
-            onSaved: (input) => _con.user.companyName = input,
+            onSaved: (input) => _con.user.business_name = input,
             textAlignVertical: TextAlignVertical.center,
             keyboardType: TextInputType.name,
             decoration: InputDecoration(
@@ -225,7 +220,7 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
                     flagDropdownValue = newValue;
                   });
                 },
-                items: <String>['AE', 'US', 'TT', 'PK']
+                items: <String>['IQ']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
@@ -280,7 +275,7 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
             controller: _phoneController,
             textInputAction: TextInputAction.next,
             onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
-            onSaved: (input) => _con.user.phone = input,
+            onSaved: (input) => _con.user.phone_no = input,
             textAlignVertical: TextAlignVertical.center,
             keyboardType: TextInputType.phone,
             decoration: InputDecoration(
@@ -404,3 +399,4 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
     return true;
   }
 }
+*/

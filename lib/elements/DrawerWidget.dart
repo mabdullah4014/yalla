@@ -6,6 +6,8 @@ import 'package:arbi/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../controller/user_controller.dart' as userCont;
+
 class DrawerWidget extends StatelessWidget {
   DrawerWidget({Key key}) : super(key: key);
 
@@ -16,132 +18,126 @@ class DrawerWidget extends StatelessWidget {
     return Drawer(
         child: Column(children: <Widget>[
       Expanded(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            InkWell(
-              child: DrawerHeader(
-                child: Image.asset(
-                  'assets/images/logo_text.png',
-                  fit: BoxFit.contain,
-                ),
-                padding: EdgeInsets.zero,
-                decoration: BoxDecoration(
-                  color: AppColors.greyColor,
-                ),
-
-              ),
-              onTap: (){
-                Navigator.of(context).pushNamed(RouteGenerator.PROFILE_PROVIDER);
-              },
+          child: ListView(padding: EdgeInsets.zero, children: <Widget>[
+        InkWell(
+          child: DrawerHeader(
+            child: Image.asset(
+              'assets/images/logo_text.png',
+              fit: BoxFit.contain,
             ),
-            ListTile(
-              title: Text(
-                S.of(context).about,
-                style: TextStyle(color: _DrawerItemColor),
-              ),
-              onTap: () {
-//                Navigator.pop(context);
-              Navigator.of(context).pushNamed(RouteGenerator.JOBS);
-              },
+            padding: EdgeInsets.zero,
+            decoration: BoxDecoration(
+              color: AppColors.greyColor,
             ),
-            ListTile(
-              title: Text(S.of(context).blog,
-                  style: TextStyle(color: _DrawerItemColor)),
-              onTap: () {
-                Navigator.of(context).pushNamed(RouteGenerator.PROVIDER_COMPLETE_SIGNUP);
-              },
-            ),
-            ListTile(
-              title: Text(S.of(context).how_it_works,
-                  style: TextStyle(color: _DrawerItemColor)),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text(S.of(context).terms_and_condition,
-                  style: TextStyle(color: _DrawerItemColor)),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            Row(
-              children: <Widget>[
-                Flexible(
-                  fit: FlexFit.tight,
-                  child: IconButton(
-                      icon: FaIcon(FontAwesomeIcons.facebook,
-                          color: _DrawerItemColor),
-                      onPressed: () {}),
-                  flex: 1,
-                ),
-                Flexible(
-                  fit: FlexFit.tight,
-                  child: IconButton(
-                      icon: FaIcon(FontAwesomeIcons.twitter,
-                          color: _DrawerItemColor),
-                      onPressed: () {}),
-                  flex: 1,
-                ),
-                Flexible(
-                  fit: FlexFit.tight,
-                  child: IconButton(
-                      icon: FaIcon(FontAwesomeIcons.instagram,
-                          color: _DrawerItemColor),
-                      onPressed: () {}),
-                  flex: 1,
-                )
-              ],
-            ),
-          ],
+          ),
+          onTap: () {
+            Navigator.of(context).pushNamed(RouteGenerator.PROFILE_PROVIDER);
+          },
         ),
-      ),
-      Container(
-          color: AppColors.greyColor,
-          // This align moves the children to the bottom
-          child: Align(
-              alignment: FractionalOffset.bottomCenter,
-              // This container holds all the children that will be aligned
-              // on the bottom and should not scroll with the above ListView
-              child: Row(
-                children: <Widget>[
-                  Flexible(
-                    fit: FlexFit.tight,
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.of(context).pushNamed(RouteGenerator.LOGIN);
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.all(20),
-                        child: Text(S.of(context).login.toUpperCase(),
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w700,
-                                color: _DrawerItemColor)),
+        ListTile(
+          title: Text(
+            S.of(context).about,
+            style: TextStyle(color: _DrawerItemColor),
+          ),
+          onTap: () {
+//                Navigator.pop(context);
+            Navigator.of(context).pushNamed(RouteGenerator.JOBS);
+          },
+        ),
+        ListTile(
+          title: Text(S.of(context).blog,
+              style: TextStyle(color: _DrawerItemColor)),
+          onTap: () {
+            Navigator.of(context)
+                .pushNamed(RouteGenerator.PROVIDER_COMPLETE_SIGNUP);
+          },
+        ),
+        ListTile(
+          title: Text(S.of(context).how_it_works,
+              style: TextStyle(color: _DrawerItemColor)),
+          onTap: () {
+            Navigator.pop(context);
+          },
+        ),
+        ListTile(
+          title: Text(S.of(context).terms_and_condition,
+              style: TextStyle(color: _DrawerItemColor)),
+          onTap: () {
+            Navigator.pop(context);
+          },
+        ),
+        Row(children: <Widget>[
+          Flexible(
+              fit: FlexFit.tight,
+              child: IconButton(
+                  icon: FaIcon(FontAwesomeIcons.facebook,
+                      color: _DrawerItemColor),
+                  onPressed: () {}),
+              flex: 1),
+          Flexible(
+              fit: FlexFit.tight,
+              child: IconButton(
+                  icon:
+                      FaIcon(FontAwesomeIcons.twitter, color: _DrawerItemColor),
+                  onPressed: () {}),
+              flex: 1),
+          Flexible(
+              fit: FlexFit.tight,
+              child: IconButton(
+                  icon: FaIcon(FontAwesomeIcons.instagram,
+                      color: _DrawerItemColor),
+                  onPressed: () {}),
+              flex: 1)
+        ])
+      ])),
+      Visibility(
+          visible: !userCont.currentUser.value.auth,
+          child: Container(
+              color: AppColors.greyColor,
+              // This align moves the children to the bottom
+              child: Align(
+                  alignment: FractionalOffset.bottomCenter,
+                  // This container holds all the children that will be aligned
+                  // on the bottom and should not scroll with the above ListView
+                  child: Row(
+                    children: <Widget>[
+                      Flexible(
+                        fit: FlexFit.tight,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.of(context)
+                                .pushNamed(RouteGenerator.LOGIN);
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Text(S.of(context).login.toUpperCase(),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.w700,
+                                    color: _DrawerItemColor)),
+                          ),
+                        ),
+                        flex: 1,
                       ),
-                    ),
-                    flex: 1,
-                  ),
-                  Flexible(
-                    fit: FlexFit.tight,
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.of(context)
-                            .pushNamed(RouteGenerator.SIGNUP_AS);
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.all(20),
-                        child: Text(S.of(context).signup.toUpperCase(),
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.headline6),
-                      ),
-                    ),
-                    flex: 1,
-                  )
-                ],
-              )))
+                      Flexible(
+                        fit: FlexFit.tight,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.of(context)
+                                .pushNamed(RouteGenerator.SIGNUP_AS);
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Text(S.of(context).signup.toUpperCase(),
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.headline6),
+                          ),
+                        ),
+                        flex: 1,
+                      )
+                    ],
+                  ))))
     ]));
   }
 }

@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:arbi/model/category_response.dart';
+import 'package:arbi/model/cat_response.dart';
 import 'package:arbi/ui/service_target.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -50,18 +50,10 @@ class _ServiceDetailPageState extends StateMVC<ServiceDetailPage> {
   }
 
   Widget generateListOrGrid() {
-    if (widget.params.serviceValues != null) {
-      if (widget.params.serviceValues.viewType == 'list') {
-        return generateList(values: widget.params.serviceValues.values);
-      } else {
-        return generateGrid(values: widget.params.serviceValues.values);
-      }
+    if (widget.params.services.view_type == 'list') {
+      return generateList(values: widget.params.services.values);
     } else {
-      if (widget.params.services.viewType == 'list') {
-        return generateList(values: widget.params.services.values);
-      } else {
-        return generateGrid(values: widget.params.services.values);
-      }
+      return generateGrid(values: widget.params.services.values);
     }
   }
 
@@ -92,7 +84,8 @@ class _ServiceDetailPageState extends StateMVC<ServiceDetailPage> {
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
                   values[index].name,
-                  style: TextStyle(fontSize: 22.0),
+                  style: TextStyle(
+                      fontSize: 22.0, color: Theme.of(context).primaryColor),
                 ),
               )));
         });
@@ -115,7 +108,7 @@ class _ServiceDetailPageState extends StateMVC<ServiceDetailPage> {
                       height: MediaQuery.of(context).size.height / 4.5,
                       child: CachedNetworkImage(
                           fit: BoxFit.cover,
-                          imageUrl: serviceValue.image,
+                          imageUrl: serviceValue.image_path,
                           placeholder: (context, url) => Image.asset(
                               'assets/images/loading.gif',
                               fit: BoxFit.contain),
@@ -145,10 +138,9 @@ class _ServiceDetailPageState extends StateMVC<ServiceDetailPage> {
       print('ValuesId:${detailPageData.valuesIdList}');
       Navigator.of(context).pushNamed(RouteGenerator.DETAIL,
           arguments: ServiceDetailPageParam(
-              services: widget.params.services,
-              detailPageData: detailPageData,
-              serviceValues: serviceValue));
-    } else if (serviceValue.target != null && serviceValue.target.isNotEmpty) {
+              services: serviceValue, detailPageData: detailPageData));
+    } else if (serviceValue.targets != null &&
+        serviceValue.targets.isNotEmpty) {
       DetailPageData detailPageData = widget.params.detailPageData;
       if (detailPageData.valuesIdList == null) {
         detailPageData.valuesIdList = List();
@@ -157,25 +149,21 @@ class _ServiceDetailPageState extends StateMVC<ServiceDetailPage> {
       print('ValuesId:${detailPageData.valuesIdList}');
       Navigator.of(context).pushNamed(RouteGenerator.TARGET,
           arguments: ServiceTargetPageParam(
-              services: widget.params.services,
+              services: serviceValue,
               detailPageData: detailPageData,
-              target: serviceValue.target));
+              targets: serviceValue.targets));
     } else {}
   }
 }
 
 class ServiceDetailPageParam {
-  ServiceDetailPageParam(
-      {this.services, this.detailPageData, this.serviceValues});
+  ServiceDetailPageParam({this.services, this.detailPageData});
 
   // object filled when navigating through values of services
   final DetailPageData detailPageData;
 
-  // service object (item tapped on initially)
-  final YallaService services;
-
-  // parent value object of service (null initially)
-  final ServiceValue serviceValues;
+  // service object
+  final ServiceValue services;
 }
 
 class DetailPageData {

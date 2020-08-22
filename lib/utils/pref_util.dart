@@ -33,4 +33,8 @@ class PreferenceUtils {
     return prefs?.setBool(key, value) ?? Future.value(false);
   }
 
+  static dynamic getDynamic(String key) {
+    return _prefsInstance.get(key) ?? null;
+  }
+
 }

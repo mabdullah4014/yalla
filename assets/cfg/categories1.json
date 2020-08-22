@@ -1,0 +1,50 @@
+{
+  "code": 200,
+  "data": {
+    "values": [
+      {
+        "id": 23,
+        "name": "Empty House 35000",
+        "image": "",
+        "description": "",
+        "view_type": "grid",
+        "values": null,
+        "fixed_price": "",
+        "target": [
+          {
+            "type": "input",
+            "default_value": "",
+            "is_enabled": true,
+            "label": "My label",
+            "target_value": "label1"
+          },
+          {
+            "type": "checkbox",
+            "default_value": "",
+            "is_enabled": true,
+            "label": "This is my checkbox",
+            "target_value": "checkbox_1"
+          },
+          {
+            "type": "location",
+            "default_value": "",
+            "is_enabled": true,
+            "label": "Start Location",
+            "target_value": "start_location"
+          },
+          {
+            "type": "location",
+            "default_value": "",
+            "is_enabled": true,
+            "label": "End Location",
+            "target_value": "end_location"
+          }
+        ]
+      }
+    ],
+    "banners": [
+
+    ]
+  },
+  "message": ""
+}

@@ -1,6 +1,6 @@
 import 'package:arbi/controller/jobs_listing_controller.dart';
 import 'package:arbi/generated/l10n.dart';
-import 'package:arbi/model/category_response.dart';
+import 'package:arbi/model/cat_response.dart';
 import 'package:flutter/material.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 
@@ -57,13 +57,13 @@ class _JobsListingPageState extends StateMVC<JobsListingPage> {
   }
 
   Widget _listItem(int index) {
-    Category category = _con.categories[index];
+    ServiceValue category = _con.categories[index];
     return Card(
       child: Column(
         children: <Widget>[
           ListTile(
             leading: CircleAvatar(
-              backgroundImage: NetworkImage(category.image),
+              backgroundImage: NetworkImage(category.image_path),
             ),
             title: Text(category.name),
             subtitle: Text(category.description),

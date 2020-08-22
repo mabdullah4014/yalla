@@ -13,7 +13,7 @@ ValueNotifier<Setting> setting = new ValueNotifier(new Setting());
 Future<Setting> initSettings() async {
   Setting _setting;
   final String url =
-      '${GlobalConfiguration().getString('api_base_url')}settings';
+      '${GlobalConfiguration().getString('api_base_url')}configurations';
   final response = await http
       .get(url, headers: {HttpHeaders.contentTypeHeader: 'application/json'});
   if (response.statusCode == 200 &&

@@ -1,8 +1,12 @@
 import 'dart:ui';
 
+import 'package:arbi/controller/cat_buy_controller.dart';
 import 'package:arbi/generated/l10n.dart';
-import 'package:arbi/model/category_response.dart';
+import 'package:arbi/model/cat_response.dart';
+import 'package:arbi/model/check_service_request.dart';
+import 'package:arbi/route_generator.dart';
 import 'package:arbi/ui/map_page.dart';
+import 'package:arbi/ui/service_buy.dart';
 import 'package:arbi/ui/service_detail.dart';
 import 'package:arbi/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,6 +28,12 @@ class ServiceTargetPage extends StatefulWidget {
 
 class _ServiceTargetPageState extends StateMVC<ServiceTargetPage> {
   final Map<String, String> targetValuesMap = Map();
+
+  CheckServiceController checkServiceController;
+
+  _ServiceTargetPageState() {
+    checkServiceController = CheckServiceController();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,8 +69,8 @@ class _ServiceTargetPageState extends StateMVC<ServiceTargetPage> {
 
   List<Widget> generateTargets() {
     List<Widget> widgetList = List();
-    for (Target target in widget.params.target) {
-      if (target.type == 'input') {
+    for (ServiceTarget target in widget.params.targets) {
+      if (target.type == 'Input') {
         widgetList.add(inputField(target));
         widgetList.add(SizedBox(height: 10));
       } else if (target.type == 'location') {
@@ -75,10 +85,15 @@ class _ServiceTargetPageState extends StateMVC<ServiceTargetPage> {
     return widgetList;
   }
 
-  Widget inputField(Target target) {
+  Widget inputField(ServiceTarget target) {
+    TextEditingController _controller = new TextEditingController();
+    _controller.text = target.default_value;
+    targetValuesMap[target.target_value] = target.default_value;
     return TextField(
-      onChanged: (input) =>
-          targetValuesMap.putIfAbsent(target.targetValue, () => input),
+      enabled: target.is_enabled == 1 ? true : false,
+      style: TextStyle(color: Theme.of(context).primaryColor),
+      controller: _controller,
+      onChanged: (input) => targetValuesMap[target.target_value] = input,
       decoration: InputDecoration(
           border: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -88,7 +103,7 @@ class _ServiceTargetPageState extends StateMVC<ServiceTargetPage> {
     );
   }
 
-  Widget locationField(Target target) {
+  Widget locationField(ServiceTarget target) {
     return Container(
       padding: EdgeInsets.all(10),
       child: Row(
@@ -101,12 +116,12 @@ class _ServiceTargetPageState extends StateMVC<ServiceTargetPage> {
             ),
             SizedBox(height: 5),
             Visibility(
-                visible: (targetValuesMap[target.targetValue] != null &&
-                    targetValuesMap[target.targetValue].isNotEmpty),
+                visible: (targetValuesMap[target.target_value] != null &&
+                    targetValuesMap[target.target_value].isNotEmpty),
                 child: Text(
-                    (targetValuesMap[target.targetValue] != null &&
-                            targetValuesMap[target.targetValue].isNotEmpty)
-                        ? targetValuesMap[target.targetValue]
+                    (targetValuesMap[target.target_value] != null &&
+                            targetValuesMap[target.target_value].isNotEmpty)
+                        ? targetValuesMap[target.target_value]
                         : "",
                     style: TextStyle(fontSize: 14)))
           ]),
@@ -125,8 +140,8 @@ class _ServiceTargetPageState extends StateMVC<ServiceTargetPage> {
                           String coordinates =
                               '${latLng.latitude},${latLng.longitude}';
                           targetValuesMap.putIfAbsent(
-                              target.targetValue, () => coordinates);
-                          targetValuesMap[target.targetValue] = coordinates;
+                              target.target_value, () => coordinates);
+                          targetValuesMap[target.target_value] = coordinates;
                         });
                       });
                     });
@@ -136,18 +151,18 @@ class _ServiceTargetPageState extends StateMVC<ServiceTargetPage> {
     );
   }
 
-  Widget checkboxField(Target target) {
-    targetValuesMap.putIfAbsent(target.targetValue, () => "0");
+  Widget checkboxField(ServiceTarget target) {
+    targetValuesMap.putIfAbsent(target.target_value, () => "0");
     return CheckboxListTile(
         activeColor: Theme.of(context).primaryColor,
         title: Text(target.label), //
-        value: targetValuesMap[target.targetValue] == "0" ? false : true,
+        value: targetValuesMap[target.target_value] == "0" ? false : true,
         onChanged: (newValue) {
           setState(() {
             if (newValue)
-              targetValuesMap[target.targetValue] = "1";
+              targetValuesMap[target.target_value] = "1";
             else
-              targetValuesMap[target.targetValue] = "0";
+              targetValuesMap[target.target_value] = "0";
           });
         });
   }
@@ -155,18 +170,39 @@ class _ServiceTargetPageState extends StateMVC<ServiceTargetPage> {
   Widget submitButton() {
     return AppUtils.submitButton(context, S.of(context).submit, () {
       bool allValuesDone = true;
-      for (Target target in widget.params.target) {
-        if (!targetValuesMap.containsKey(target.targetValue)) {
+      for (ServiceTarget target in widget.params.targets) {
+        if (!targetValuesMap.containsKey(target.target_value) ||
+            targetValuesMap[target.target_value].isEmpty) {
           allValuesDone = false;
           showDialogforError(target);
           break;
         }
       }
-      if (allValuesDone) print(targetValuesMap.toString());
+      if (allValuesDone) {
+        AppUtils.onLoading(context, message: S.of(context).calculating_price);
+        checkServiceController.checkPrice(
+            CheckServiceRequest(
+                widget.params.services.id,
+                widget.params.detailPageData.valuesIdList,
+                targetValuesMap), onPriceCheck: (price) {
+          Navigator.of(context).pop();
+          if (price == 0) {
+            AppUtils.showMessage(
+                context, S.of(context).error, S.of(context).price_zero);
+          } else {
+            Navigator.of(context).pushNamed(RouteGenerator.BUY,
+                arguments: ServiceBuyPageParam(
+                    detailPageData: widget.params.detailPageData,
+                    services: widget.params.services,
+                    price: price,
+                    targetValues: targetValuesMap));
+          }
+        });
+      }
     });
   }
 
-  void showDialogforError(Target target) {
+  void showDialogforError(ServiceTarget target) {
     showDialog<void>(
       context: context,
       barrierDismissible: true, // user must tap button!
@@ -192,14 +228,14 @@ class _ServiceTargetPageState extends StateMVC<ServiceTargetPage> {
 }
 
 class ServiceTargetPageParam {
-  ServiceTargetPageParam({this.services, this.detailPageData, this.target});
+  ServiceTargetPageParam({this.services, this.detailPageData, this.targets});
 
   // object filled when navigating through values of services
   final DetailPageData detailPageData;
 
   // service object (item tapped on initially)
-  final YallaService services;
+  final ServiceValue services;
 
   // parent value object of service (null initially)
-  final List<Target> target;
+  final List<ServiceTarget> targets;
 }

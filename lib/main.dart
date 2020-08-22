@@ -1,3 +1,4 @@
+import 'package:arbi/utils/pref_util.dart';
 import 'package:arbi/utils/utils.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,12 @@ class MyApp extends AppMVC {
   MyApp({Key key}) : super(con: SettingsController(), key: key);
 
   @override
+  void initApp() {
+    super.initApp();
+    PreferenceUtils.init();
+  }
+
+  @override
   Widget build(BuildContext buildContext) {
     return DynamicTheme(
         defaultBrightness: Brightness.light,
@@ -29,7 +36,7 @@ class MyApp extends AppMVC {
           if (brightness == Brightness.light) {
             return ThemeData(
               fontFamily: 'Roboto',
-              primaryColor: Color(0xFFFF6601),
+              primaryColor: config.Colors().mainColor(1),
               brightness: brightness,
               accentColor: config.Colors().mainColor(1),
               focusColor: config.Colors().accentColor(1),

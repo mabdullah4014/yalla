@@ -193,41 +193,21 @@ class S {
     );
   }
 
-  /// `Should be a valid email`
+  /// `Email should be valid`
   String get should_be_a_valid_email {
     return Intl.message(
-      'Should be a valid email',
+      'Email should be valid',
       name: 'should_be_a_valid_email',
       desc: '',
       args: [],
     );
   }
 
-  /// `Should be more than 3 characters`
+  /// `Password should be more than 3 characters`
   String get should_be_more_than_3_characters {
     return Intl.message(
-      'Should be more than 3 characters',
+      'Password should be more than 3 characters',
       name: 'should_be_more_than_3_characters',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Should be more than 3 letters`
-  String get should_be_more_than_3_letters {
-    return Intl.message(
-      'Should be more than 3 letters',
-      name: 'should_be_more_than_3_letters',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Should be more than 6 letters`
-  String get should_be_more_than_6_letters {
-    return Intl.message(
-      'Should be more than 6 letters',
-      name: 'should_be_more_than_6_letters',
       desc: '',
       args: [],
     );
@@ -568,6 +548,86 @@ class S {
     return Intl.message(
       'category',
       name: 'category',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Service unavailable at the moment. Please try again later`
+  String get unavailable {
+    return Intl.message(
+      'Service unavailable at the moment. Please try again later',
+      name: 'unavailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No categories available`
+  String get no_categories {
+    return Intl.message(
+      'No categories available',
+      name: 'no_categories',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No banners available`
+  String get no_banners {
+    return Intl.message(
+      'No banners available',
+      name: 'no_banners',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm Order`
+  String get confirm_order {
+    return Intl.message(
+      'Confirm Order',
+      name: 'confirm_order',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Place Order`
+  String get place_order {
+    return Intl.message(
+      'Place Order',
+      name: 'place_order',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter valid values to calculate price`
+  String get price_zero {
+    return Intl.message(
+      'Enter valid values to calculate price',
+      name: 'price_zero',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Loading`
+  String get loading {
+    return Intl.message(
+      'Loading',
+      name: 'loading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Calculating Price...`
+  String get calculating_price {
+    return Intl.message(
+      'Calculating Price...',
+      name: 'calculating_price',
       desc: '',
       args: [],
     );

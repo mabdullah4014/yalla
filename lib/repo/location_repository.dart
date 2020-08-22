@@ -1,6 +1,4 @@
-import 'package:flutter/services.dart';
 import 'package:location/location.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 LocationData locationData;
 Location location = new Location();

@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import '../route_generator.dart';
 
 class Constants {
+
+  static const String defaultPhoneCode = '+964';
+
   static InputDecoration getInputDecoration(
       BuildContext context, String hintText, String labelText,
       {Icon icon}) {
