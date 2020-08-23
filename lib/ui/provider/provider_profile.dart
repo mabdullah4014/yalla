@@ -1,8 +1,11 @@
 import 'dart:ui';
 
+import 'package:arbi/controller/listing_controller.dart';
 import 'package:arbi/controller/user_controller.dart';
 import 'package:arbi/generated/l10n.dart';
-import 'package:arbi/utils/colors.dart';
+import 'package:arbi/model/provider_categories_response.dart';
+import 'package:arbi/model/user.dart';
+import 'package:arbi/utils/app_colors.dart';
 import 'package:arbi/utils/utils.dart';
 import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +25,7 @@ class ProviderProfilePage extends StatefulWidget {
 
 class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
   UserController _con;
+  ListingController listingController;
   String flagDropdownValue = 'IQ';
   String codeDropdownValue = '50';
 
@@ -33,13 +37,17 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
+
   String currentLocation;
 
   List _myActivities;
+  List _initialCategories;
 
   _ProviderProfilePageState() {
     _con = UserController();
+    listingController = ListingController.loadProvider();
     _myActivities = [];
+    _initialCategories = [];
 
     _detailController.text = currentUser.value.bio;
     _companyNameController.text = currentUser.value.business_name;
@@ -48,12 +56,18 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
     _phoneController.text = currentUser.value.phone_no;
     _passController.text = currentUser.value.password;
     currentLocation = currentUser.value.location();
+    if (currentLocation == null || currentLocation.isEmpty)
+      currentLocation = 'Tap to enter location';
+
+    listingController.getProviderCategories(catList: (List<dynamic> list) {
+      setState(() {
+        _initialCategories.addAll(list);
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
     return Scaffold(
         backgroundColor: Colors.grey.shade200,
         appBar: AppBar(
@@ -103,7 +117,7 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
         child: Form(
             key: _con.loginFormKey,
             child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   _businessDetail(),
@@ -115,6 +129,15 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
                   Container(
                       color: Colors.grey.shade200,
                       height: _defaultPaddingMargin),
+                  Container(
+                      padding: EdgeInsets.all(_defaultPaddingMargin),
+                      child: Text(
+                        'Location',
+                        style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.black54),
+                      )),
                   _location(),
                   Container(
                       color: Colors.grey.shade200,
@@ -154,7 +177,7 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
             textInputAction: TextInputAction.next,
             onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
             controller: _companyNameController,
-            onSaved: (input) => _con.user.business_name = input,
+            onChanged: (input) => _con.user.business_name = input,
             textAlignVertical: TextAlignVertical.center,
             keyboardType: TextInputType.name,
             decoration: InputDecoration(
@@ -176,7 +199,7 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
             controller: _nameController,
             textInputAction: TextInputAction.next,
             onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
-            onSaved: (input) => _con.user.name = input,
+            onChanged: (input) => _con.user.name = input,
             textAlignVertical: TextAlignVertical.center,
             keyboardType: TextInputType.name,
             decoration: InputDecoration(
@@ -197,7 +220,7 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
             style: TextStyle(color: Theme.of(context).primaryColor),
             controller: _emailController,
             textInputAction: TextInputAction.done,
-            onSaved: (input) => _con.user.email = input,
+            onChanged: (input) => _con.user.email = input,
             textAlignVertical: TextAlignVertical.center,
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
@@ -293,7 +316,7 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
             controller: _phoneController,
             textInputAction: TextInputAction.next,
             onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
-            onSaved: (input) => _con.user.phone_no = input,
+            onChanged: (input) => _con.user.phone_no = input,
             textAlignVertical: TextAlignVertical.center,
             keyboardType: TextInputType.phone,
             decoration: InputDecoration(
@@ -314,7 +337,7 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
         child: TextFormField(
             style: TextStyle(color: Theme.of(context).primaryColor),
             controller: _passController,
-            onSaved: (input) => _con.user.password = input,
+            onChanged: (input) => _con.user.password = input,
             textAlignVertical: TextAlignVertical.center,
             obscureText: true,
             textInputAction: TextInputAction.done,
@@ -355,7 +378,7 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
                     style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w800,
-                        color: Colors.black54),
+                        color: Theme.of(context).primaryColor),
                   ),
                   flex: 5),
               Flexible(
@@ -368,38 +391,9 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
   Widget _categoriesContainer() {
     return MultiSelectFormField(
       autovalidate: false,
-      dataSource: [
-        {
-          "display": "Running",
-          "value": "Running",
-        },
-        {
-          "display": "Climbing",
-          "value": "Climbing",
-        },
-        {
-          "display": "Walking",
-          "value": "Walking",
-        },
-        {
-          "display": "Swimming",
-          "value": "Swimming",
-        },
-        {
-          "display": "Soccer Practice",
-          "value": "Soccer Practice",
-        },
-        {
-          "display": "Baseball Practice",
-          "value": "Baseball Practice",
-        },
-        {
-          "display": "Football Practice",
-          "value": "Football Practice",
-        }
-      ],
-      textField: 'display',
-      valueField: 'value',
+      dataSource: _initialCategories,
+      textField: 'name',
+      valueField: 'id',
       titleText: S.of(context).categories,
       fillColor: Colors.white,
       okButtonLabel: S.of(context).ok,
@@ -417,7 +411,24 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
 
   Widget _submit() {
     return AppUtils.submitButton(context, S.of(context).update, () {
-      if (_isValidForm()) _con.login();
+      if (_isValidForm()) {
+
+        _con.user.bio = _detailController.text;
+        _con.user.business_name = _companyNameController.text;
+        _con.user.name = _nameController.text;
+        _con.user.email = _emailController.text;
+        _con.user.phone_no = _phoneController.text;
+        if(_passController.text!=null && _passController.text.isNotEmpty) {
+          _con.user.password = _passController.text;
+          _con.user.password_confirmation = _passController.text;
+        }
+        _con.user.push_notification_token = currentUser.value.push_notification_token;
+        _con.user.user_type = currentUser.value.user_type;
+//       AppUtils.onLoading(context,message: S.of(context).updating);
+        _con.update(onUpdateUser: (User user) {
+//          Navigator.of(context).pop();
+        });
+      }
     });
   }
 

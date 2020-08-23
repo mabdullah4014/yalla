@@ -1,6 +1,7 @@
 import 'package:arbi/elements/listing/ServiceWidget.dart';
 import 'package:arbi/model/cat_response.dart';
 import 'package:arbi/route_generator.dart';
+import 'package:arbi/ui/service_buy.dart';
 import 'package:arbi/ui/service_detail.dart';
 import 'package:flutter/material.dart';
 
@@ -36,15 +37,20 @@ class _ServicesCarouselWidgetState extends State<ServicesCarouselWidget> {
                   return InkWell(
                       onTap: () {
                         ServiceValue serviceValues = widget.servicesList[index];
-                        if (serviceValues.fixed_price != null &&
-                            serviceValues.fixed_price != 0.0) {
-                        } else if (widget.servicesList[index].values != null &&
-                            widget.servicesList[index].values.isNotEmpty) {
+                        if (serviceValues.price != null &&
+                            serviceValues.price != 0.0) {
+                          Navigator.of(context).pushNamed(RouteGenerator.BUY,
+                              arguments: ServiceBuyPageParam(
+                                  detailPageData: DetailPageData(),
+                                  services: serviceValues,
+                                  price: serviceValues.price));
+                        } else if (serviceValues.values != null &&
+                            serviceValues.values.isNotEmpty) {
                           DetailPageData detailPageData = DetailPageData();
 
                           Navigator.of(context).pushNamed(RouteGenerator.DETAIL,
                               arguments: ServiceDetailPageParam(
-                                  services: widget.servicesList[index],
+                                  services: serviceValues,
                                   detailPageData: detailPageData));
                         }
                       },

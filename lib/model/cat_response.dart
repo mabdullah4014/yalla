@@ -135,7 +135,7 @@ class ServiceValue {
   String description;
   String view_type;
   List<ServiceValue> values;
-  double fixed_price;
+  double price = 20;
   List<ServiceTarget> targets;
 
   ServiceValue(
@@ -153,7 +153,7 @@ class ServiceValue {
     this.description = description;
     this.view_type = viewType;
     this.values = values;
-    this.fixed_price = fixedPrice;
+    this.price = fixedPrice;
     this.targets = tar;
   }
 
@@ -172,8 +172,8 @@ class ServiceValue {
         this.values.add(ServiceValue.fromJson(v));
       });
     }
-    if (json['fixed_price'] != null)
-      this.fixed_price = json["fixed_price"].toDouble();
+    if (json['price'] != null)
+      this.price = double.parse(json["price"]);
     if (json["targets"] != null) {
       this.targets = [];
       json["targets"].forEach((v) {
@@ -190,7 +190,7 @@ class ServiceValue {
     map["description"] = description;
     map["view_type"] = view_type;
     map["values"] = values;
-    map["fixed_price"] = fixed_price;
+    map["price"] = price;
     if (targets != null) {
       map["targets"] = targets.map((v) => v.toJson()).toList();
     }

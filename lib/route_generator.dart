@@ -37,9 +37,11 @@ class RouteGenerator {
       case LOGIN:
         return MaterialPageRoute(builder: (_) => LoginPage());
       case SIGNUP:
-        return MaterialPageRoute(builder: (_) => SignUpPage(isCustomer: args));
+        return MaterialPageRoute(
+            builder: (_) => SignUpPage(signUpPageParam: args));
       case SIGNUP_AS:
-        return MaterialPageRoute(builder: (_) => SelectSignUpPage());
+        return MaterialPageRoute(
+            builder: (_) => SelectSignUpPage(signUpPageParam: args));
       case DETAIL:
         return MaterialPageRoute(
             builder: (_) =>

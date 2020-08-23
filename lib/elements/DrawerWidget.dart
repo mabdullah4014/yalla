@@ -1,6 +1,6 @@
 import 'package:arbi/generated/l10n.dart';
 import 'package:arbi/route_generator.dart';
-import 'package:arbi/utils/colors.dart';
+import 'package:arbi/utils/app_colors.dart';
 import 'package:arbi/utils/route_argument.dart';
 import 'package:arbi/utils/utils.dart';
 import 'package:flutter/material.dart';

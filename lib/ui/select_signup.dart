@@ -3,7 +3,8 @@ import 'dart:ui';
 import 'package:arbi/controller/user_controller.dart';
 import 'package:arbi/elements/circleWidgetOnTop.dart';
 import 'package:arbi/generated/l10n.dart';
-import 'package:arbi/utils/colors.dart';
+import 'package:arbi/ui/signup.dart';
+import 'package:arbi/utils/app_colors.dart';
 import 'package:arbi/utils/utils.dart';
 import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,10 @@ import 'package:mvc_pattern/mvc_pattern.dart';
 import '../route_generator.dart';
 
 class SelectSignUpPage extends StatefulWidget {
+  SelectSignUpPage({Key key, this.signUpPageParam}) : super(key: key);
+
+  final SignUpPageParam signUpPageParam;
+
   @override
   _SelectSignUpPageState createState() => _SelectSignUpPageState();
 }
@@ -128,7 +133,14 @@ class _SelectSignUpPageState extends StateMVC<SelectSignUpPage> {
                   SizedBox(height: _defaultPaddingMargin * 2),
                   AppUtils.submitButton(context, buttonText, () {
                     Navigator.of(context).pushNamed(RouteGenerator.SIGNUP,
-                        arguments: isCustomer);
+                        arguments: SignUpPageParam(
+                            isCustomer: isCustomer,
+                            name: widget.signUpPageParam != null
+                                ? widget.signUpPageParam.name
+                                : null,
+                            email: widget.signUpPageParam != null
+                                ? widget.signUpPageParam.email
+                                : null));
                   }),
                 ])),
         childBgColor: Colors.white,

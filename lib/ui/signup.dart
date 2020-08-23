@@ -1,26 +1,31 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:arbi/controller/user_controller.dart';
 import 'package:arbi/elements/circleWidgetOnTop.dart';
 import 'package:arbi/generated/l10n.dart';
+import 'package:arbi/model/facebook_user.dart';
 import 'package:arbi/model/user.dart';
-import 'package:arbi/utils/colors.dart';
+import 'package:arbi/model/user_exist_request.dart';
+import 'package:arbi/utils/app_colors.dart';
 import 'package:arbi/utils/constants.dart';
 import 'package:arbi/utils/utils.dart';
 import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
+import 'package:http/http.dart' as http;
 
 import '../route_generator.dart';
 
 class SignUpPage extends StatefulWidget {
-  SignUpPage({Key key, this.isCustomer}) : super(key: key);
+  SignUpPage({Key key, this.signUpPageParam}) : super(key: key);
 
-  final bool isCustomer;
+  final SignUpPageParam signUpPageParam;
 
   @override
-  _SignUpPageState createState() => _SignUpPageState(isCustomer);
+  _SignUpPageState createState() => _SignUpPageState(signUpPageParam);
 }
 
 class _SignUpPageState extends StateMVC<SignUpPage> {
@@ -29,6 +34,7 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
   String codeDropdownValue = '50';
 
   final double _defaultPaddingMargin = 5;
+  bool isCustomer;
 
   final TextEditingController _companyNameController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
@@ -36,9 +42,17 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
 
-  _SignUpPageState(bool isCustomer) {
+  _SignUpPageState(SignUpPageParam signUpPageParam) {
     _con = UserController();
-    _con.user.user_type = isCustomer ? User.CUSTOMER : User.SERVICE_PROVIDER;
+    isCustomer = signUpPageParam.isCustomer;
+    _con.user.user_type =
+        signUpPageParam.isCustomer ? User.CUSTOMER : User.SERVICE_PROVIDER;
+    if (signUpPageParam.name != null) {
+      _nameController.text = signUpPageParam.name;
+    }
+    if (signUpPageParam.email != null) {
+      _emailController.text = signUpPageParam.email;
+    }
   }
 
   @override
@@ -68,13 +82,14 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
                                     SizedBox(height: _defaultPaddingMargin),
                                     AppUtils.submitButton(
                                         context,
-                                        widget.isCustomer
+                                        isCustomer
                                             ? S.of(context).signup_customer
                                             : S.of(context).signup_as_yalla,
                                         () {
-                                      if (_isValidForm())
+                                      if (_isValidForm()) {
                                         FocusScope.of(context).unfocus();
-                                      _doRegister(scaffoldContext, context);
+                                        _doRegister(scaffoldContext, context);
+                                      }
                                     }),
                                     _facebookButton(),
                                   ])),
@@ -107,37 +122,37 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
   }
 
   Widget _facebookButton() {
-    return Container(
-      height: 50,
-      margin: EdgeInsets.symmetric(vertical: _defaultPaddingMargin),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            flex: 1,
-            child: Container(
-              decoration: BoxDecoration(color: Color(0xff1959a9)),
-              alignment: Alignment.center,
-              child: Icon(
-                FontAwesomeIcons.facebookF,
-                color: Colors.white,
+    return InkWell(
+        onTap: () {
+          _fbLogin();
+        },
+        child: Container(
+            height: 50,
+            margin: EdgeInsets.symmetric(vertical: _defaultPaddingMargin),
+            child: Row(children: <Widget>[
+              Expanded(
+                flex: 1,
+                child: Container(
+                  decoration: BoxDecoration(color: Color(0xff1959a9)),
+                  alignment: Alignment.center,
+                  child: Icon(
+                    FontAwesomeIcons.facebookF,
+                    color: Colors.white,
+                  ),
+                ),
               ),
-            ),
-          ),
-          Expanded(
-            flex: 5,
-            child: Container(
-              decoration: BoxDecoration(color: Color(0xff1959a9)),
-              alignment: Alignment.center,
-              child: Text(S.of(context).sign_up_fb,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400)),
-            ),
-          ),
-        ],
-      ),
-    );
+              Expanded(
+                  flex: 5,
+                  child: Container(
+                    decoration: BoxDecoration(color: Color(0xff1959a9)),
+                    alignment: Alignment.center,
+                    child: Text(S.of(context).sign_up_fb,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400)),
+                  ))
+            ])));
   }
 
   Widget _createAccountLabel() {
@@ -199,7 +214,7 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
   Widget _description() {
     return Column(children: <Widget>[
       Text(
-          widget.isCustomer
+          isCustomer
               ? S.of(context).signup_customer
               : S.of(context).signup_business_owner,
           textAlign: TextAlign.center,
@@ -209,7 +224,7 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
               fontSize: 20)),
       SizedBox(height: 5),
       Text(
-          widget.isCustomer
+          isCustomer
               ? S.of(context).signup_customer_desc
               : S.of(context).signup_business_desc,
           textAlign: TextAlign.center,
@@ -253,7 +268,7 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
 
   Widget _companyNameWidget() {
     return Visibility(
-      visible: !widget.isCustomer,
+      visible: !isCustomer,
       child: Container(
           padding: EdgeInsets.only(left: 5),
           decoration: BoxDecoration(
@@ -262,7 +277,7 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
                       BorderSide(color: AppColors.darkGreyColor, width: 1.0))),
           child: TextFormField(
               style: TextStyle(color: Theme.of(context).primaryColor),
-              controller: !widget.isCustomer ? _companyNameController : null,
+              controller: !isCustomer ? _companyNameController : null,
               onSaved: (input) => _con.user.business_name = input,
               textAlignVertical: TextAlignVertical.center,
               keyboardType: TextInputType.name,
@@ -413,7 +428,7 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
   }
 
   bool _isValidForm() {
-    if (!widget.isCustomer && _companyNameController.text.isEmpty) {
+    if (!isCustomer && _companyNameController.text.isEmpty) {
       AppUtils.showMessage(
           context, S.of(context).error, S.of(context).should_be_a_valid_name);
       return false;
@@ -447,7 +462,7 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
       if (value != null && value.auth_token != null) {
         Scaffold.of(scaffoldContext).showSnackBar(
             SnackBar(content: Text(S.of(buildContext).welcome + value.name)));
-        if (widget.isCustomer)
+        if (isCustomer)
           Navigator.of(buildContext).pushReplacementNamed(RouteGenerator.MAIN);
         else
           Navigator.of(buildContext)
@@ -464,4 +479,65 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
   void _showSnackBar(BuildContext scaffoldContext, String message) {
     Scaffold.of(scaffoldContext).showSnackBar(SnackBar(content: Text(message)));
   }
+
+  FacebookLogin facebookSignIn = FacebookLogin();
+
+  Future<Null> _fbLogin() async {
+    facebookSignIn.loginBehavior = FacebookLoginBehavior.nativeWithFallback;
+    facebookSignIn.logIn(['email']).then((result) {
+      switch (result.status) {
+        case FacebookLoginStatus.loggedIn:
+          final FacebookAccessToken accessToken = result.accessToken;
+          http
+              .get('https://graph.facebook.com/v2.12/me?'
+                  'fields=name,first_name,picture,last_name,'
+                  'email&access_token=${accessToken.token}')
+              .then((graphResponse) {
+            print(graphResponse.body);
+            FacebookUser facebookUser =
+                FacebookUser.fromJson(json.decode(graphResponse.body));
+            _con.user.email = facebookUser.email;
+            AppUtils.onLoading(context);
+            _con.exists(UserExistRequest(facebookUser.email),
+                onUserExits: (userExists) {
+              Navigator.of(context).pop();
+              if (userExists) {
+                AppUtils.showMessage(context, S.of(context).error,
+                    S.of(context).user_already_exists);
+              } else {
+                setState(() {
+                  _emailController.text = facebookUser.email;
+                  _nameController.text = facebookUser.name;
+                });
+              }
+            });
+          });
+          break;
+        case FacebookLoginStatus.cancelledByUser:
+          AppUtils.showMessage(
+              context, S.of(context).login_fb, 'Login cancelled by the user.');
+          break;
+        case FacebookLoginStatus.error:
+          AppUtils.showMessage(
+              context,
+              S.of(context).login_fb,
+              'Something went wrong with the login process.\n'
+              'Here\'s the error Facebook gave us: ${result.errorMessage}');
+          break;
+      }
+    });
+  }
+
+  Future<Null> _fbLogOut() async {
+    await facebookSignIn.logOut();
+    AppUtils.showMessage(context, S.of(context).login_fb, 'Logged out.');
+  }
+}
+
+class SignUpPageParam {
+  SignUpPageParam({this.isCustomer, this.name, this.email});
+
+  final bool isCustomer;
+  final String name;
+  final String email;
 }

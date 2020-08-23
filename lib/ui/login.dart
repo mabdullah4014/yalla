@@ -1,18 +1,21 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:arbi/controller/user_controller.dart';
 import 'package:arbi/generated/l10n.dart';
+import 'package:arbi/model/facebook_user.dart';
 import 'package:arbi/model/user.dart';
-import 'package:arbi/utils/colors.dart';
+import 'package:arbi/model/user_exist_request.dart';
+import 'package:arbi/ui/signup.dart';
+import 'package:arbi/utils/app_colors.dart';
 import 'package:arbi/utils/utils.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/http.dart' as http;
 import 'package:mvc_pattern/mvc_pattern.dart';
 
 import '../route_generator.dart';
-import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title}) : super(key: key);
@@ -68,29 +71,19 @@ class _LoginPageState extends StateMVC<LoginPage> {
                                       Navigator.pop(buildContext);
                                       if (value != null &&
                                           value.auth_token != null) {
-                                        Scaffold.of(scaffoldContext)
-                                            .showSnackBar(SnackBar(
-                                                content: Text(
-                                                    S.of(buildContext).welcome +
-                                                        value.name)));
-                                        if (value.user_type == User.CUSTOMER)
-                                          Navigator.of(buildContext)
-                                              .pushReplacementNamed(
-                                                  RouteGenerator.MAIN);
-                                        else
-                                          Navigator.of(buildContext)
-                                              .pushReplacementNamed(
-                                                  RouteGenerator
-                                                      .PROFILE_PROVIDER);
+                                        _onLoginSuccess(buildContext, value);
                                       } else if (value.status ==
                                           User.STATUS_INVALID) {
-                                        _showSnackBar(
-                                            scaffoldContext,
+                                        AppUtils.showMessage(
+                                            buildContext,
+                                            S.of(buildContext).error,
                                             S
                                                 .of(buildContext)
                                                 .wrong_email_or_password);
                                       } else {
-                                        _showSnackBar(scaffoldContext,
+                                        AppUtils.showMessage(
+                                            buildContext,
+                                            S.of(buildContext).error,
                                             S.of(buildContext).unavailable);
                                       }
                                     });
@@ -269,9 +262,7 @@ class _LoginPageState extends StateMVC<LoginPage> {
     );
   }
 
-  static final FacebookLogin facebookSignIn = FacebookLogin();
-
-  String _message = 'Log in/out by pressing the buttons below.';
+  FacebookLogin facebookSignIn = FacebookLogin();
 
   Future<Null> _fbLogin() async {
     facebookSignIn.loginBehavior = FacebookLoginBehavior.nativeWithFallback;
@@ -280,19 +271,27 @@ class _LoginPageState extends StateMVC<LoginPage> {
         case FacebookLoginStatus.loggedIn:
           final FacebookAccessToken accessToken = result.accessToken;
           http
-              .get(
-                  'https://graph.facebook.com/v2.12/me?fields=name,first_name,picture,last_name,email&access_token=${accessToken.token}')
+              .get('https://graph.facebook.com/v2.12/me?'
+                  'fields=name,first_name,picture,last_name,'
+                  'email&access_token=${accessToken.token}')
               .then((graphResponse) {
             print(graphResponse.body);
-            AppUtils.showMessage(context, S.of(context).login_fb, '''
-         Profile: ${graphResponse.body}
-         Logged in!
-         Token: ${accessToken.token}
-         User id: ${accessToken.userId}
-         Expires: ${accessToken.expires}
-         Permissions: ${accessToken.permissions}
-         Declined permissions: ${accessToken.declinedPermissions}
-         ''');
+            FacebookUser facebookUser =
+                FacebookUser.fromJson(json.decode(graphResponse.body));
+            _con.user.email = facebookUser.email;
+            AppUtils.onLoading(context);
+            _con.exists(UserExistRequest(facebookUser.email),
+                onUserExits: (userExists) {
+              Navigator.of(context).pop();
+              if (userExists) {
+                AppUtils.showMessage(
+                    context, 'title', 'User exists : ${facebookUser.toJson()}');
+              } else {
+                Navigator.of(context).pushNamed(RouteGenerator.SIGNUP_AS,
+                    arguments: SignUpPageParam(
+                        name: facebookUser.name, email: facebookUser.email));
+              }
+            });
           });
           break;
         case FacebookLoginStatus.cancelledByUser:
@@ -331,5 +330,13 @@ class _LoginPageState extends StateMVC<LoginPage> {
 
   void _showSnackBar(BuildContext scaffoldContext, String message) {
     Scaffold.of(scaffoldContext).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  void _onLoginSuccess(BuildContext buildContext, User user) {
+    if (user.user_type == User.CUSTOMER)
+      Navigator.of(buildContext).pushReplacementNamed(RouteGenerator.MAIN);
+    else
+      Navigator.of(buildContext)
+          .pushReplacementNamed(RouteGenerator.PROFILE_PROVIDER);
   }
 }

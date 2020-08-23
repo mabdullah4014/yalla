@@ -1,15 +1,17 @@
+import 'package:arbi/controller/user_controller.dart';
 import 'package:arbi/utils/pref_util.dart';
-import 'package:arbi/utils/utils.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
-import 'utils/app_config.dart' as config;
 
-import 'settings_controller.dart';
+import 'firebase/notification_handler.dart';
 import 'generated/l10n.dart';
 import 'route_generator.dart';
+import 'settings_controller.dart';
+import 'utils/app_config.dart' as config;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,10 +24,34 @@ class MyApp extends AppMVC {
 //  /// Supply 'the Controller' for this application.
   MyApp({Key key}) : super(con: SettingsController(), key: key);
 
+  FirebaseMessaging _firebaseMessaging;
+
   @override
   void initApp() {
     super.initApp();
     PreferenceUtils.init();
+    _firebaseMessaging = FirebaseMessaging();
+    _firebaseMessaging.requestNotificationPermissions();
+    _firebaseMessaging.getToken().then((String _deviceToken) {
+      print('Yalla token: $_deviceToken');
+      currentUser.value.push_notification_token = _deviceToken;
+    });
+
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+//        _showItemDialog(message);
+      },
+      onBackgroundMessage: myBackgroundMessageHandler,
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+//        _navigateToItemDetail(message);
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+//        _navigateToItemDetail(message);
+      },
+    );
   }
 
   @override

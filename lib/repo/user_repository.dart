@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:arbi/controller/user_controller.dart';
 import 'package:arbi/model/user.dart';
+import 'package:arbi/model/user_exist_request.dart';
+import 'package:arbi/model/user_exist_response.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart' as http;
 
@@ -53,10 +55,36 @@ Future<User> register(User user) async {
   return currentUser;
 }
 
+Future<UserExistResponse> exists(UserExistRequest userExistRequest) async {
+  final String url =
+      '${GlobalConfiguration().getString('api_base_url')}users/exists';
+  final client = new http.Client();
+  final response = await client.post(
+    url,
+    headers: {HttpHeaders.contentTypeHeader: 'application/json'},
+    body: json.encode(userExistRequest.toJson()),
+  );
+  UserExistResponse userExistResponse;
+  if (response.statusCode == 200) {
+    Map<String, dynamic> jsonResponse = json.decode(response.body);
+    if (jsonResponse.containsKey('success') && jsonResponse['success'] == 200) {
+      userExistResponse =
+          UserExistResponse.fromJson(json.decode(response.body));
+    } else {
+      userExistResponse =
+          UserExistResponse.status(UserExistResponse.STATUS_INVALID);
+    }
+  } else {
+    userExistResponse =
+        UserExistResponse.status(UserExistResponse.STATUS_SOMETHING_WENT_WRONG);
+  }
+  return userExistResponse;
+}
+
 Future<User> update(User updatedUser) async {
   print('Update Request : ${updatedUser.toString()}');
   final String url =
-      '${GlobalConfiguration().getString('api_base_url')}users/updateUser/${updatedUser.id}';
+      '${GlobalConfiguration().getString('api_base_url')}users/updateUser/${currentUser.value.id}';
   final client = new http.Client();
 
   Map<String, String> headers = Map();

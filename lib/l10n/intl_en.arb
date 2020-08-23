@@ -58,5 +58,9 @@
   "place_order": "Place Order",
   "price_zero": "Enter valid values to calculate price",
   "loading": "Loading",
-  "calculating_price": "Calculating Price..."
+  "calculating_price": "Calculating Price...",
+  "notes": "Notes",
+  "service": "Service",
+  "price": "Price",
+  "user_already_exists": "User already exists"
 }

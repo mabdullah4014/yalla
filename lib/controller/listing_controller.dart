@@ -1,16 +1,19 @@
 import 'package:arbi/model/cat_response.dart';
+import 'package:arbi/model/provider_categories_response.dart';
 import 'package:arbi/repo/category_repository.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 
 class ListingController extends ControllerMVC {
-  List<ServiceValue> services = <ServiceValue>[];
-  List<Banner> banners = <Banner>[];
+  List<ServiceValue> services = [];
+  List<Banner> banners = [];
   Future<int> serviceListLoading = Future.value(0);
   Future<int> bannerListLoading = Future.value(0);
 
   ListingController() {
     listenForCategories();
   }
+
+  ListingController.loadProvider();
 
   void listenForCategories() async {
     await getCategories().then((catResponse) {
@@ -41,6 +44,18 @@ class ListingController extends ControllerMVC {
           serviceListLoading = Future.value(2);
           bannerListLoading = Future.value(2);
         });
+      }
+    });
+  }
+
+  Future<void> getProviderCategories({Function(List<dynamic>) catList}) async {
+    await getProviderCat().then((providerCatResponse) {
+      if (providerCatResponse != null &&
+          providerCatResponse.status == 200 &&
+          providerCatResponse.data != null &&
+          providerCatResponse.data.isNotEmpty) {
+        print('Got categories');
+        catList(providerCatResponse.getDataMap());
       }
     });
   }

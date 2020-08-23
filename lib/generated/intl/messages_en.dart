@@ -56,12 +56,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_banners" : MessageLookupByLibrary.simpleMessage("No banners available"),
     "no_categories" : MessageLookupByLibrary.simpleMessage("No categories available"),
     "no_jobs" : MessageLookupByLibrary.simpleMessage("No Jobs"),
+    "notes" : MessageLookupByLibrary.simpleMessage("Notes"),
     "ok" : MessageLookupByLibrary.simpleMessage("OK"),
     "password" : MessageLookupByLibrary.simpleMessage("Password"),
     "place_order" : MessageLookupByLibrary.simpleMessage("Place Order"),
     "please_select_more" : MessageLookupByLibrary.simpleMessage("Please choose one or more"),
+    "price" : MessageLookupByLibrary.simpleMessage("Price"),
     "price_zero" : MessageLookupByLibrary.simpleMessage("Enter valid values to calculate price"),
     "profile" : MessageLookupByLibrary.simpleMessage("Profile"),
+    "service" : MessageLookupByLibrary.simpleMessage("Service"),
     "should_be_a_valid_email" : MessageLookupByLibrary.simpleMessage("Email should be valid"),
     "should_be_a_valid_name" : MessageLookupByLibrary.simpleMessage("Enter full name"),
     "should_be_a_valid_number" : MessageLookupByLibrary.simpleMessage("Enter valid phone number"),
@@ -79,6 +82,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "terms_and_condition" : MessageLookupByLibrary.simpleMessage("Terms & Conditions"),
     "unavailable" : MessageLookupByLibrary.simpleMessage("Service unavailable at the moment. Please try again later"),
     "update" : MessageLookupByLibrary.simpleMessage("Update"),
+    "user_already_exists" : MessageLookupByLibrary.simpleMessage("User already exists"),
     "welcome" : MessageLookupByLibrary.simpleMessage("Welcome "),
     "wrong_email_or_password" : MessageLookupByLibrary.simpleMessage("Wrong email or password")
   };

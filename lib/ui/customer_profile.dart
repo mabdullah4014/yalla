@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:arbi/controller/user_controller.dart';
 import 'package:arbi/generated/l10n.dart';
-import 'package:arbi/utils/colors.dart';
+import 'package:arbi/utils/app_colors.dart';
 import 'package:arbi/utils/utils.dart';
 import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';

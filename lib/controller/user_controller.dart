@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:arbi/model/user.dart';
+import 'package:arbi/model/user_exist_request.dart';
 import 'package:arbi/utils/pref_util.dart';
 import 'package:flutter/material.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
@@ -17,8 +18,6 @@ class UserController extends ControllerMVC {
   GlobalKey<FormState> loginFormKey;
   GlobalKey<ScaffoldState> scaffoldKey;
 
-//  FirebaseMessaging _firebaseMessaging;
-
   UserController() {
     loginFormKey = new GlobalKey<FormState>();
     this.scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -29,10 +28,6 @@ class UserController extends ControllerMVC {
       else
         user.device = 'android';
     });
-//    _firebaseMessaging = FirebaseMessaging();
-//    _firebaseMessaging.getToken().then((String _deviceToken) {
-//      user.deviceToken = _deviceToken;
-//    });
   }
 
   void login({Function(User) onUserLogin}) async {
@@ -50,36 +45,23 @@ class UserController extends ControllerMVC {
     });
   }
 
-  void update({Function(User) onUpdateUser}) async {
-    loginFormKey.currentState.save();
-    repository.update(user).then((value) {
-      onUpdateUser(value);
+  void exists(UserExistRequest userExistRequest,
+      {Function(bool) onUserExits}) async {
+    repository.exists(userExistRequest).then((value) {
+      if (value != null) {
+        onUserExits(value.data);
+      } else
+        onUserExits(false);
     });
   }
 
-/*void resetPassword() {
-    if (loginFormKey.currentState.validate()) {
-      loginFormKey.currentState.save();
-      repository.resetPassword(user).then((value) {
-        if (value != null && value == true) {
-          scaffoldKey.currentState.showSnackBar(SnackBar(
-            content: Text(S.current.your_reset_link_has_been_sent_to_your_email),
-            action: SnackBarAction(
-              label: S.current.login,
-              onPressed: () {
-                Navigator.of(scaffoldKey.currentContext).pushReplacementNamed('/Login');
-              },
-            ),
-            duration: Duration(seconds: 10),
-          ));
-        } else {
-          scaffoldKey.currentState.showSnackBar(SnackBar(
-            content: Text(S.current.error_verify_email_settings),
-          ));
-        }
-      });
-    }
-  }*/
+  void update({Function(User) onUpdateUser}) async {
+    loginFormKey.currentState.save();
+    repository.update(user).then((value) {
+      if (value.status == 200) setCurrentUser(value);
+      onUpdateUser(value);
+    });
+  }
 
   void setCurrentUser(User userData) {
     if (userData != null) {

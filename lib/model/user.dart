@@ -47,22 +47,27 @@ class User {
 
   Map<String, dynamic> toJson() {
     var map = Map<String, dynamic>();
-    map["email"] = email;
-    map["password"] = password;
-    map["password_confirmation"] = password_confirmation;
-    map["push_notification_token"] = push_notification_token;
-    map["app_version"] = app_version;
-    map["device"] = device;
-    map["name"] = name;
-    map["id"] = id;
-    map["company_name"] = business_name;
-    map["auth_token"] = auth_token;
-    map["phone_no"] = phone_no;
-    map["address"] = address;
-    map["bio"] = bio;
-    map["user_type"] = user_type;
-    map["latitude"] = latitude;
-    map["longitude"] = longitude;
+    if (email != null && email.isNotEmpty) map["email"] = email;
+    if (password != null && password.isNotEmpty) map["password"] = password;
+    if (password_confirmation != null && password_confirmation.isNotEmpty)
+      map["password_confirmation"] = password_confirmation;
+    if (push_notification_token != null && push_notification_token.isNotEmpty)
+      map["push_notification_token"] = push_notification_token;
+    if (app_version != null && app_version.isNotEmpty)
+      map["app_version"] = app_version;
+    if (device != null && device.isNotEmpty) map["device"] = device;
+    if (name != null && name.isNotEmpty) map["name"] = name;
+    if (id != null && id.isNotEmpty) map["id"] = id;
+    if (business_name != null && business_name.isNotEmpty)
+      map["company_name"] = business_name;
+    if (auth_token != null && auth_token.isNotEmpty)
+      map["auth_token"] = auth_token;
+    if (phone_no != null && phone_no.isNotEmpty) map["phone_no"] = phone_no;
+    if (address != null && address.isNotEmpty) map["address"] = address;
+    if (bio != null && bio.isNotEmpty) map["bio"] = bio;
+    if (user_type != null && user_type.isNotEmpty) map["user_type"] = user_type;
+    if (latitude != null && latitude.isNotEmpty) map["latitude"] = latitude;
+    if (longitude != null && longitude.isNotEmpty) map["longitude"] = longitude;
     return map;
   }
 
