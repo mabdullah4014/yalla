@@ -34,8 +34,7 @@ class CatResponse {
     return map;
   }
 
-  static const int STATUS_INVALID = 401;
-  static const int STATUS_SOMETHING_WENT_WRONG = 500;
+
 }
 
 /// values : [{"id":23,"name":"Empty House 35000","image":"","description":"","view_type":"grid","values":null,"fixed_price":"","tar":[{"type":"input","default_value":"","is_enabled":true,"label":"My label","tar_value":"label1"},{"type":"checkbox","default_value":"","is_enabled":true,"label":"This is my checkbox","tar_value":"checkbox_1"},{"type":"location","default_value":"","is_enabled":true,"label":"Start Location","tar_value":"start_location"},{"type":"location","default_value":"","is_enabled":true,"label":"End Location","tar_value":"end_location"}]}]
@@ -135,7 +134,7 @@ class ServiceValue {
   String description;
   String view_type;
   List<ServiceValue> values;
-  double price = 20;
+  double price;
   List<ServiceTarget> targets;
 
   ServiceValue(

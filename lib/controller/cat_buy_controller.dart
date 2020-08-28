@@ -5,23 +5,24 @@ import 'package:mvc_pattern/mvc_pattern.dart';
 
 class CheckServiceController extends ControllerMVC {
   void checkPrice(CheckServiceRequest checkServiceRequest,
-      {Function(double) onPriceCheck}) async {
+      {Function(double, CheckServiceRequest) onPriceCheck}) async {
     await getServicePrice(checkServiceRequest).then((checkResponse) {
       if (checkResponse != null && checkResponse.status == 200) {
-        onPriceCheck(checkResponse.price);
+        checkServiceRequest.target = checkResponse.target;
+        onPriceCheck(checkResponse.price, checkServiceRequest);
       } else {
-        onPriceCheck(0);
+        onPriceCheck(0, null);
       }
     });
   }
 
   void placeOrder(PlaceOrderRequest placeOrderRequest,
-      {Function(double) onPriceCheck}) async {
+      {Function(bool) onOrderPlaced}) async {
     await servicePlaceOrder(placeOrderRequest).then((orderResponse) {
       if (orderResponse != null && orderResponse.status == 200) {
-        onPriceCheck(orderResponse.price);
+        onOrderPlaced(true);
       } else {
-        onPriceCheck(0);
+        onOrderPlaced(false);
       }
     });
   }

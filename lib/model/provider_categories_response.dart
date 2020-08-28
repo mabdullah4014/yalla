@@ -8,8 +8,7 @@ class ProviderCategoriesResponse {
   String message;
   int status = 200;
 
-  static const int STATUS_INVALID = 401;
-  static const int STATUS_SOMETHING_WENT_WRONG = 500;
+
 
   ProviderCategoriesResponse.status(int status) {
     this.status = status;
@@ -36,13 +35,6 @@ class ProviderCategoriesResponse {
     return map;
   }
 
-  List<dynamic> getDataMap() {
-    var list = [];
-    for (ProviderCategory providerCategory in data) {
-      list.add(providerCategory.toJson());
-    }
-    return list;
-  }
 }
 
 /// id : 2
@@ -51,6 +43,9 @@ class ProviderCategoriesResponse {
 class ProviderCategory {
   int id;
   String name;
+  bool isSelected = false;
+
+  ProviderCategory(this.id);
 
   ProviderCategory.fromJson(dynamic json) {
     id = json["id"];
@@ -59,8 +54,9 @@ class ProviderCategory {
 
   Map<String, dynamic> toJson() {
     var map = <String, dynamic>{};
-    map["id"] = id.toString();
+    map["id"] = id;
     map["name"] = name;
     return map;
   }
+
 }

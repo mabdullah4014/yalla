@@ -8,7 +8,7 @@ import 'package:arbi/route_generator.dart';
 import 'package:arbi/ui/map_page.dart';
 import 'package:arbi/ui/service_buy.dart';
 import 'package:arbi/ui/service_detail.dart';
-import 'package:arbi/utils/utils.dart';
+import 'package:arbi/utils/app_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -73,10 +73,10 @@ class _ServiceTargetPageState extends StateMVC<ServiceTargetPage> {
       if (target.type == 'Input') {
         widgetList.add(inputField(target));
         widgetList.add(SizedBox(height: 10));
-      } else if (target.type == 'location') {
+      } else if (target.type == 'Location') {
         widgetList.add(locationField(target));
         widgetList.add(SizedBox(height: 10));
-      } else if (target.type == 'checkbox') {
+      } else if (target.type == 'Checkbox') {
         widgetList.add(checkboxField(target));
         widgetList.add(SizedBox(height: 10));
       }
@@ -88,6 +88,8 @@ class _ServiceTargetPageState extends StateMVC<ServiceTargetPage> {
   Widget inputField(ServiceTarget target) {
     TextEditingController _controller = new TextEditingController();
     _controller.text = target.default_value;
+    _controller.selection = TextSelection.fromPosition(
+        TextPosition(offset: _controller.text.length));
     targetValuesMap[target.target_value] = target.default_value;
     return TextField(
       enabled: target.is_enabled == 1 ? true : false,
@@ -135,15 +137,28 @@ class _ServiceTargetPageState extends StateMVC<ServiceTargetPage> {
                     context: context,
                     enableDrag: false,
                     builder: (context, scrollController) {
-                      return MapPage(onLatLngFinalized: (LatLng latLng) {
-                        setState(() {
-                          String coordinates =
-                              '${latLng.latitude},${latLng.longitude}';
-                          targetValuesMap.putIfAbsent(
-                              target.target_value, () => coordinates);
-                          targetValuesMap[target.target_value] = coordinates;
-                        });
-                      });
+                      String latitude, longitude;
+                      String currentLocation =
+                          targetValuesMap[target.target_value];
+                      if (currentLocation != null &&
+                          currentLocation.isNotEmpty &&
+                          !currentLocation.contains('location')) {
+                        latitude = currentLocation.split(',')[0];
+                        longitude = currentLocation.split(',')[1];
+                      }
+                      return MapPage(
+                          latitude: latitude,
+                          longitude: longitude,
+                          onLatLngFinalized: (LatLng latLng) {
+                            setState(() {
+                              String coordinates =
+                                  '${latLng.latitude},${latLng.longitude}';
+                              targetValuesMap.putIfAbsent(
+                                  target.target_value, () => coordinates);
+                              targetValuesMap[target.target_value] =
+                                  coordinates;
+                            });
+                          });
                     });
               })
         ],
@@ -180,11 +195,12 @@ class _ServiceTargetPageState extends StateMVC<ServiceTargetPage> {
       }
       if (allValuesDone) {
         AppUtils.onLoading(context, message: S.of(context).calculating_price);
+        Map<String,String> copiedTargets = Map.from(targetValuesMap);
         checkServiceController.checkPrice(
             CheckServiceRequest(
                 widget.params.services.id,
                 widget.params.detailPageData.valuesIdList,
-                targetValuesMap), onPriceCheck: (price) {
+                copiedTargets), onPriceCheck: (price, checkRequest) {
           Navigator.of(context).pop();
           if (price == 0) {
             AppUtils.showMessage(
@@ -195,7 +211,7 @@ class _ServiceTargetPageState extends StateMVC<ServiceTargetPage> {
                     detailPageData: widget.params.detailPageData,
                     services: widget.params.services,
                     price: price,
-                    targetValues: targetValuesMap));
+                    targetValues: checkRequest.target));
           }
         });
       }

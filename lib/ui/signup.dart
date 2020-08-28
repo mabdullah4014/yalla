@@ -9,7 +9,7 @@ import 'package:arbi/model/user.dart';
 import 'package:arbi/model/user_exist_request.dart';
 import 'package:arbi/utils/app_colors.dart';
 import 'package:arbi/utils/constants.dart';
-import 'package:arbi/utils/utils.dart';
+import 'package:arbi/utils/app_utils.dart';
 import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
@@ -31,7 +31,7 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends StateMVC<SignUpPage> {
   UserController _con;
   String flagDropdownValue = 'IQ';
-  String codeDropdownValue = '50';
+  String codeDropdownValue = '73';
 
   final double _defaultPaddingMargin = 5;
   bool isCustomer;
@@ -91,7 +91,7 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
                                         _doRegister(scaffoldContext, context);
                                       }
                                     }),
-                                    _facebookButton(),
+//                                    _facebookButton(),
                                   ])),
                           childBgColor: Colors.white,
                           imageProvider: AssetImage(
@@ -237,11 +237,17 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
       Flexible(
         child: _flagDropDown(),
         fit: FlexFit.tight,
+        flex: 1,
+      ),
+      Flexible(
+        child: _countryCodeDropDown(),
+        fit: FlexFit.tight,
+        flex: 1,
       ),
       Flexible(
         child: _phoneNumberField(),
         fit: FlexFit.tight,
-        flex: 4,
+        flex: 3,
       )
     ]);
   }
@@ -320,7 +326,7 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
                 }).toList())));
   }
 
-  /*Widget _countryCodeDropDown() {
+  Widget _countryCodeDropDown() {
     return Container(
         padding: EdgeInsets.only(left: 5),
         decoration: BoxDecoration(
@@ -337,7 +343,7 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
               codeDropdownValue = newValue;
             });
           },
-          items: <String>['50', '55', '52', '53']
+          items: Constants.PHONE_CODES
               .map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
@@ -345,7 +351,7 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
             );
           }).toList(),
         )));
-  }*/
+  }
 
   Widget _form() {
     return Container(
@@ -394,10 +400,10 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
                     BorderSide(color: AppColors.darkGreyColor, width: 1.0))),
         child: TextFormField(
             style: TextStyle(color: Theme.of(context).primaryColor),
-            maxLength: 8,
+            maxLength: Constants.PHONE_LENGTH,
             controller: _phoneController,
             onSaved: (input) =>
-                _con.user.phone_no = '${Constants.defaultPhoneCode}$input',
+                _con.user.phone_no = '${Constants.defaultPhoneCode}$codeDropdownValue$input',
             textAlignVertical: TextAlignVertical.center,
             keyboardType: TextInputType.phone,
             decoration: InputDecoration(
@@ -442,7 +448,7 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
           context, S.of(context).error, S.of(context).should_be_a_valid_email);
       return false;
     } else if (_phoneController.text.isEmpty ||
-        _phoneController.text.length < 8) {
+        _phoneController.text.length < Constants.PHONE_LENGTH) {
       AppUtils.showMessage(
           context, S.of(context).error, S.of(context).should_be_a_valid_number);
       return false;
@@ -466,8 +472,8 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
           Navigator.of(buildContext).pushReplacementNamed(RouteGenerator.MAIN);
         else
           Navigator.of(buildContext)
-              .pushReplacementNamed(RouteGenerator.PROFILE_PROVIDER);
-      } else if (value.status == User.STATUS_INVALID) {
+              .pushReplacementNamed(RouteGenerator.PROVIDER_MAIN);
+      } else if (value.status == Constants.STATUS_INVALID) {
         _showSnackBar(
             scaffoldContext, S.of(buildContext).wrong_email_or_password);
       } else {

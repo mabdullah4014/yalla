@@ -1,6 +1,6 @@
 import 'package:arbi/controller/user_controller.dart';
 import 'package:arbi/generated/l10n.dart';
-import 'package:arbi/utils/utils.dart';
+import 'package:arbi/utils/app_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:multiselect_formfield/multiselect_formfield.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';

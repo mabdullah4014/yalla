@@ -1,3 +1,6 @@
+import 'package:arbi/model/provider_categories_response.dart';
+import 'package:arbi/utils/pref_util.dart';
+
 class User {
   String id;
   String name;
@@ -8,7 +11,7 @@ class User {
   String push_notification_token;
   String phone_no;
   String address;
-  String bio;
+  String business_bio;
   String business_name;
   String app_version;
   String device;
@@ -16,11 +19,14 @@ class User {
   String latitude;
   String longitude;
   int status = 200;
+  List<int> provider_categories;
+  List<ProviderCategory> categories;
+  bool auth = false;
 
-  // used for indicate if client logged in or not
-  bool auth;
-
-  User();
+  User() {
+    this.auth = false;
+    provider_categories = null;
+  }
 
   User.status(int status) {
     this.status = status;
@@ -35,14 +41,26 @@ class User {
     device = jsonMap['device'];
     name = jsonMap['name'];
     id = jsonMap['id'].toString();
-    business_name = jsonMap['company_name'];
+    business_name = jsonMap['business_name'];
     auth_token = jsonMap['auth_token'];
     phone_no = jsonMap['phone_no'];
     address = jsonMap['address'];
-    bio = jsonMap['bio'];
+    business_bio = jsonMap['business_bio'];
     user_type = jsonMap['user_type'];
     latitude = jsonMap['latitude'];
     longitude = jsonMap['longitude'];
+    if (jsonMap["provider_categories"] != null) {
+      provider_categories = [];
+      jsonMap["provider_categories"].forEach((v) {
+        provider_categories.add(v);
+      });
+    }
+    if (jsonMap["categories"] != null) {
+      categories = [];
+      jsonMap["categories"].forEach((v) {
+        categories.add(ProviderCategory.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -59,15 +77,21 @@ class User {
     if (name != null && name.isNotEmpty) map["name"] = name;
     if (id != null && id.isNotEmpty) map["id"] = id;
     if (business_name != null && business_name.isNotEmpty)
-      map["company_name"] = business_name;
+      map["business_name"] = business_name;
     if (auth_token != null && auth_token.isNotEmpty)
       map["auth_token"] = auth_token;
     if (phone_no != null && phone_no.isNotEmpty) map["phone_no"] = phone_no;
     if (address != null && address.isNotEmpty) map["address"] = address;
-    if (bio != null && bio.isNotEmpty) map["bio"] = bio;
+    if (business_bio != null && business_bio.isNotEmpty)
+      map["business_bio"] = business_bio;
     if (user_type != null && user_type.isNotEmpty) map["user_type"] = user_type;
     if (latitude != null && latitude.isNotEmpty) map["latitude"] = latitude;
     if (longitude != null && longitude.isNotEmpty) map["longitude"] = longitude;
+    if (provider_categories != null && provider_categories.isNotEmpty)
+      map["provider_categories"] = provider_categories;
+    if (categories != null && categories.isNotEmpty)
+      map["categories"] = categories;
+    if (auth != null) map["auth"] = auth;
     return map;
   }
 
@@ -95,6 +119,27 @@ class User {
   static const String CUSTOMER = 'customer';
   static const String SERVICE_PROVIDER = 'service_provider';
 
-  static const int STATUS_INVALID = 401;
-  static const int STATUS_SOMETHING_WENT_WRONG = 500;
+  User logout() {
+    id = null;
+    name = null;
+    email = null;
+    password = null;
+    password_confirmation = null;
+    auth_token = null;
+    push_notification_token = null;
+    phone_no = null;
+    address = null;
+    business_bio = null;
+    business_name = null;
+    app_version = null;
+    device = null;
+    user_type = null;
+    latitude = null;
+    longitude = null;
+    provider_categories = null;
+    categories = null;
+    auth = false;
+    PreferenceUtils.setString('current_user', "");
+    return this;
+  }
 }

@@ -2,8 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferenceUtils {
 
-  static final String pref_walk_through = "pref_walk_through";
-  static final String pref_sub_domain = "pref_sub_domain";
+  static final String push_token = "push_token";
 
   static Future<SharedPreferences> get _instance async =>
       _prefsInstance ??= await SharedPreferences.getInstance();

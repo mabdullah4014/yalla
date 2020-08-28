@@ -7,6 +7,7 @@ class CheckServiceResponse {
   double price;
   String message;
   int status = 200;
+  Map<String,String> target;
 
 
   CheckServiceResponse.status(int status) {
@@ -33,6 +34,5 @@ class CheckServiceResponse {
     return map;
   }
 
-  static const int STATUS_INVALID = 401;
-  static const int STATUS_SOMETHING_WENT_WRONG = 500;
+
 }

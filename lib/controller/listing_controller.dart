@@ -48,20 +48,21 @@ class ListingController extends ControllerMVC {
     });
   }
 
-  Future<void> getProviderCategories({Function(List<dynamic>) catList}) async {
+  Future<void> getProviderCategories({Function(List<ProviderCategory>) catList}) async {
     await getProviderCat().then((providerCatResponse) {
       if (providerCatResponse != null &&
           providerCatResponse.status == 200 &&
           providerCatResponse.data != null &&
           providerCatResponse.data.isNotEmpty) {
         print('Got categories');
-        catList(providerCatResponse.getDataMap());
+        catList(providerCatResponse.data);
       }
     });
   }
 
   Future<void> refreshHome() async {
-    services = <ServiceValue>[];
+    services = [];
+    banners = [];
     setState(() {
       serviceListLoading = Future.value(0);
       bannerListLoading = Future.value(0);

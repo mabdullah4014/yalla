@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:arbi/generated/l10n.dart';
 import 'package:arbi/location_controller.dart';
-import 'package:arbi/utils/utils.dart';
+import 'package:arbi/utils/app_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -11,10 +11,15 @@ import 'package:location/location.dart';
 class MapPage extends StatefulWidget {
   final Function(LatLng) onLatLngFinalized;
 
-  MapPage({this.onLatLngFinalized});
+  String latitude, longitude;
+
+  MapPage({String latitude, String longitude, this.onLatLngFinalized}) {
+    this.latitude = latitude;
+    this.longitude = longitude;
+  }
 
   @override
-  State<MapPage> createState() => MapPageState();
+  State<MapPage> createState() => MapPageState(latitude, longitude);
 }
 
 class MapPageState extends State<MapPage> {
@@ -23,18 +28,32 @@ class MapPageState extends State<MapPage> {
   Completer<GoogleMapController> _controller;
   LocationController locationController;
 
-  CameraPosition _iraqLocation = CameraPosition(
-    target: LatLng(33.048134, 43.001309),
-    zoom: 9,
-  );
+  CameraPosition _initialLocation;
 
   Set<Marker> markers = Set();
+
+  String latitude, longitude;
+
+  MapPageState(String latitude, String longitude) {
+    this.latitude = latitude;
+    this.longitude = longitude;
+  }
 
   @override
   void initState() {
     super.initState();
     _controller = Completer();
     locationController = LocationController();
+    if (latitude != null && longitude != null) {
+      _initialLocation = CameraPosition(
+          target: LatLng(double.parse(latitude), double.parse(longitude)),
+          zoom: 9);
+    } else {
+      _initialLocation =
+          CameraPosition(target: LatLng(33.048134, 43.001309), zoom: 9);
+    }
+    markers.add(
+        Marker(markerId: MarkerId('1'), position: _initialLocation.target));
   }
 
   @override
@@ -47,7 +66,7 @@ class MapPageState extends State<MapPage> {
                 myLocationEnabled: true,
                 compassEnabled: true,
                 mapType: MapType.normal,
-                initialCameraPosition: _iraqLocation,
+                initialCameraPosition: _initialLocation,
                 onTap: (LatLng latLng) {
                   setState(() {
                     markers.clear();
@@ -58,7 +77,9 @@ class MapPageState extends State<MapPage> {
                 markers: markers,
                 onMapCreated: (GoogleMapController controller) {
                   _controller.complete(controller);
-                  animateToCurrentLocation();
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    animateToCurrentLocation();
+                  });
                 }),
             margin: EdgeInsets.only(left: 0, top: 0, right: 0, bottom: 50)),
         Positioned(
@@ -122,7 +143,7 @@ class MapPageState extends State<MapPage> {
           .listen((LocationData currentLatLng) {
         if (currentLatLng != null) {
           _controller.future.then((mapController) => {
-                mapController.animateCamera(CameraUpdate.newCameraPosition(
+                mapController.moveCamera(CameraUpdate.newCameraPosition(
                     CameraPosition(
                         target: LatLng(
                             currentLatLng.latitude, currentLatLng.longitude),

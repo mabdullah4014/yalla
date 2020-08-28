@@ -42,7 +42,8 @@ class AppUtils {
             )));
   }
 
-  static void showMessage(BuildContext context, String title, String message) {
+  static void showMessage(BuildContext context, String title, String message,
+      {VoidCallback callback}) {
     showDialog<void>(
       context: context,
       barrierDismissible: true, // user must tap button!
@@ -54,6 +55,37 @@ class AppUtils {
             FlatButton(
               child: Text(S.of(context).ok),
               onPressed: () {
+                if (callback != null)
+                  callback();
+                else
+                  Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  static void yesNoDialog(BuildContext context, String title, String message,
+      VoidCallback onYesClick) {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: true, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title, style: TextStyle(color: Colors.black87)),
+          content: Text(message, style: TextStyle(color: Colors.red)),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(S.of(context).yes),
+              onPressed: () {
+                onYesClick();
+              },
+            ),
+            FlatButton(
+              child: Text(S.of(context).no),
+              onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
@@ -63,7 +95,7 @@ class AppUtils {
     );
   }
 
-  static onLoading(BuildContext context,{String message}) {
+  static onLoading(BuildContext context, {String message}) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -79,7 +111,7 @@ class AppUtils {
                     valueColor: AlwaysStoppedAnimation<Color>(
                         Theme.of(context).primaryColor)),
                 SizedBox(height: 10),
-                Text(message!=null ? message : S.of(context).loading,
+                Text(message != null ? message : S.of(context).loading,
                     style: TextStyle(color: Theme.of(context).primaryColor)),
               ],
             ),

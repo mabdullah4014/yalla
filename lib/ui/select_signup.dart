@@ -5,7 +5,7 @@ import 'package:arbi/elements/circleWidgetOnTop.dart';
 import 'package:arbi/generated/l10n.dart';
 import 'package:arbi/ui/signup.dart';
 import 'package:arbi/utils/app_colors.dart';
-import 'package:arbi/utils/utils.dart';
+import 'package:arbi/utils/app_utils.dart';
 import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -132,7 +132,7 @@ class _SelectSignUpPageState extends StateMVC<SelectSignUpPage> {
                       style: TextStyle(color: Color(0xffB0B0B0), fontSize: 16)),
                   SizedBox(height: _defaultPaddingMargin * 2),
                   AppUtils.submitButton(context, buttonText, () {
-                    Navigator.of(context).pushNamed(RouteGenerator.SIGNUP,
+                    Navigator.of(context).popAndPushNamed(RouteGenerator.SIGNUP,
                         arguments: SignUpPageParam(
                             isCustomer: isCustomer,
                             name: widget.signUpPageParam != null

@@ -38,7 +38,7 @@ class App {
   }
 }
 
-class Colors {
+class AppColors {
   Color mainColor(double opacity) {
     try {
       return Color(int.parse(

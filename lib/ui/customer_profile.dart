@@ -1,27 +1,29 @@
-/*
 import 'dart:ui';
 
 import 'package:arbi/controller/user_controller.dart';
 import 'package:arbi/generated/l10n.dart';
+import 'package:arbi/model/user.dart';
 import 'package:arbi/utils/app_colors.dart';
-import 'package:arbi/utils/utils.dart';
+import 'package:arbi/utils/constants.dart';
+import 'package:arbi/utils/pref_util.dart';
+import 'package:arbi/utils/app_utils.dart';
 import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
-import 'package:multiselect_formfield/multiselect_formfield.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 
-class CustomerProfilePage extends StatefulWidget {
-  CustomerProfilePage({Key key}) : super(key: key);
+import 'map_page.dart';
 
+class CustomerProfilePage extends StatefulWidget {
   @override
   _CustomerProfilePageState createState() => _CustomerProfilePageState();
 }
 
 class _CustomerProfilePageState extends StateMVC<CustomerProfilePage> {
-
   UserController _con;
   String flagDropdownValue = 'IQ';
-  String codeDropdownValue = '50';
+  String codeDropdownValue = '73';
 
   final double _defaultPaddingMargin = 10;
 
@@ -30,14 +32,22 @@ class _CustomerProfilePageState extends StateMVC<CustomerProfilePage> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
 
+  String currentLocation;
+
   _CustomerProfilePageState() {
     _con = UserController();
+
+    _nameController.text = currentUser.value.name;
+    _emailController.text = currentUser.value.email;
+    setPhone(currentUser.value.phone_no);
+    _passController.text = currentUser.value.password;
+    currentLocation = currentUser.value.location();
   }
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
+    if (currentLocation == null || currentLocation.isEmpty)
+      currentLocation = S.of(context).tap_to_enter;
     return Scaffold(
         backgroundColor: Colors.grey.shade200,
         appBar: AppBar(
@@ -87,7 +97,7 @@ class _CustomerProfilePageState extends StateMVC<CustomerProfilePage> {
         child: Form(
             key: _con.loginFormKey,
             child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   _nameWidget(),
@@ -97,49 +107,17 @@ class _CustomerProfilePageState extends StateMVC<CustomerProfilePage> {
                   Container(
                       color: Colors.grey.shade200,
                       height: _defaultPaddingMargin),
-                  _categoriesContainer(),
+                  Container(
+                      padding: EdgeInsets.all(_defaultPaddingMargin),
+                      child: Text(
+                        'Location',
+                        style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.black54),
+                      )),
+                  _location()
                 ])));
-  }
-
-  Widget _businessDetail() {
-    return Container(
-        padding: EdgeInsets.only(left: 5),
-        decoration: BoxDecoration(
-            border: Border(
-                bottom:
-                    BorderSide(color: AppColors.darkGreyColor, width: 1.0))),
-        child: TextFormField(
-            style: TextStyle(color: Theme.of(context).primaryColor),
-            maxLines: 4,
-            controller: _detailController,
-            onSaved: (input) => _con.user.bio = input,
-           keyboardType: TextInputType.multiline,
-            decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: S.of(context).business_detail,
-                hintStyle: TextStyle(color: Color(0xffC6C6C6)))));
-  }
-
-  Widget _companyNameWidget() {
-    return Container(
-        padding: EdgeInsets.only(left: 5),
-        decoration: BoxDecoration(
-            border: Border(
-                bottom:
-                    BorderSide(color: AppColors.darkGreyColor, width: 1.0))),
-        child: TextFormField(
-            style: TextStyle(color: Theme.of(context).primaryColor),
-            textInputAction: TextInputAction.next,
-            onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
-            controller: _companyNameController,
-            onSaved: (input) => _con.user.business_name = input,
-            textAlignVertical: TextAlignVertical.center,
-            keyboardType: TextInputType.name,
-            decoration: InputDecoration(
-                border: InputBorder.none,
-                suffixIcon: Icon(Icons.person_outline, size: 20),
-                hintText: S.of(context).comapny_name,
-                hintStyle: TextStyle(color: Color(0xffC6C6C6)))));
   }
 
   Widget _nameWidget() {
@@ -154,7 +132,7 @@ class _CustomerProfilePageState extends StateMVC<CustomerProfilePage> {
             controller: _nameController,
             textInputAction: TextInputAction.next,
             onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
-            onSaved: (input) => _con.user.name = input,
+            onChanged: (input) => _con.user.name = input,
             textAlignVertical: TextAlignVertical.center,
             keyboardType: TextInputType.name,
             decoration: InputDecoration(
@@ -175,7 +153,7 @@ class _CustomerProfilePageState extends StateMVC<CustomerProfilePage> {
             style: TextStyle(color: Theme.of(context).primaryColor),
             controller: _emailController,
             textInputAction: TextInputAction.done,
-            onSaved: (input) => _con.user.email = input,
+            onChanged: (input) => _con.user.email = input,
             textAlignVertical: TextAlignVertical.center,
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
@@ -190,10 +168,12 @@ class _CustomerProfilePageState extends StateMVC<CustomerProfilePage> {
       Flexible(
         child: _flagDropDown(),
         fit: FlexFit.tight,
+        flex: 1,
       ),
       Flexible(
         child: _countryCodeDropDown(),
         fit: FlexFit.tight,
+        flex: 1,
       ),
       Flexible(
         child: _phoneNumberField(),
@@ -252,7 +232,7 @@ class _CustomerProfilePageState extends StateMVC<CustomerProfilePage> {
               codeDropdownValue = newValue;
             });
           },
-          items: <String>['50', '55', '52', '53']
+          items: Constants.PHONE_CODES
               .map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
@@ -271,11 +251,11 @@ class _CustomerProfilePageState extends StateMVC<CustomerProfilePage> {
                     BorderSide(color: AppColors.darkGreyColor, width: 1.0))),
         child: TextFormField(
             style: TextStyle(color: Theme.of(context).primaryColor),
-            maxLength: 8,
+            maxLength: Constants.PHONE_LENGTH,
             controller: _phoneController,
             textInputAction: TextInputAction.next,
             onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
-            onSaved: (input) => _con.user.phone_no = input,
+            onChanged: (input) => _con.user.phone_no = input,
             textAlignVertical: TextAlignVertical.center,
             keyboardType: TextInputType.phone,
             decoration: InputDecoration(
@@ -296,83 +276,97 @@ class _CustomerProfilePageState extends StateMVC<CustomerProfilePage> {
         child: TextFormField(
             style: TextStyle(color: Theme.of(context).primaryColor),
             controller: _passController,
-            onSaved: (input) => _con.user.password = input,
+            onChanged: (input) => _con.user.password = input,
             textAlignVertical: TextAlignVertical.center,
             obscureText: true,
             textInputAction: TextInputAction.done,
             decoration: InputDecoration(
                 suffixIcon: Icon(Icons.lock, size: 20),
-                hintText: S.of(context).create_password,
+                hintText: S.of(context).password,
                 hintStyle: TextStyle(color: Color(0xffC6C6C6)),
                 border: InputBorder.none)));
   }
 
-  Widget _categoriesContainer() {
-    return MultiSelectFormField(
-      autovalidate: false,
-      dataSource: [
-        {
-          "display": "Running",
-          "value": "Running",
+  Widget _location() {
+    return InkWell(
+        onTap: () {
+          showCupertinoModalBottomSheet(
+              barrierColor: Theme.of(context).primaryColor,
+              useRootNavigator: true,
+              context: context,
+              enableDrag: false,
+              builder: (context, scrollController) {
+                String latitude, longitude;
+                if (currentLocation != null &&
+                    currentLocation.isNotEmpty &&
+                    !currentLocation.contains('location')) {
+                  latitude = currentLocation.split(',')[0];
+                  longitude = currentLocation.split(',')[1];
+                }
+                return MapPage(
+                    latitude: latitude,
+                    longitude: longitude,
+                    onLatLngFinalized: (LatLng latLng) {
+                      setState(() {
+                        String coordinates =
+                            '${latLng.latitude},${latLng.longitude}';
+                        currentLocation = coordinates;
+                        _con.user.latitude = latLng.latitude.toString();
+                        _con.user.longitude = latLng.longitude.toString();
+                      });
+                    });
+              });
         },
-        {
-          "display": "Climbing",
-          "value": "Climbing",
-        },
-        {
-          "display": "Walking",
-          "value": "Walking",
-        },
-        {
-          "display": "Swimming",
-          "value": "Swimming",
-        },
-        {
-          "display": "Soccer Practice",
-          "value": "Soccer Practice",
-        },
-        {
-          "display": "Baseball Practice",
-          "value": "Baseball Practice",
-        },
-        {
-          "display": "Football Practice",
-          "value": "Football Practice",
-        }
-      ],
-      textField: 'display',
-      valueField: 'value',
-      titleText: S.of(context).categories,
-      fillColor: Colors.white,
-      okButtonLabel: S.of(context).ok,
-      cancelButtonLabel: S.of(context).cancel,
-      hintText: S.of(context).please_select_more,
-      initialValue: _myActivities,
-      onSaved: (value) {
-        if (value == null) return;
-        setState(() {
-          _myActivities = value;
-        });
-      },
-    );
+        child: Container(
+            padding: EdgeInsets.all(_defaultPaddingMargin),
+            child: Row(children: <Widget>[
+              Flexible(
+                  fit: FlexFit.tight,
+                  child: Text(
+                    currentLocation,
+                    style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w800,
+                        color: Theme.of(context).primaryColor),
+                  ),
+                  flex: 5),
+              Flexible(
+                  fit: FlexFit.tight,
+                  child: Icon(Icons.arrow_right, size: 30),
+                  flex: 1)
+            ])));
   }
 
   Widget _submit() {
     return AppUtils.submitButton(context, S.of(context).update, () {
-      if (_isValidForm()) _con.login();
+      if (_isValidForm()) {
+        _con.user.name = _nameController.text;
+        _con.user.email = _emailController.text;
+        _con.user.phone_no = getPhone();
+        if (_passController.text != null && _passController.text.isNotEmpty) {
+          _con.user.password = _passController.text;
+          _con.user.password_confirmation = _passController.text;
+        }
+        _con.user.push_notification_token =
+            PreferenceUtils.getString(PreferenceUtils.push_token);
+        _con.user.user_type = currentUser.value.user_type;
+        AppUtils.onLoading(context, message: S.of(context).updating);
+        _con.update(onUpdateUser: (bool updated) {
+          Navigator.of(context).pop();
+          if (updated) {
+            AppUtils.showMessage(
+                context, S.of(context).app_name, S.of(context).user_updated);
+          } else {
+            AppUtils.showMessage(
+                context, S.of(context).error, S.of(context).unavailable);
+          }
+        });
+      }
     });
   }
 
   bool _isValidForm() {
-    if (_detailController.text.isEmpty) {
-      AppUtils.showMessage(
-          context, S.of(context).error, S.of(context).business_detail_empty);
-      return false;
-    } else if (_companyNameController.text.isEmpty) {
-      AppUtils.showMessage(
-          context, S.of(context).error, S.of(context).should_be_a_valid_name);
-      return false;
-    } else if (_nameController.text.isEmpty) {
+    if (_nameController.text.isEmpty) {
       AppUtils.showMessage(
           context, S.of(context).error, S.of(context).should_be_a_valid_name);
       return false;
@@ -382,21 +376,34 @@ class _CustomerProfilePageState extends StateMVC<CustomerProfilePage> {
           context, S.of(context).error, S.of(context).should_be_a_valid_email);
       return false;
     } else if (_phoneController.text.isEmpty ||
-        _phoneController.text.length < 8) {
+        _phoneController.text.length < Constants.PHONE_LENGTH) {
       AppUtils.showMessage(
           context, S.of(context).error, S.of(context).should_be_a_valid_number);
       return false;
-    } else if (_passController.text.isEmpty ||
+    }
+    /*else if (_passController.text.isEmpty ||
         _passController.text.length < 3) {
       AppUtils.showMessage(context, S.of(context).error,
           S.of(context).should_be_more_than_3_characters);
       return false;
-    } else if (_myActivities.length == 0) {
-      AppUtils.showMessage(context, S.of(context).error,
-          '${S.of(context).please_select_more} ${S.of(context).category}');
-      return false;
-    }
+    } */
     return true;
   }
+
+  String getPhone() {
+    return Constants.defaultPhoneCode +
+        codeDropdownValue +
+        _phoneController.text;
+  }
+
+  void setPhone(String phoneNumber) {
+    if (phoneNumber.length == 14) {
+      String code = phoneNumber.substring(4, 6);
+      String number = phoneNumber.substring(6);
+      codeDropdownValue = code;
+      _phoneController.text = number;
+    } else {
+      _phoneController.text = phoneNumber;
+    }
+  }
 }
-*/

@@ -1,7 +1,7 @@
 import 'package:arbi/controller/listing_controller.dart';
 import 'package:arbi/elements/listing/ServiceCarouselWidget.dart';
 import 'package:arbi/generated/l10n.dart';
-import 'package:arbi/utils/utils.dart';
+import 'package:arbi/utils/app_utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';

@@ -34,24 +34,24 @@ class MyApp extends AppMVC {
     _firebaseMessaging.requestNotificationPermissions();
     _firebaseMessaging.getToken().then((String _deviceToken) {
       print('Yalla token: $_deviceToken');
+      PreferenceUtils.setString(PreferenceUtils.push_token, _deviceToken);
       currentUser.value.push_notification_token = _deviceToken;
     });
 
     _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
+        onMessage: (Map<String, dynamic> message) async {
+          print("onMessage: $message");
 //        _showItemDialog(message);
-      },
-      onBackgroundMessage: myBackgroundMessageHandler,
-      onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
+        },
+        onBackgroundMessage: myBackgroundMessageHandler,
+        onLaunch: (Map<String, dynamic> message) async {
+          print("onLaunch: $message");
 //        _navigateToItemDetail(message);
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
+        },
+        onResume: (Map<String, dynamic> message) async {
+          print("onResume: $message");
 //        _navigateToItemDetail(message);
-      },
-    );
+        });
   }
 
   @override
@@ -61,109 +61,111 @@ class MyApp extends AppMVC {
         data: (brightness) {
           if (brightness == Brightness.light) {
             return ThemeData(
-              fontFamily: 'Roboto',
-              primaryColor: config.Colors().mainColor(1),
-              brightness: brightness,
-              accentColor: config.Colors().mainColor(1),
-              focusColor: config.Colors().accentColor(1),
-              hintColor: config.Colors().secondColor(1),
-              textTheme: TextTheme(
-                headline5: TextStyle(
-                    fontSize: 20.0, color: config.Colors().secondColor(1)),
-                headline4: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w600,
-                    color: config.Colors().secondColor(1)),
-                headline3: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.w600,
-                    color: config.Colors().secondColor(1)),
-                headline2: TextStyle(
-                    fontSize: 22.0,
-                    fontWeight: FontWeight.w700,
-                    color: config.Colors().mainColor(1)),
-                headline1: TextStyle(
-                    fontSize: 22.0,
-                    fontWeight: FontWeight.w300,
-                    color: config.Colors().secondColor(1)),
-                subtitle1: TextStyle(
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.w500,
-                    color: config.Colors().secondColor(1)),
-                headline6: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w600,
-                    color: config.Colors().mainColor(1)),
-                bodyText2: TextStyle(
-                    fontSize: 12.0, color: config.Colors().secondColor(1)),
-                bodyText1: TextStyle(
-                    fontSize: 14.0, color: config.Colors().secondColor(1)),
-                caption: TextStyle(
-                    fontSize: 12.0, color: config.Colors().accentColor(1)),
-              ),
-            );
+                fontFamily: 'Roboto',
+                primaryColor: config.AppColors().mainColor(1),
+                brightness: brightness,
+                accentColor: config.AppColors().mainColor(1),
+                focusColor: config.AppColors().accentColor(1),
+                hintColor: config.AppColors().secondColor(1),
+                textTheme: TextTheme(
+                    headline5: TextStyle(
+                        fontSize: 20.0,
+                        color: config.AppColors().secondColor(1)),
+                    headline4: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w600,
+                        color: config.AppColors().secondColor(1)),
+                    headline3: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.w600,
+                        color: config.AppColors().secondColor(1)),
+                    headline2: TextStyle(
+                        fontSize: 22.0,
+                        fontWeight: FontWeight.w700,
+                        color: config.AppColors().mainColor(1)),
+                    headline1: TextStyle(
+                        fontSize: 22.0,
+                        fontWeight: FontWeight.w300,
+                        color: config.AppColors().secondColor(1)),
+                    subtitle1: TextStyle(
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.w500,
+                        color: config.AppColors().secondColor(1)),
+                    headline6: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w600,
+                        color: config.AppColors().mainColor(1)),
+                    bodyText2: TextStyle(
+                        fontSize: 12.0,
+                        color: config.AppColors().secondColor(1)),
+                    bodyText1: TextStyle(
+                        fontSize: 14.0,
+                        color: config.AppColors().secondColor(1)),
+                    caption: TextStyle(
+                        fontSize: 12.0,
+                        color: config.AppColors().accentColor(1))));
           } else {
             return ThemeData(
-              fontFamily: 'Roboto',
-              primaryColor: Color(0xFF252525),
-              brightness: Brightness.dark,
-              scaffoldBackgroundColor: Color(0xFF2C2C2C),
-              accentColor: config.Colors().mainDarkColor(1),
-              hintColor: config.Colors().secondDarkColor(1),
-              focusColor: config.Colors().accentDarkColor(1),
-              textTheme: TextTheme(
-                headline5: TextStyle(
-                    fontSize: 20.0, color: config.Colors().secondDarkColor(1)),
-                headline4: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w600,
-                    color: config.Colors().secondDarkColor(1)),
-                headline3: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.w600,
-                    color: config.Colors().secondDarkColor(1)),
-                headline2: TextStyle(
-                    fontSize: 22.0,
-                    fontWeight: FontWeight.w700,
-                    color: config.Colors().mainDarkColor(1)),
-                headline1: TextStyle(
-                    fontSize: 22.0,
-                    fontWeight: FontWeight.w300,
-                    color: config.Colors().secondDarkColor(1)),
-                subtitle1: TextStyle(
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.w500,
-                    color: config.Colors().secondDarkColor(1)),
-                headline6: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w600,
-                    color: config.Colors().mainDarkColor(1)),
-                bodyText2: TextStyle(
-                    fontSize: 12.0, color: config.Colors().secondDarkColor(1)),
-                bodyText1: TextStyle(
-                    fontSize: 14.0, color: config.Colors().secondDarkColor(1)),
-                caption: TextStyle(
-                    fontSize: 12.0,
-                    color: config.Colors().secondDarkColor(0.6)),
-              ),
-            );
+                fontFamily: 'Roboto',
+                primaryColor: Color(0xFF252525),
+                brightness: Brightness.dark,
+                scaffoldBackgroundColor: Color(0xFF2C2C2C),
+                accentColor: config.AppColors().mainDarkColor(1),
+                hintColor: config.AppColors().secondDarkColor(1),
+                focusColor: config.AppColors().accentDarkColor(1),
+                textTheme: TextTheme(
+                    headline5: TextStyle(
+                        fontSize: 20.0,
+                        color: config.AppColors().secondDarkColor(1)),
+                    headline4: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w600,
+                        color: config.AppColors().secondDarkColor(1)),
+                    headline3: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.w600,
+                        color: config.AppColors().secondDarkColor(1)),
+                    headline2: TextStyle(
+                        fontSize: 22.0,
+                        fontWeight: FontWeight.w700,
+                        color: config.AppColors().mainDarkColor(1)),
+                    headline1: TextStyle(
+                        fontSize: 22.0,
+                        fontWeight: FontWeight.w300,
+                        color: config.AppColors().secondDarkColor(1)),
+                    subtitle1: TextStyle(
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.w500,
+                        color: config.AppColors().secondDarkColor(1)),
+                    headline6: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w600,
+                        color: config.AppColors().mainDarkColor(1)),
+                    bodyText2: TextStyle(
+                        fontSize: 12.0,
+                        color: config.AppColors().secondDarkColor(1)),
+                    bodyText1: TextStyle(
+                        fontSize: 14.0,
+                        color: config.AppColors().secondDarkColor(1)),
+                    caption: TextStyle(
+                        fontSize: 12.0,
+                        color: config.AppColors().secondDarkColor(0.6))));
           }
         },
         themedWidgetBuilder: (context, theme) {
           return MaterialApp(
-            title: 'Yalla',
-            initialRoute: RouteGenerator.SPLASH,
-            onGenerateRoute: RouteGenerator.generateRoute,
-            debugShowCheckedModeBanner: true,
-            localizationsDelegates: [
-              S.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate
-            ],
-            supportedLocales: S.delegate.supportedLocales,
-            theme: theme,
-          );
+              title: 'Yalla',
+              initialRoute: RouteGenerator.SPLASH,
+              onGenerateRoute: RouteGenerator.generateRoute,
+              debugShowCheckedModeBanner: true,
+              localizationsDelegates: [
+                S.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate
+              ],
+              supportedLocales: S.delegate.supportedLocales,
+              theme: theme);
         });
   }
 }

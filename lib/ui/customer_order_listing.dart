@@ -1,20 +1,23 @@
-import 'package:arbi/controller/jobs_listing_controller.dart';
+import 'package:arbi/controller/customer_order_listing_controller.dart';
 import 'package:arbi/generated/l10n.dart';
 import 'package:arbi/model/cat_response.dart';
+import 'package:arbi/model/customer_order_response.dart';
 import 'package:flutter/material.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 
-class JobsListingPage extends StatefulWidget {
-  JobsListingPage({Key key}) : super(key: key);
+class CustomerOrderListingPage extends StatefulWidget {
+  CustomerOrderListingPage({Key key}) : super(key: key);
 
   @override
-  _JobsListingPageState createState() => _JobsListingPageState();
+  _CustomerOrderListingPageState createState() =>
+      _CustomerOrderListingPageState();
 }
 
-class _JobsListingPageState extends StateMVC<JobsListingPage> {
-  JobsListingController _con;
+class _CustomerOrderListingPageState
+    extends StateMVC<CustomerOrderListingPage> {
+  CustomerOrderListingController _con;
 
-  _JobsListingPageState() : super(JobsListingController()) {
+  _CustomerOrderListingPageState() : super(CustomerOrderListingController()) {
     _con = controller;
   }
 
@@ -41,14 +44,14 @@ class _JobsListingPageState extends StateMVC<JobsListingPage> {
                 .merge(TextStyle(color: Colors.white)),
           )),
       body: SafeArea(
-          child: (_con.categories != null && _con.categories.length > 0)
+          child: (_con.orders != null && _con.orders.length > 0)
               ? RefreshIndicator(
                   onRefresh: _con.refreshHome,
                   child: ListView.builder(
                       padding: EdgeInsets.all(10),
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
-                      itemCount: _con.categories.length,
+                      itemCount: _con.orders.length,
                       itemBuilder: (context, index) {
                         return _listItem(index);
                       }))
@@ -57,18 +60,24 @@ class _JobsListingPageState extends StateMVC<JobsListingPage> {
   }
 
   Widget _listItem(int index) {
-    ServiceValue category = _con.categories[index];
+    Order order = _con.orders[index];
     return Card(
       child: Column(
         children: <Widget>[
           ListTile(
-            leading: CircleAvatar(
-              backgroundImage: NetworkImage(category.image_path),
-            ),
-            title: Text(category.name),
-            subtitle: Text(category.description),
-            trailing: Text("category"),
-          )
+              title: Text(order.category_name),
+              subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10),
+                    Visibility(
+                        visible: (order.service_provider_name != null &&
+                            order.service_provider_name.isNotEmpty),
+                        child: Text(
+                            '${S.of(context).provider_name} : ${order.service_provider_name}')),
+                    Text('${S.of(context).price} : ${order.amount}')
+                  ]),
+              trailing: Text(order.status_name))
         ],
       ),
     );

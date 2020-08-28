@@ -33,6 +33,5 @@ class UserExistResponse {
     return map;
   }
 
-  static const int STATUS_INVALID = 401;
-  static const int STATUS_SOMETHING_WENT_WRONG = 500;
+
 }

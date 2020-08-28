@@ -2,12 +2,15 @@ import 'dart:async';
 
 import 'package:arbi/controller/splash_controller.dart';
 import 'package:arbi/controller/user_controller.dart';
+import 'package:arbi/generated/l10n.dart';
 import 'package:arbi/model/user.dart';
 import 'package:arbi/route_generator.dart';
-import 'package:arbi/utils/utils.dart';
+import 'package:arbi/utils/app_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
+
+import 'login.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -31,10 +34,14 @@ class SplashScreenState extends StateMVC<SplashScreen> {
           if (value.user_type == User.CUSTOMER) {
             Navigator.of(context).popAndPushNamed(RouteGenerator.MAIN);
           } else if (value.user_type == User.SERVICE_PROVIDER) {
-            Navigator.of(context).popAndPushNamed(RouteGenerator.PROFILE_PROVIDER);
+            Navigator.of(context).popAndPushNamed(RouteGenerator.PROVIDER_MAIN);
+          } else {
+            AppUtils.showMessage(context, S.of(context).app_name,
+                S.of(context).unable_to_proceed);
           }
         } else {
-          Navigator.of(context).popAndPushNamed(RouteGenerator.MAIN);
+          Navigator.of(context).popAndPushNamed(RouteGenerator.LOGIN,
+              arguments: LoginPageParam(comingFrom: LoginPage.FROM_SPLASH));
         }
       });
     });

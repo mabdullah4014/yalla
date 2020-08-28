@@ -1,7 +1,9 @@
+import 'package:arbi/ui/customer_order_listing.dart';
 import 'package:arbi/ui/home.dart';
 import 'package:arbi/ui/login.dart';
 import 'package:arbi/ui/map_place_picker.dart';
-import 'package:arbi/ui/provider/jobs_listing.dart';
+import 'package:arbi/ui/provider/provider_jobs_listing.dart';
+import 'package:arbi/ui/provider/provider_home.dart';
 import 'package:arbi/ui/provider/provider_profile.dart';
 import 'package:arbi/ui/provider/provider_information.dart';
 import 'package:arbi/ui/select_signup.dart';
@@ -21,10 +23,12 @@ class RouteGenerator {
   static const String DETAIL = '/Detail';
   static const String TARGET = '/Target';
   static const String MAP = '/Map';
-  static const String JOBS = '/Jobs';
+  static const String PROVIDER_JOBS = '/Jobs';
   static const String PROFILE_PROVIDER = '/ProfileProvider';
   static const String PROVIDER_COMPLETE_SIGNUP = '/ProviderSignUpComplete';
   static const String BUY = '/Buy';
+  static const String PROVIDER_MAIN = '/ProviderMain';
+  static const String CUSTOMER_ORDER = '/CustomerOrders';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     // Getting arguments passed in while calling Navigator.pushNamed
@@ -35,7 +39,8 @@ class RouteGenerator {
       case MAIN:
         return MaterialPageRoute(builder: (_) => HomePageScreen());
       case LOGIN:
-        return MaterialPageRoute(builder: (_) => LoginPage());
+        return MaterialPageRoute(
+            builder: (_) => LoginPage(loginPageParam: args as LoginPageParam));
       case SIGNUP:
         return MaterialPageRoute(
             builder: (_) => SignUpPage(signUpPageParam: args));
@@ -52,8 +57,8 @@ class RouteGenerator {
                 ServiceTargetPage(params: args as ServiceTargetPageParam));
       case MAP:
         return MaterialPageRoute(builder: (_) => MapPlacePicker());
-      case JOBS:
-        return MaterialPageRoute(builder: (_) => JobsListingPage());
+      case PROVIDER_JOBS:
+        return MaterialPageRoute(builder: (_) => ProviderJobsListingPage());
       case PROFILE_PROVIDER:
         return MaterialPageRoute(builder: (_) => ProviderProfilePage());
       case PROVIDER_COMPLETE_SIGNUP:
@@ -62,6 +67,10 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (_) =>
                 ServiceBuyPage(params: args as ServiceBuyPageParam));
+      case PROVIDER_MAIN:
+        return MaterialPageRoute(builder: (_) => ProviderHomePageScreen());
+      case CUSTOMER_ORDER:
+        return MaterialPageRoute(builder: (_) => CustomerOrderListingPage());
     }
   }
 

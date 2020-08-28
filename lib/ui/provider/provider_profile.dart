@@ -4,14 +4,14 @@ import 'package:arbi/controller/listing_controller.dart';
 import 'package:arbi/controller/user_controller.dart';
 import 'package:arbi/generated/l10n.dart';
 import 'package:arbi/model/provider_categories_response.dart';
-import 'package:arbi/model/user.dart';
+import 'package:arbi/ui/provider/provider_categories.dart';
 import 'package:arbi/utils/app_colors.dart';
-import 'package:arbi/utils/utils.dart';
+import 'package:arbi/utils/app_utils.dart';
+import 'package:arbi/utils/constants.dart';
 import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:multiselect_formfield/multiselect_formfield.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 
 import '../map_page.dart';
@@ -25,9 +25,8 @@ class ProviderProfilePage extends StatefulWidget {
 
 class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
   UserController _con;
-  ListingController listingController;
   String flagDropdownValue = 'IQ';
-  String codeDropdownValue = '50';
+  String codeDropdownValue = '73';
 
   final double _defaultPaddingMargin = 10;
 
@@ -39,35 +38,37 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
   final TextEditingController _passController = TextEditingController();
 
   String currentLocation;
-
-  List _myActivities;
-  List _initialCategories;
+  String currentCategories = '';
+  List<ProviderCategory> _myActivities;
 
   _ProviderProfilePageState() {
     _con = UserController();
-    listingController = ListingController.loadProvider();
     _myActivities = [];
-    _initialCategories = [];
 
-    _detailController.text = currentUser.value.bio;
+    _detailController.text = currentUser.value.business_bio;
     _companyNameController.text = currentUser.value.business_name;
     _nameController.text = currentUser.value.name;
     _emailController.text = currentUser.value.email;
-    _phoneController.text = currentUser.value.phone_no;
+    setPhone(currentUser.value.phone_no);
     _passController.text = currentUser.value.password;
     currentLocation = currentUser.value.location();
-    if (currentLocation == null || currentLocation.isEmpty)
-      currentLocation = 'Tap to enter location';
 
-    listingController.getProviderCategories(catList: (List<dynamic> list) {
-      setState(() {
-        _initialCategories.addAll(list);
-      });
-    });
+    if (currentUser.value.categories != null &&
+        currentUser.value.categories.isNotEmpty) {
+      setCategories(currentUser.value.categories);
+    } else {
+      currentCategories = 'Tap to select categories';
+    }
+  }
+
+  String removeLastChars(String str, int chars) {
+    return str.substring(0, str.length - chars);
   }
 
   @override
   Widget build(BuildContext context) {
+    if (currentLocation == null || currentLocation.isEmpty)
+      currentLocation = S.of(context).tap_to_enter;
     return Scaffold(
         backgroundColor: Colors.grey.shade200,
         appBar: AppBar(
@@ -132,7 +133,7 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
                   Container(
                       padding: EdgeInsets.all(_defaultPaddingMargin),
                       child: Text(
-                        'Location',
+                        S.of(context).location,
                         style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w800,
@@ -142,6 +143,15 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
                   Container(
                       color: Colors.grey.shade200,
                       height: _defaultPaddingMargin),
+                  Container(
+                      padding: EdgeInsets.all(_defaultPaddingMargin),
+                      child: Text(
+                        S.of(context).selected_categories,
+                        style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.black54),
+                      )),
                   _categoriesContainer(),
                 ])));
   }
@@ -157,7 +167,7 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
             style: TextStyle(color: Theme.of(context).primaryColor),
             maxLines: 4,
             controller: _detailController,
-            onSaved: (input) => _con.user.bio = input,
+            onSaved: (input) => _con.user.business_bio = input,
             keyboardType: TextInputType.multiline,
             decoration: InputDecoration(
                 border: InputBorder.none,
@@ -235,11 +245,17 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
       Flexible(
         child: _flagDropDown(),
         fit: FlexFit.tight,
+        flex: 1,
+      ),
+      Flexible(
+        child: _countryCodeDropDown(),
+        fit: FlexFit.tight,
+        flex: 1,
       ),
       Flexible(
         child: _phoneNumberField(),
         fit: FlexFit.tight,
-        flex: 4,
+        flex: 3,
       )
     ]);
   }
@@ -293,7 +309,7 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
               codeDropdownValue = newValue;
             });
           },
-          items: <String>['50', '55', '52', '53']
+          items: Constants.PHONE_CODES
               .map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
@@ -312,7 +328,7 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
                     BorderSide(color: AppColors.darkGreyColor, width: 1.0))),
         child: TextFormField(
             style: TextStyle(color: Theme.of(context).primaryColor),
-            maxLength: 8,
+            maxLength: Constants.PHONE_LENGTH,
             controller: _phoneController,
             textInputAction: TextInputAction.next,
             onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
@@ -357,15 +373,25 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
               context: context,
               enableDrag: false,
               builder: (context, scrollController) {
-                return MapPage(onLatLngFinalized: (LatLng latLng) {
-                  setState(() {
-                    String coordinates =
-                        '${latLng.latitude},${latLng.longitude}';
-                    currentLocation = coordinates;
-                    _con.user.latitude = latLng.latitude.toString();
-                    _con.user.longitude = latLng.longitude.toString();
-                  });
-                });
+                String latitude, longitude;
+                if (currentLocation != null &&
+                    currentLocation.isNotEmpty &&
+                    !currentLocation.contains('location')) {
+                  latitude = currentLocation.split(',')[0];
+                  longitude = currentLocation.split(',')[1];
+                }
+                return MapPage(
+                    latitude: latitude,
+                    longitude: longitude,
+                    onLatLngFinalized: (LatLng latLng) {
+                      setState(() {
+                        String coordinates =
+                            '${latLng.latitude},${latLng.longitude}';
+                        currentLocation = coordinates;
+                        _con.user.latitude = latLng.latitude.toString();
+                        _con.user.longitude = latLng.longitude.toString();
+                      });
+                    });
               });
         },
         child: Container(
@@ -389,44 +415,75 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
   }
 
   Widget _categoriesContainer() {
-    return MultiSelectFormField(
-      autovalidate: false,
-      dataSource: _initialCategories,
-      textField: 'name',
-      valueField: 'id',
-      titleText: S.of(context).categories,
-      fillColor: Colors.white,
-      okButtonLabel: S.of(context).ok,
-      cancelButtonLabel: S.of(context).cancel,
-      hintText: S.of(context).please_select_more,
-      initialValue: _myActivities,
-      onSaved: (value) {
-        if (value == null) return;
-        setState(() {
-          _myActivities = value;
-        });
-      },
-    );
+    return InkWell(
+        onTap: () {
+          showCupertinoModalBottomSheet(
+              barrierColor: Theme.of(context).primaryColor,
+              useRootNavigator: true,
+              context: context,
+              enableDrag: false,
+              builder: (context, scrollController) {
+                return ProviderCategoryPage(
+                    selectedItems: _myActivities,
+                    onCategoriesSelected: (List<ProviderCategory> list) {
+                      setState(() {
+                        currentCategories = '';
+                        setCategories(list);
+                      });
+                    });
+              });
+        },
+        child: Container(
+            padding: EdgeInsets.all(_defaultPaddingMargin),
+            child: Row(children: <Widget>[
+              Flexible(
+                  fit: FlexFit.tight,
+                  child: Text(
+                    currentCategories,
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: Theme.of(context).primaryColor),
+                  ),
+                  flex: 5),
+              Flexible(
+                  fit: FlexFit.tight,
+                  child: Icon(Icons.arrow_right, size: 30),
+                  flex: 1)
+            ])));
   }
 
   Widget _submit() {
     return AppUtils.submitButton(context, S.of(context).update, () {
       if (_isValidForm()) {
-
-        _con.user.bio = _detailController.text;
+        _con.user.business_bio = _detailController.text;
         _con.user.business_name = _companyNameController.text;
         _con.user.name = _nameController.text;
         _con.user.email = _emailController.text;
-        _con.user.phone_no = _phoneController.text;
-        if(_passController.text!=null && _passController.text.isNotEmpty) {
+        _con.user.phone_no = getPhone();
+        if (_passController.text != null && _passController.text.isNotEmpty) {
           _con.user.password = _passController.text;
           _con.user.password_confirmation = _passController.text;
         }
-        _con.user.push_notification_token = currentUser.value.push_notification_token;
+        _con.user.push_notification_token =
+            currentUser.value.push_notification_token;
         _con.user.user_type = currentUser.value.user_type;
-//       AppUtils.onLoading(context,message: S.of(context).updating);
-        _con.update(onUpdateUser: (User user) {
-//          Navigator.of(context).pop();
+
+        List<int> list = [];
+        for (ProviderCategory category in _myActivities) {
+          list.add(category.id);
+        }
+        _con.user.provider_categories = list;
+        AppUtils.onLoading(context, message: S.of(context).updating);
+        _con.update(onUpdateUser: (bool updated) {
+          Navigator.of(context).pop();
+          if (updated) {
+            AppUtils.showMessage(
+                context, S.of(context).app_name, S.of(context).user_updated);
+          } else {
+            AppUtils.showMessage(
+                context, S.of(context).error, S.of(context).unavailable);
+          }
         });
       }
     });
@@ -451,7 +508,7 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
           context, S.of(context).error, S.of(context).should_be_a_valid_email);
       return false;
     } else if (_phoneController.text.isEmpty ||
-        _phoneController.text.length < 8) {
+        _phoneController.text.length < Constants.PHONE_LENGTH) {
       AppUtils.showMessage(
           context, S.of(context).error, S.of(context).should_be_a_valid_number);
       return false;
@@ -462,11 +519,36 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
           S.of(context).should_be_more_than_3_characters);
       return false;
     } */
-    else if (_myActivities.length == 0) {
+    else if (currentCategories == null || currentCategories.isEmpty) {
       AppUtils.showMessage(context, S.of(context).error,
           '${S.of(context).please_select_more} ${S.of(context).category}');
       return false;
     }
     return true;
+  }
+
+  String getPhone() {
+    return Constants.defaultPhoneCode +
+        codeDropdownValue +
+        _phoneController.text;
+  }
+
+  void setPhone(String phoneNumber) {
+    if (phoneNumber.length == 14) {
+      String code = phoneNumber.substring(4, 6);
+      String number = phoneNumber.substring(6);
+      codeDropdownValue = code;
+      _phoneController.text = number;
+    } else {
+      _phoneController.text = phoneNumber;
+    }
+  }
+
+  void setCategories(List<ProviderCategory> categories) {
+    _myActivities = categories;
+    for (ProviderCategory category in categories) {
+      currentCategories = '${category.name} , $currentCategories';
+    }
+    currentCategories = removeLastChars(currentCategories, 2);
   }
 }

@@ -672,6 +672,246 @@ class S {
       args: [],
     );
   }
+
+  /// `Logout`
+  String get logout {
+    return Intl.message(
+      'Logout',
+      name: 'logout',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Yes`
+  String get yes {
+    return Intl.message(
+      'Yes',
+      name: 'yes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No`
+  String get no {
+    return Intl.message(
+      'No',
+      name: 'no',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to logout?`
+  String get logout_message {
+    return Intl.message(
+      'Are you sure you want to logout?',
+      name: 'logout_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Login to continue..`
+  String get login_to_continue {
+    return Intl.message(
+      'Login to continue..',
+      name: 'login_to_continue',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter location to proceed`
+  String get enter_location {
+    return Intl.message(
+      'Enter location to proceed',
+      name: 'enter_location',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Order not placed`
+  String get order_not_placed {
+    return Intl.message(
+      'Order not placed',
+      name: 'order_not_placed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Order placed successfully`
+  String get order_placed {
+    return Intl.message(
+      'Order placed successfully',
+      name: 'order_placed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Updating...`
+  String get updating {
+    return Intl.message(
+      'Updating...',
+      name: 'updating',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `User updated successfully.`
+  String get user_updated {
+    return Intl.message(
+      'User updated successfully.',
+      name: 'user_updated',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `My Orders`
+  String get my_order {
+    return Intl.message(
+      'My Orders',
+      name: 'my_order',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Provider Name`
+  String get provider_name {
+    return Intl.message(
+      'Provider Name',
+      name: 'provider_name',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `My Jobs`
+  String get my_jobs {
+    return Intl.message(
+      'My Jobs',
+      name: 'my_jobs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update Order`
+  String get change_status {
+    return Intl.message(
+      'Update Order',
+      name: 'change_status',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Order updated successfully.`
+  String get order_update {
+    return Intl.message(
+      'Order updated successfully.',
+      name: 'order_update',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error updating order status.`
+  String get order_update_error {
+    return Intl.message(
+      'Error updating order status.',
+      name: 'order_update_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Accept`
+  String get accept {
+    return Intl.message(
+      'Accept',
+      name: 'accept',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Available Jobs`
+  String get available_jobs {
+    return Intl.message(
+      'Available Jobs',
+      name: 'available_jobs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tap to enter location`
+  String get tap_to_enter {
+    return Intl.message(
+      'Tap to enter location',
+      name: 'tap_to_enter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location`
+  String get location {
+    return Intl.message(
+      'Location',
+      name: 'location',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unable to proceed`
+  String get unable_to_proceed {
+    return Intl.message(
+      'Unable to proceed',
+      name: 'unable_to_proceed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Current categories`
+  String get selected_categories {
+    return Intl.message(
+      'Current categories',
+      name: 'selected_categories',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select at least one category to proceed`
+  String get select_category_to_proceed {
+    return Intl.message(
+      'Select at least one category to proceed',
+      name: 'select_category_to_proceed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Description`
+  String get description {
+    return Intl.message(
+      'Description',
+      name: 'description',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

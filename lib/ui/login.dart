@@ -8,7 +8,8 @@ import 'package:arbi/model/user.dart';
 import 'package:arbi/model/user_exist_request.dart';
 import 'package:arbi/ui/signup.dart';
 import 'package:arbi/utils/app_colors.dart';
-import 'package:arbi/utils/utils.dart';
+import 'package:arbi/utils/app_utils.dart';
+import 'package:arbi/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -18,9 +19,13 @@ import 'package:mvc_pattern/mvc_pattern.dart';
 import '../route_generator.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key key, this.title}) : super(key: key);
+  LoginPage({this.loginPageParam});
 
-  final String title;
+  final LoginPageParam loginPageParam;
+
+  static const int FROM_SPLASH = 0;
+  static const int FROM_PLACE_ORDER = 1;
+  static const int FROM_DRAWER = 2;
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -73,7 +78,7 @@ class _LoginPageState extends StateMVC<LoginPage> {
                                           value.auth_token != null) {
                                         _onLoginSuccess(buildContext, value);
                                       } else if (value.status ==
-                                          User.STATUS_INVALID) {
+                                          Constants.STATUS_INVALID) {
                                         AppUtils.showMessage(
                                             buildContext,
                                             S.of(buildContext).error,
@@ -100,8 +105,8 @@ class _LoginPageState extends StateMVC<LoginPage> {
                                           fontSize: 14,
                                           fontWeight: FontWeight.w500)),
                                 ),
-                                _facebookButton(),
-                                SizedBox(height: 10),
+//                                _facebookButton(),
+//                                SizedBox(height: 10),
                                 _createAccountLabel(),
                               ],
                             ),
@@ -333,10 +338,26 @@ class _LoginPageState extends StateMVC<LoginPage> {
   }
 
   void _onLoginSuccess(BuildContext buildContext, User user) {
-    if (user.user_type == User.CUSTOMER)
-      Navigator.of(buildContext).pushReplacementNamed(RouteGenerator.MAIN);
-    else
-      Navigator.of(buildContext)
-          .pushReplacementNamed(RouteGenerator.PROFILE_PROVIDER);
+    if (user.user_type == User.CUSTOMER) {
+      if (widget.loginPageParam.comingFrom == LoginPage.FROM_PLACE_ORDER) {
+        Navigator.of(context).pop(true);
+      } else {
+        Navigator.of(buildContext).pushReplacementNamed(RouteGenerator.MAIN);
+      }
+    } else {
+      if (widget.loginPageParam.comingFrom == LoginPage.FROM_PLACE_ORDER) {
+        Navigator.of(context)
+            .popUntil(ModalRoute.withName(RouteGenerator.MAIN));
+      } else {
+        Navigator.of(buildContext)
+            .pushReplacementNamed(RouteGenerator.PROVIDER_MAIN);
+      }
+    }
   }
+}
+
+class LoginPageParam {
+  final int comingFrom;
+
+  LoginPageParam({this.comingFrom});
 }

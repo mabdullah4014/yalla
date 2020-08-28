@@ -1,4 +1,8 @@
-import 'package:arbi/elements/DrawerWidget.dart';
+import 'package:arbi/controller/user_controller.dart';
+import 'package:arbi/ui/customer_drawer.dart';
+import 'package:arbi/generated/l10n.dart';
+import 'package:arbi/ui/customer_profile.dart';
+import 'package:arbi/utils/app_utils.dart';
 import 'package:flutter/material.dart';
 
 import 'listing.dart';
@@ -43,8 +47,13 @@ class _HomePageScreenState extends State<HomePageScreen> {
               ListingWidget(parentScaffoldKey: widget.scaffoldKey);
           break;
         case 1:
-//          widget.currentPage =
-//              ProfileWidget(parentScaffoldKey: widget.scaffoldKey);
+          if (currentUser.value.auth)
+            widget.currentPage = CustomerProfilePage();
+          else {
+            AppUtils.showMessage(context, S.of(context).app_name,
+                S.of(context).login_to_continue);
+            _selectTab(0);
+          }
           break;
       }
     });
@@ -53,10 +62,10 @@ class _HomePageScreenState extends State<HomePageScreen> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async => false,
+      onWillPop: () async => true,
       child: Scaffold(
         key: widget.scaffoldKey,
-        drawer: DrawerWidget(),
+        drawer: CustomerDrawerWidget(),
         body: SafeArea(child: widget.currentPage),
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,

@@ -1,15 +1,17 @@
+import 'package:arbi/controller/user_controller.dart';
 import 'package:arbi/generated/l10n.dart';
+import 'package:arbi/model/user.dart';
 import 'package:arbi/route_generator.dart';
+import 'package:arbi/ui/login.dart';
 import 'package:arbi/utils/app_colors.dart';
-import 'package:arbi/utils/route_argument.dart';
-import 'package:arbi/utils/utils.dart';
+import 'package:arbi/utils/app_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../controller/user_controller.dart' as userCont;
 
-class DrawerWidget extends StatelessWidget {
-  DrawerWidget({Key key}) : super(key: key);
+class CustomerDrawerWidget extends StatelessWidget {
+  CustomerDrawerWidget({Key key}) : super(key: key);
 
   static const _DrawerItemColor = Color(0xff8B8B8B);
 
@@ -20,30 +22,33 @@ class DrawerWidget extends StatelessWidget {
       Expanded(
           child: ListView(padding: EdgeInsets.zero, children: <Widget>[
         InkWell(
-          child: DrawerHeader(
-            child: Image.asset(
-              'assets/images/logo_text.png',
-              fit: BoxFit.contain,
-            ),
-            padding: EdgeInsets.zero,
-            decoration: BoxDecoration(
-              color: AppColors.greyColor,
-            ),
-          ),
-          onTap: () {
-            Navigator.of(context).pushNamed(RouteGenerator.PROFILE_PROVIDER);
-          },
-        ),
+            child: DrawerHeader(
+                child: Image.asset(
+                  'assets/images/logo_text.png',
+                  fit: BoxFit.contain,
+                ),
+                padding: EdgeInsets.zero,
+                decoration: BoxDecoration(color: AppColors.greyColor))),
+        Visibility(
+            visible: userCont.currentUser.value.auth,
+            child: ListTile(
+                title: Text(
+                  S.of(context).my_order,
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                ),
+                onTap: () {
+                  Navigator.of(context)
+                      .pushNamed(RouteGenerator.CUSTOMER_ORDER);
+                })),
         ListTile(
-          title: Text(
-            S.of(context).about,
-            style: TextStyle(color: _DrawerItemColor),
-          ),
-          onTap: () {
+            title: Text(
+              S.of(context).about,
+              style: TextStyle(color: _DrawerItemColor),
+            ),
+            onTap: () {
 //                Navigator.pop(context);
-            Navigator.of(context).pushNamed(RouteGenerator.JOBS);
-          },
-        ),
+              Navigator.of(context).pushNamed(RouteGenerator.PROVIDER_JOBS);
+            }),
         ListTile(
           title: Text(S.of(context).blog,
               style: TextStyle(color: _DrawerItemColor)),
@@ -105,8 +110,10 @@ class DrawerWidget extends StatelessWidget {
                         fit: FlexFit.tight,
                         child: InkWell(
                           onTap: () {
-                            Navigator.of(context)
-                                .pushNamed(RouteGenerator.LOGIN);
+                            Navigator.of(context).pushNamed(
+                                RouteGenerator.LOGIN,
+                                arguments: LoginPageParam(
+                                    comingFrom: LoginPage.FROM_DRAWER));
                           },
                           child: Padding(
                             padding: EdgeInsets.all(20),
@@ -132,6 +139,45 @@ class DrawerWidget extends StatelessWidget {
                             child: Text(S.of(context).signup.toUpperCase(),
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme.headline6),
+                          ),
+                        ),
+                        flex: 1,
+                      )
+                    ],
+                  )))),
+      Visibility(
+          visible: userCont.currentUser.value.auth,
+          child: Container(
+              color: AppColors.greyColor,
+              // This align moves the children to the bottom
+              child: Align(
+                  alignment: FractionalOffset.bottomCenter,
+                  // This container holds all the children that will be aligned
+                  // on the bottom and should not scroll with the above ListView
+                  child: Row(
+                    children: <Widget>[
+                      Flexible(
+                        fit: FlexFit.tight,
+                        child: InkWell(
+                          onTap: () {
+                            AppUtils.yesNoDialog(context, S.of(context).logout,
+                                S.of(context).logout_message, () {
+                              currentUser.value.logout();
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  RouteGenerator.LOGIN,
+                                  (Route<dynamic> route) => false,
+                                  arguments: LoginPageParam(
+                                      comingFrom: LoginPage.FROM_SPLASH));
+                            });
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Text(S.of(context).logout.toUpperCase(),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.w700,
+                                    color: _DrawerItemColor)),
                           ),
                         ),
                         flex: 1,

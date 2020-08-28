@@ -22,6 +22,8 @@ class UserController extends ControllerMVC {
     loginFormKey = new GlobalKey<FormState>();
     this.scaffoldKey = new GlobalKey<ScaffoldState>();
     PackageInfo.fromPlatform().then((value) {
+      user.push_notification_token =
+          PreferenceUtils.getString(PreferenceUtils.push_token);
       user.app_version = value.version;
       if (Platform.isIOS)
         user.device = 'ios';
@@ -33,7 +35,10 @@ class UserController extends ControllerMVC {
   void login({Function(User) onUserLogin}) async {
     loginFormKey.currentState.save();
     repository.login(user).then((value) {
-      if (value.status == 200) setCurrentUser(value);
+      if (value.status == 200) {
+        value.auth = true;
+        setCurrentUser(value);
+      }
       onUserLogin(value);
     });
   }
@@ -41,6 +46,10 @@ class UserController extends ControllerMVC {
   void register({Function(User) onUserRegister}) async {
     loginFormKey.currentState.save();
     repository.register(user).then((value) {
+      if (value.status == 200) {
+        value.auth = true;
+        setCurrentUser(value);
+      }
       onUserRegister(value);
     });
   }
@@ -55,28 +64,35 @@ class UserController extends ControllerMVC {
     });
   }
 
-  void update({Function(User) onUpdateUser}) async {
+  void update({Function(bool) onUpdateUser}) async {
     loginFormKey.currentState.save();
     repository.update(user).then((value) {
-      if (value.status == 200) setCurrentUser(value);
-      onUpdateUser(value);
+      if (value.status == 200) {
+        value.auth = true;
+        value.auth_token = currentUser.value.auth_token;
+        setCurrentUser(value);
+        onUpdateUser(true);
+      } else
+        onUpdateUser(false);
     });
   }
 
-  void setCurrentUser(User userData) {
+  static void setCurrentUser(User userData) {
     if (userData != null) {
-      userData.auth = true;
       PreferenceUtils.setString('current_user', json.encode(userData));
       currentUser.value = userData;
       print('Yalla user ${userData.toString()}');
     }
   }
 
+  static void logout() {
+    PreferenceUtils.setString('current_user', "");
+  }
+
   static Future<User> getCurrentUser() async {
     String prefUser = PreferenceUtils.getString('current_user');
-    if (currentUser.value.auth == null && prefUser.isNotEmpty) {
+    if (prefUser.isNotEmpty) {
       currentUser.value = User.fromJSON(json.decode(prefUser));
-      currentUser.value.auth = true;
     } else {
       currentUser.value.auth = false;
     }

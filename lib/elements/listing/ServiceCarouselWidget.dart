@@ -3,6 +3,7 @@ import 'package:arbi/model/cat_response.dart';
 import 'package:arbi/route_generator.dart';
 import 'package:arbi/ui/service_buy.dart';
 import 'package:arbi/ui/service_detail.dart';
+import 'package:arbi/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 import '../CircularLoadingWidget.dart';
@@ -36,23 +37,9 @@ class _ServicesCarouselWidgetState extends State<ServicesCarouselWidget> {
                 itemBuilder: (context, index) {
                   return InkWell(
                       onTap: () {
-                        ServiceValue serviceValues = widget.servicesList[index];
-                        if (serviceValues.price != null &&
-                            serviceValues.price != 0.0) {
-                          Navigator.of(context).pushNamed(RouteGenerator.BUY,
-                              arguments: ServiceBuyPageParam(
-                                  detailPageData: DetailPageData(),
-                                  services: serviceValues,
-                                  price: serviceValues.price));
-                        } else if (serviceValues.values != null &&
-                            serviceValues.values.isNotEmpty) {
-                          DetailPageData detailPageData = DetailPageData();
-
-                          Navigator.of(context).pushNamed(RouteGenerator.DETAIL,
-                              arguments: ServiceDetailPageParam(
-                                  services: serviceValues,
-                                  detailPageData: detailPageData));
-                        }
+                        ServiceValue serviceValue = widget.servicesList[index];
+                        Constants.onServiceItemClick(
+                            context, DetailPageData(), serviceValue);
                       },
                       child: ServiceWidget(
                           service: widget.servicesList.elementAt(index),

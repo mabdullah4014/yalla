@@ -5,6 +5,7 @@ import 'package:arbi/controller/user_controller.dart';
 import 'package:arbi/model/user.dart';
 import 'package:arbi/model/user_exist_request.dart';
 import 'package:arbi/model/user_exist_response.dart';
+import 'package:arbi/utils/constants.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart' as http;
 
@@ -17,16 +18,17 @@ Future<User> login(User user) async {
     headers: {HttpHeaders.contentTypeHeader: 'application/json'},
     body: json.encode(user.toJson()),
   );
+  print('Login Response : ${response.body}');
   User cUser;
   if (response.statusCode == 200) {
     Map<String, dynamic> jsonResponse = json.decode(response.body);
-    if (jsonResponse.containsKey('success') && jsonResponse['success'] == 200) {
+    if (jsonResponse.containsKey('status_code') && jsonResponse['status_code'] == 200) {
       cUser = User.fromJSON(json.decode(response.body)['data']);
     } else {
-      cUser = User.status(User.STATUS_INVALID);
+      cUser = User.status(Constants.STATUS_INVALID);
     }
   } else {
-    cUser = User.status(User.STATUS_SOMETHING_WENT_WRONG);
+    cUser = User.status(Constants.STATUS_SOMETHING_WENT_WRONG);
   }
   return cUser;
 }
@@ -42,15 +44,16 @@ Future<User> register(User user) async {
     body: json.encode(user.toJson()),
   );
   User currentUser;
+  print('Register Response : ${response.body}');
   if (response.statusCode == 200) {
     Map<String, dynamic> jsonResponse = json.decode(response.body);
-    if (jsonResponse.containsKey('success') && jsonResponse['success'] == 200) {
+    if (jsonResponse.containsKey('status_code') && jsonResponse['status_code'] == 200) {
       currentUser = User.fromJSON(json.decode(response.body)['data']);
     } else {
-      currentUser = User.status(User.STATUS_INVALID);
+      currentUser = User.status(Constants.STATUS_INVALID);
     }
   } else {
-    currentUser = User.status(User.STATUS_SOMETHING_WENT_WRONG);
+    currentUser = User.status(Constants.STATUS_SOMETHING_WENT_WRONG);
   }
   return currentUser;
 }
@@ -65,18 +68,18 @@ Future<UserExistResponse> exists(UserExistRequest userExistRequest) async {
     body: json.encode(userExistRequest.toJson()),
   );
   UserExistResponse userExistResponse;
+  print('User Exists Response : ${response.body}');
   if (response.statusCode == 200) {
     Map<String, dynamic> jsonResponse = json.decode(response.body);
     if (jsonResponse.containsKey('success') && jsonResponse['success'] == 200) {
       userExistResponse =
           UserExistResponse.fromJson(json.decode(response.body));
     } else {
-      userExistResponse =
-          UserExistResponse.status(UserExistResponse.STATUS_INVALID);
+      userExistResponse = UserExistResponse.status(Constants.STATUS_INVALID);
     }
   } else {
     userExistResponse =
-        UserExistResponse.status(UserExistResponse.STATUS_SOMETHING_WENT_WRONG);
+        UserExistResponse.status(Constants.STATUS_SOMETHING_WENT_WRONG);
   }
   return userExistResponse;
 }
@@ -97,16 +100,18 @@ Future<User> update(User updatedUser) async {
     headers: headers,
     body: json.encode(updatedUser.toJson()),
   );
+  print('User update Response : ${response.body}');
   User cUser;
   if (response.statusCode == 200) {
     Map<String, dynamic> jsonResponse = json.decode(response.body);
-    if (jsonResponse.containsKey('success') && jsonResponse['success'] == 200) {
+    if (jsonResponse.containsKey('status_code') &&
+        jsonResponse['status_code'] == 200) {
       cUser = User.fromJSON(json.decode(response.body)['data']);
     } else {
-      cUser = User.status(User.STATUS_INVALID);
+      cUser = User.status(Constants.STATUS_INVALID);
     }
   } else {
-    cUser = User.status(User.STATUS_SOMETHING_WENT_WRONG);
+    cUser = User.status(Constants.STATUS_SOMETHING_WENT_WRONG);
   }
   return cUser;
 }

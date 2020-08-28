@@ -1,7 +1,10 @@
 import 'dart:ui';
 
+import 'package:arbi/generated/l10n.dart';
 import 'package:arbi/model/cat_response.dart';
+import 'package:arbi/ui/service_buy.dart';
 import 'package:arbi/ui/service_target.dart';
+import 'package:arbi/utils/constants.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
@@ -79,16 +82,21 @@ class _ServiceDetailPageState extends StateMVC<ServiceDetailPage> {
               onTap: () {
                 itemTap(values[index]);
               },
-              child: Card(
-                  child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  values[index].name,
-                  style: TextStyle(
-                      fontSize: 22.0, color: Theme.of(context).primaryColor),
-                ),
-              )));
+              child: _listItem(values[index]));
         });
+  }
+
+  Widget _listItem(ServiceValue serviceValue) {
+    return Card(
+        child: Column(children: <Widget>[
+      ListTile(
+          title: Text(serviceValue.name),
+          subtitle: Visibility(
+              visible: (serviceValue.description != null &&
+                  serviceValue.description.isNotEmpty),
+              child: Text(
+                  '${serviceValue.description}')))
+    ]));
   }
 
   Widget getGridItem(ServiceValue serviceValue) {
@@ -105,7 +113,7 @@ class _ServiceDetailPageState extends StateMVC<ServiceDetailPage> {
                     child: Column(children: [
                   Container(
                       width: MediaQuery.of(context).size.width / 2,
-                      height: MediaQuery.of(context).size.height / 4.5,
+                      height: MediaQuery.of(context).size.height / 6,
                       child: CachedNetworkImage(
                           fit: BoxFit.cover,
                           imageUrl: serviceValue.image_path,
@@ -129,30 +137,12 @@ class _ServiceDetailPageState extends StateMVC<ServiceDetailPage> {
   }
 
   void itemTap(ServiceValue serviceValue) {
-    if (serviceValue.values != null && serviceValue.values.isNotEmpty) {
-      DetailPageData detailPageData = widget.params.detailPageData;
-      if (detailPageData.valuesIdList == null) {
-        detailPageData.valuesIdList = List();
-      }
-      detailPageData.valuesIdList.add(serviceValue.id);
-      print('ValuesId:${detailPageData.valuesIdList}');
-      Navigator.of(context).pushNamed(RouteGenerator.DETAIL,
-          arguments: ServiceDetailPageParam(
-              services: serviceValue, detailPageData: detailPageData));
-    } else if (serviceValue.targets != null &&
-        serviceValue.targets.isNotEmpty) {
-      DetailPageData detailPageData = widget.params.detailPageData;
-      if (detailPageData.valuesIdList == null) {
-        detailPageData.valuesIdList = List();
-      }
-      detailPageData.valuesIdList.add(serviceValue.id);
-      print('ValuesId:${detailPageData.valuesIdList}');
-      Navigator.of(context).pushNamed(RouteGenerator.TARGET,
-          arguments: ServiceTargetPageParam(
-              services: serviceValue,
-              detailPageData: detailPageData,
-              targets: serviceValue.targets));
-    } else {}
+    DetailPageData detailPageData = widget.params.detailPageData;
+    if (detailPageData.valuesIdList == null) {
+      detailPageData.valuesIdList = List();
+    }
+    detailPageData.valuesIdList.add(serviceValue.id);
+    Constants.onServiceItemClick(context, detailPageData, serviceValue);
   }
 }
 
