@@ -61,6 +61,7 @@ class User {
         categories.add(ProviderCategory.fromJson(v));
       });
     }
+    auth = true;
   }
 
   Map<String, dynamic> toJson() {

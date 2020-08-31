@@ -1,3 +1,4 @@
+import 'package:arbi/ui/change_language.dart';
 import 'package:arbi/ui/customer_order_listing.dart';
 import 'package:arbi/ui/home.dart';
 import 'package:arbi/ui/login.dart';
@@ -5,7 +6,6 @@ import 'package:arbi/ui/map_place_picker.dart';
 import 'package:arbi/ui/provider/provider_jobs_listing.dart';
 import 'package:arbi/ui/provider/provider_home.dart';
 import 'package:arbi/ui/provider/provider_profile.dart';
-import 'package:arbi/ui/provider/provider_information.dart';
 import 'package:arbi/ui/select_signup.dart';
 import 'package:arbi/ui/service_buy.dart';
 import 'package:arbi/ui/service_detail.dart';
@@ -25,10 +25,10 @@ class RouteGenerator {
   static const String MAP = '/Map';
   static const String PROVIDER_JOBS = '/Jobs';
   static const String PROFILE_PROVIDER = '/ProfileProvider';
-  static const String PROVIDER_COMPLETE_SIGNUP = '/ProviderSignUpComplete';
   static const String BUY = '/Buy';
   static const String PROVIDER_MAIN = '/ProviderMain';
   static const String CUSTOMER_ORDER = '/CustomerOrders';
+  static const String LANGUAGE = '/Language';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     // Getting arguments passed in while calling Navigator.pushNamed
@@ -61,8 +61,6 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => ProviderJobsListingPage());
       case PROFILE_PROVIDER:
         return MaterialPageRoute(builder: (_) => ProviderProfilePage());
-      case PROVIDER_COMPLETE_SIGNUP:
-        return MaterialPageRoute(builder: (_) => ProviderCompleteSignupPage());
       case BUY:
         return MaterialPageRoute(
             builder: (_) =>
@@ -71,6 +69,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => ProviderHomePageScreen());
       case CUSTOMER_ORDER:
         return MaterialPageRoute(builder: (_) => CustomerOrderListingPage());
+      case LANGUAGE:
+        return MaterialPageRoute(builder: (_) => ChangeLanguageWidget());
     }
   }
 

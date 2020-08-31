@@ -12,6 +12,8 @@ import 'generated/l10n.dart';
 import 'route_generator.dart';
 import 'settings_controller.dart';
 import 'utils/app_config.dart' as config;
+import 'model/setting.dart';
+import 'repo/settings_repository.dart' as settingRepo;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -153,19 +155,24 @@ class MyApp extends AppMVC {
           }
         },
         themedWidgetBuilder: (context, theme) {
-          return MaterialApp(
-              title: 'Yalla',
-              initialRoute: RouteGenerator.SPLASH,
-              onGenerateRoute: RouteGenerator.generateRoute,
-              debugShowCheckedModeBanner: true,
-              localizationsDelegates: [
-                S.delegate,
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate
-              ],
-              supportedLocales: S.delegate.supportedLocales,
-              theme: theme);
+          return ValueListenableBuilder(
+              valueListenable: settingRepo.setting,
+              builder: (context, Setting _setting, _) {
+                return MaterialApp(
+                    title: 'Yalla',
+                    initialRoute: RouteGenerator.SPLASH,
+                    onGenerateRoute: RouteGenerator.generateRoute,
+                    debugShowCheckedModeBanner: true,
+                    locale: _setting.mobileLanguage.value,
+                    localizationsDelegates: [
+                      S.delegate,
+                      GlobalMaterialLocalizations.delegate,
+                      GlobalWidgetsLocalizations.delegate,
+                      GlobalCupertinoLocalizations.delegate
+                    ],
+                    supportedLocales: S.delegate.supportedLocales,
+                    theme: theme);
+              });
         });
   }
 }

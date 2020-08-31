@@ -1,6 +1,5 @@
 import 'package:arbi/controller/user_controller.dart';
 import 'package:arbi/generated/l10n.dart';
-import 'package:arbi/model/user.dart';
 import 'package:arbi/route_generator.dart';
 import 'package:arbi/ui/login.dart';
 import 'package:arbi/utils/app_colors.dart';
@@ -50,13 +49,9 @@ class CustomerDrawerWidget extends StatelessWidget {
               Navigator.of(context).pushNamed(RouteGenerator.PROVIDER_JOBS);
             }),
         ListTile(
-          title: Text(S.of(context).blog,
-              style: TextStyle(color: _DrawerItemColor)),
-          onTap: () {
-            Navigator.of(context)
-                .pushNamed(RouteGenerator.PROVIDER_COMPLETE_SIGNUP);
-          },
-        ),
+            title: Text(S.of(context).blog,
+                style: TextStyle(color: _DrawerItemColor)),
+            onTap: () {}),
         ListTile(
           title: Text(S.of(context).how_it_works,
               style: TextStyle(color: _DrawerItemColor)),
@@ -69,6 +64,13 @@ class CustomerDrawerWidget extends StatelessWidget {
               style: TextStyle(color: _DrawerItemColor)),
           onTap: () {
             Navigator.pop(context);
+          },
+        ),
+        ListTile(
+          title: Text(S.of(context).change_language,
+              style: TextStyle(color: _DrawerItemColor)),
+          onTap: () {
+            Navigator.of(context).pushNamed(RouteGenerator.LANGUAGE);
           },
         ),
         Row(children: <Widget>[

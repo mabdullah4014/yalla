@@ -71,27 +71,7 @@ class _LoginPageState extends StateMVC<LoginPage> {
                                     buildContext, S.of(buildContext).login, () {
                                   FocusScope.of(buildContext).unfocus();
                                   if (_isValidForm()) {
-                                    AppUtils.onLoading(buildContext);
-                                    _con.login(onUserLogin: (User value) {
-                                      Navigator.pop(buildContext);
-                                      if (value != null &&
-                                          value.auth_token != null) {
-                                        _onLoginSuccess(buildContext, value);
-                                      } else if (value.status ==
-                                          Constants.STATUS_INVALID) {
-                                        AppUtils.showMessage(
-                                            buildContext,
-                                            S.of(buildContext).error,
-                                            S
-                                                .of(buildContext)
-                                                .wrong_email_or_password);
-                                      } else {
-                                        AppUtils.showMessage(
-                                            buildContext,
-                                            S.of(buildContext).error,
-                                            S.of(buildContext).unavailable);
-                                      }
-                                    });
+                                    _doLogin();
                                   }
                                 }),
                                 SizedBox(height: 10),
@@ -105,8 +85,8 @@ class _LoginPageState extends StateMVC<LoginPage> {
                                           fontSize: 14,
                                           fontWeight: FontWeight.w500)),
                                 ),
-//                                _facebookButton(),
-//                                SizedBox(height: 10),
+                                _facebookButton(),
+                                SizedBox(height: 10),
                                 _createAccountLabel(),
                               ],
                             ),
@@ -285,18 +265,19 @@ class _LoginPageState extends StateMVC<LoginPage> {
                 FacebookUser.fromJson(json.decode(graphResponse.body));
             _con.user.email = facebookUser.email;
             AppUtils.onLoading(context);
-            _con.exists(UserExistRequest(facebookUser.email),
-                onUserExits: (userExists) {
-              Navigator.of(context).pop();
-              if (userExists) {
-                AppUtils.showMessage(
-                    context, 'title', 'User exists : ${facebookUser.toJson()}');
-              } else {
-                Navigator.of(context).pushNamed(RouteGenerator.SIGNUP_AS,
-                    arguments: SignUpPageParam(
-                        name: facebookUser.name, email: facebookUser.email));
-              }
-            });
+            _doLogin();
+//            _con.exists(UserExistRequest(facebookUser.email),
+//                onUserExits: (userExists) {
+//              Navigator.of(context).pop();
+//              if (userExists) {
+//                AppUtils.showMessage(
+//                    context, 'title', 'User exists : ${facebookUser.toJson()}');
+//              } else {
+//                Navigator.of(context).pushNamed(RouteGenerator.SIGNUP_AS,
+//                    arguments: SignUpPageParam(
+//                        name: facebookUser.name, email: facebookUser.email));
+//              }
+//            });
           });
           break;
         case FacebookLoginStatus.cancelledByUser:
@@ -353,6 +334,22 @@ class _LoginPageState extends StateMVC<LoginPage> {
             .pushReplacementNamed(RouteGenerator.PROVIDER_MAIN);
       }
     }
+  }
+
+  void _doLogin() {
+    AppUtils.onLoading(context);
+    _con.login(onUserLogin: (User value) {
+      Navigator.pop(context);
+      if (value != null && value.auth_token != null) {
+        _onLoginSuccess(context, value);
+      } else if (value.status == Constants.STATUS_INVALID) {
+        AppUtils.showMessage(context, S.of(context).error,
+            S.of(context).wrong_email_or_password);
+      } else {
+        AppUtils.showMessage(
+            context, S.of(context).error, S.of(context).unavailable);
+      }
+    });
   }
 }
 
