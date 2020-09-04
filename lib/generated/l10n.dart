@@ -932,6 +932,56 @@ class S {
       args: [],
     );
   }
+
+  /// `Are you sure you want to delete this image?`
+  String get delete_image_message {
+    return Intl.message(
+      'Are you sure you want to delete this image?',
+      name: 'delete_image_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete`
+  String get delete {
+    return Intl.message(
+      'Delete',
+      name: 'delete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile Pic`
+  String get profile_pic {
+    return Intl.message(
+      'Profile Pic',
+      name: 'profile_pic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ID Card Front`
+  String get id_front_pic {
+    return Intl.message(
+      'ID Card Front',
+      name: 'id_front_pic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ID Card Back`
+  String get id_back_pic {
+    return Intl.message(
+      'ID Card Back',
+      name: 'id_back_pic',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

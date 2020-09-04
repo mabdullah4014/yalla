@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:arbi/model/cat_response.dart';
 import 'package:arbi/model/check_service_request.dart';
@@ -14,20 +13,11 @@ import 'package:flutter/services.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart' as http;
 
-import '../controller/user_controller.dart' as userCont;
-
 Future<CatResponse> getCategories() async {
   final String url =
       '${GlobalConfiguration().getString('api_base_url')}services';
   final client = new http.Client();
-  final response = await client.get(
-    url,
-    headers: {
-      HttpHeaders.contentTypeHeader: 'application/json',
-      HttpHeaders.authorizationHeader:
-          'Bearer ${userCont.currentUser.value.auth_token}'
-    },
-  );
+  final response = await client.get(url, headers: Constants.getHeader());
   print('Get Services Response : ${response.body}');
   CatResponse catResponse;
   if (response.statusCode == 200) {
@@ -56,17 +46,13 @@ Future<String> _loadFromAsset() async {
 
 Future<CheckServiceResponse> getServicePrice(
     CheckServiceRequest checkServiceRequest) async {
-  Map<String,String> mapB = Map.from(checkServiceRequest.target);
+  Map<String, String> mapB = Map.from(checkServiceRequest.target);
   print('Get Service price  Request : ${checkServiceRequest.toString()}');
   final String url = '${GlobalConfiguration().getString('api_base_url')}check';
   final client = new http.Client();
   final response = await client.post(
     url,
-    headers: {
-      HttpHeaders.contentTypeHeader: 'application/json',
-      HttpHeaders.authorizationHeader:
-          'Bearer ${userCont.currentUser.value.auth_token}'
-    },
+    headers: Constants.getHeader(),
     body: json.encode(checkServiceRequest.toJson()),
   );
   print('Calculate Response : ${response.body}');
@@ -96,11 +82,7 @@ Future<PlaceOrderResponse> servicePlaceOrder(
   final client = new http.Client();
   final response = await client.post(
     url,
-    headers: {
-      HttpHeaders.contentTypeHeader: 'application/json',
-      HttpHeaders.authorizationHeader:
-          'Bearer ${userCont.currentUser.value.auth_token}'
-    },
+    headers: Constants.getHeader(),
     body: json.encode(placeOrderRequest.toJson()),
   );
   print('Place Order Response : ${response.body}');
@@ -125,14 +107,7 @@ Future<ProviderCategoriesResponse> getProviderCat() async {
   final String url =
       '${GlobalConfiguration().getString('api_base_url')}providersService';
   final client = new http.Client();
-  final response = await client.get(
-    url,
-    headers: {
-      HttpHeaders.contentTypeHeader: 'application/json',
-      HttpHeaders.authorizationHeader:
-          'Bearer ${userCont.currentUser.value.auth_token}'
-    },
-  );
+  final response = await client.get(url, headers: Constants.getHeader());
   print('Provider Categories Response : ${response.body}');
   ProviderCategoriesResponse catResponse;
   if (response.statusCode == 200) {
@@ -154,11 +129,7 @@ Future<CustomerOrderResponse> getCustomerOrders() async {
   final String url =
       '${GlobalConfiguration().getString('api_base_url')}customerOrders';
   final client = new http.Client();
-  final response = await client.post(url, headers: {
-    HttpHeaders.contentTypeHeader: 'application/json',
-    HttpHeaders.authorizationHeader:
-        'Bearer ${userCont.currentUser.value.auth_token}'
-  });
+  final response = await client.post(url, headers: Constants.getHeader());
   print('Customer Order Response : ${response.body}');
   CustomerOrderResponse customerOrderResponse;
   if (response.statusCode == 200) {
@@ -182,11 +153,7 @@ Future<CustomerOrderResponse> getProviderJobs() async {
   final String url =
       '${GlobalConfiguration().getString('api_base_url')}serviceProviderOrders';
   final client = new http.Client();
-  final response = await client.post(url, headers: {
-    HttpHeaders.contentTypeHeader: 'application/json',
-    HttpHeaders.authorizationHeader:
-        'Bearer ${userCont.currentUser.value.auth_token}'
-  });
+  final response = await client.post(url, headers: Constants.getHeader());
   print('Provider Jobs Response : ${response.body}');
   CustomerOrderResponse customerOrderResponse;
   if (response.statusCode == 200) {
@@ -213,11 +180,7 @@ Future<bool> updateProviderJob(UpdateJobRequest request) async {
   final client = new http.Client();
   final response = await client.post(
     url,
-    headers: {
-      HttpHeaders.contentTypeHeader: 'application/json',
-      HttpHeaders.authorizationHeader:
-          'Bearer ${userCont.currentUser.value.auth_token}',
-    },
+    headers: Constants.getHeader(),
     body: json.encode(request.toJson()),
   );
   print('Update Provider job Response : ${response.body}');
@@ -240,11 +203,7 @@ Future<CustomerOrderResponse> getProviderPendingJobs() async {
   final String url =
       '${GlobalConfiguration().getString('api_base_url')}providerPendingOrders';
   final client = new http.Client();
-  final response = await client.get(url, headers: {
-    HttpHeaders.contentTypeHeader: 'application/json',
-    HttpHeaders.authorizationHeader:
-    'Bearer ${userCont.currentUser.value.auth_token}'
-  });
+  final response = await client.get(url, headers: Constants.getHeader());
   print('Provider pending job Response : ${response.body}');
   CustomerOrderResponse customerOrderResponse;
   if (response.statusCode == 200) {
@@ -263,4 +222,3 @@ Future<CustomerOrderResponse> getProviderPendingJobs() async {
   }
   return customerOrderResponse;
 }
-

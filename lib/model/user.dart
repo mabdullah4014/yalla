@@ -2,6 +2,10 @@ import 'package:arbi/model/provider_categories_response.dart';
 import 'package:arbi/utils/pref_util.dart';
 
 class User {
+
+  static const String PROVIDER_EMAIL = 'email';
+  static const String PROVIDER_FB = 'facebook';
+
   String id;
   String name;
   String email;
@@ -22,6 +26,7 @@ class User {
   List<int> provider_categories;
   List<ProviderCategory> categories;
   bool auth = false;
+  String provider = PROVIDER_EMAIL;
 
   User() {
     this.auth = false;
@@ -49,6 +54,7 @@ class User {
     user_type = jsonMap['user_type'];
     latitude = jsonMap['latitude'];
     longitude = jsonMap['longitude'];
+    provider = jsonMap['provider'];
     if (jsonMap["provider_categories"] != null) {
       provider_categories = [];
       jsonMap["provider_categories"].forEach((v) {
@@ -92,7 +98,35 @@ class User {
       map["provider_categories"] = provider_categories;
     if (categories != null && categories.isNotEmpty)
       map["categories"] = categories;
+    if (provider != null && provider.isNotEmpty)
+      map["provider"] = provider;
     if (auth != null) map["auth"] = auth;
+    return map;
+  }
+
+  Map<String, dynamic> getMultipartForRegister(Map<String, String> map) {
+    if (email != null && email.isNotEmpty) map["email"] = email;
+    if (password != null && password.isNotEmpty) map["password"] = password;
+    if (password_confirmation != null && password_confirmation.isNotEmpty)
+      map["password_confirmation"] = password_confirmation;
+    if (push_notification_token != null && push_notification_token.isNotEmpty)
+      map["push_notification_token"] = push_notification_token;
+    if (app_version != null && app_version.isNotEmpty)
+      map["app_version"] = app_version;
+    if (device != null && device.isNotEmpty) map["device"] = device;
+    if (name != null && name.isNotEmpty) map["name"] = name;
+    if (id != null && id.isNotEmpty) map["id"] = id;
+    if (business_name != null && business_name.isNotEmpty)
+      map["business_name"] = business_name;
+    if (auth_token != null && auth_token.isNotEmpty)
+      map["auth_token"] = auth_token;
+    if (phone_no != null && phone_no.isNotEmpty) map["phone_no"] = phone_no;
+    if (address != null && address.isNotEmpty) map["address"] = address;
+    if (business_bio != null && business_bio.isNotEmpty)
+      map["business_bio"] = business_bio;
+    if (user_type != null && user_type.isNotEmpty) map["user_type"] = user_type;
+    if (latitude != null && latitude.isNotEmpty) map["latitude"] = latitude;
+    if (longitude != null && longitude.isNotEmpty) map["longitude"] = longitude;
     return map;
   }
 
@@ -140,6 +174,7 @@ class User {
     provider_categories = null;
     categories = null;
     auth = false;
+    provider = null;
     PreferenceUtils.setString('current_user', "");
     return this;
   }

@@ -45,6 +45,15 @@ class _CustomerProfilePageState extends StateMVC<CustomerProfilePage> {
   }
 
   @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _passController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (currentLocation == null || currentLocation.isEmpty)
       currentLocation = S.of(context).tap_to_enter;

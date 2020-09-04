@@ -88,5 +88,10 @@
   "select_category_to_proceed": "Select at least one category to proceed",
   "description": "Description",
   "change_language": "Change Language",
-  "languages": "Languages"
+  "languages": "Languages",
+  "delete_image_message": "Are you sure you want to delete this image?",
+  "delete": "Delete",
+  "profile_pic": "Profile Pic",
+  "id_front_pic": "ID Card Front",
+  "id_back_pic": "ID Card Back"
 }

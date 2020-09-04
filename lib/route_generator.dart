@@ -1,6 +1,7 @@
 import 'package:arbi/ui/change_language.dart';
 import 'package:arbi/ui/customer_order_listing.dart';
 import 'package:arbi/ui/home.dart';
+import 'package:arbi/ui/image_picker_example.dart';
 import 'package:arbi/ui/login.dart';
 import 'package:arbi/ui/map_place_picker.dart';
 import 'package:arbi/ui/provider/provider_jobs_listing.dart';
@@ -29,6 +30,7 @@ class RouteGenerator {
   static const String PROVIDER_MAIN = '/ProviderMain';
   static const String CUSTOMER_ORDER = '/CustomerOrders';
   static const String LANGUAGE = '/Language';
+  static const String IMAGE = '/Image';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     // Getting arguments passed in while calling Navigator.pushNamed
@@ -71,6 +73,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => CustomerOrderListingPage());
       case LANGUAGE:
         return MaterialPageRoute(builder: (_) => ChangeLanguageWidget());
+      case IMAGE:
+        return MaterialPageRoute(builder: (_) => ImagePickerExamplePage());
     }
   }
 

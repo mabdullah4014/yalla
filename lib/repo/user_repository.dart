@@ -1,12 +1,13 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:arbi/controller/user_controller.dart';
 import 'package:arbi/model/user.dart';
 import 'package:arbi/model/user_exist_request.dart';
 import 'package:arbi/model/user_exist_response.dart';
+import 'package:arbi/ui/signup.dart';
 import 'package:arbi/utils/constants.dart';
 import 'package:global_configuration/global_configuration.dart';
+import 'package:http_parser/src/media_type.dart';
 import 'package:http/http.dart' as http;
 
 Future<User> login(User user) async {
@@ -15,14 +16,15 @@ Future<User> login(User user) async {
   final client = new http.Client();
   final response = await client.post(
     url,
-    headers: {HttpHeaders.contentTypeHeader: 'application/json'},
+    headers: Constants.getHeader(),
     body: json.encode(user.toJson()),
   );
   print('Login Response : ${response.body}');
   User cUser;
   if (response.statusCode == 200) {
     Map<String, dynamic> jsonResponse = json.decode(response.body);
-    if (jsonResponse.containsKey('status_code') && jsonResponse['status_code'] == 200) {
+    if (jsonResponse.containsKey('status_code') &&
+        jsonResponse['status_code'] == 200) {
       cUser = User.fromJSON(json.decode(response.body)['data']);
     } else {
       cUser = User.status(Constants.STATUS_INVALID);
@@ -40,15 +42,52 @@ Future<User> register(User user) async {
   final client = new http.Client();
   final response = await client.post(
     url,
-    headers: {HttpHeaders.contentTypeHeader: 'application/json'},
+    headers: Constants.getHeader(),
     body: json.encode(user.toJson()),
   );
   User currentUser;
   print('Register Response : ${response.body}');
   if (response.statusCode == 200) {
     Map<String, dynamic> jsonResponse = json.decode(response.body);
-    if (jsonResponse.containsKey('status_code') && jsonResponse['status_code'] == 200) {
+    if (jsonResponse.containsKey('status_code') &&
+        jsonResponse['status_code'] == 200) {
       currentUser = User.fromJSON(json.decode(response.body)['data']);
+    } else {
+      currentUser = User.status(Constants.STATUS_INVALID);
+    }
+  } else {
+    currentUser = User.status(Constants.STATUS_SOMETHING_WENT_WRONG);
+  }
+  return currentUser;
+}
+
+Future<User> multipartRegister(
+    User user, List<UploadImageObject> pickedFiles) async {
+  print('Register Multipart Request : ${user.toString()}');
+
+  final String url =
+      '${GlobalConfiguration().getString('api_base_url')}register';
+
+  var request = new http.MultipartRequest('POST', Uri.parse(url));
+  user.getMultipartForRegister(request.fields);
+  for (UploadImageObject file in pickedFiles) {
+    print('Images : ${file.toString()}');
+    http.MultipartFile.fromPath(file.fieldName, file.path,
+            filename: file.imageName,
+            contentType: MediaType.parse('image/jpeg'))
+        .then((value) {
+      request.files.add(value);
+    });
+  }
+  final response = await request.send();
+  var respStr = await http.Response.fromStream(response);
+  User currentUser;
+  print('Register Response : ${respStr.body}');
+  if (response.statusCode == 200) {
+    Map<String, dynamic> jsonResponse = json.decode(respStr.body);
+    if (jsonResponse.containsKey('status_code') &&
+        jsonResponse['status_code'] == 200) {
+      currentUser = User.fromJSON(json.decode(respStr.body)['data']);
     } else {
       currentUser = User.status(Constants.STATUS_INVALID);
     }
@@ -64,7 +103,7 @@ Future<UserExistResponse> exists(UserExistRequest userExistRequest) async {
   final client = new http.Client();
   final response = await client.post(
     url,
-    headers: {HttpHeaders.contentTypeHeader: 'application/json'},
+    headers: Constants.getHeader(),
     body: json.encode(userExistRequest.toJson()),
   );
   UserExistResponse userExistResponse;
@@ -89,15 +128,9 @@ Future<User> update(User updatedUser) async {
   final String url =
       '${GlobalConfiguration().getString('api_base_url')}users/updateUser/${currentUser.value.id}';
   final client = new http.Client();
-
-  Map<String, String> headers = Map();
-  headers[HttpHeaders.contentTypeHeader] = 'application/json';
-  if (currentUser.value != null && currentUser.value.hasAuthToken())
-    headers[HttpHeaders.authorizationHeader] =
-        'Bearer ${currentUser.value.auth_token}';
   final response = await client.post(
     url,
-    headers: headers,
+    headers: Constants.getHeader(),
     body: json.encode(updatedUser.toJson()),
   );
   print('User update Response : ${response.body}');
@@ -122,10 +155,7 @@ Future<bool> resetPassword(User user) async {
   final client = new http.Client();
   final response = await client.post(
     url,
-    headers: {
-      HttpHeaders.contentTypeHeader: 'application/json',
-      HttpHeaders.authorizationHeader: 'Bearer ${user.auth_token}'
-    },
+    headers: Constants.getHeader(),
     body: json.encode(user.toJson()),
   );
   if (response.statusCode == 200) {
@@ -135,24 +165,3 @@ Future<bool> resetPassword(User user) async {
     return false;
   }
 }
-
-//Future<void> logout() async {
-//  currentUser.value = new User();
-//  SharedPreferences prefs = await SharedPreferences.getInstance();
-//  await prefs.remove('current_user');
-//}
-
-//Future<User> update(User user) async {
-//  final String _apiToken = 'api_token=${currentUser.value.authToken}';
-//  final String url =
-//      '${GlobalConfiguration().getString('api_base_url')}users/${currentUser.value.id}?$_apiToken';
-//  final client = new http.Client();
-//  final response = await client.post(
-//    url,
-//    headers: {HttpHeaders.contentTypeHeader: 'application/json'},
-//    body: json.encode(user.toMap()),
-//  );
-//  setCurrentUser(response.body);
-//  currentUser.value = User.fromJSON(json.decode(response.body)['data']);
-//  return currentUser.value;
-//}

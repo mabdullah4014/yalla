@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:arbi/model/setting.dart';
+import 'package:arbi/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:global_configuration/global_configuration.dart';
@@ -14,8 +15,7 @@ Future<Setting> initSettings() async {
   Setting _setting;
   final String url =
       '${GlobalConfiguration().getString('api_base_url')}configurations';
-  final response = await http
-      .get(url, headers: {HttpHeaders.contentTypeHeader: 'application/json'});
+  final response = await http.get(url, headers: Constants.getHeader());
   if (response.statusCode == 200 &&
       response.headers.containsValue('application/json')) {
     if (json.decode(response.body)['data'] != null) {

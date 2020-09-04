@@ -45,7 +45,7 @@ class AppColors {
               settingRepo.setting.value.mainColor.replaceAll("#", "0xFF")))
           .withOpacity(opacity);
     } catch (e) {
-      return Color(0xFFCCCCCC).withOpacity(opacity);
+      return Color(0xFFF39C12).withOpacity(opacity);
     }
   }
 
@@ -55,7 +55,7 @@ class AppColors {
               settingRepo.setting.value.secondColor.replaceAll("#", "0xFF")))
           .withOpacity(opacity);
     } catch (e) {
-      return Color(0xFFCCCCCC).withOpacity(opacity);
+      return Color(0xFF1196A7).withOpacity(opacity);
     }
   }
 
@@ -65,7 +65,7 @@ class AppColors {
               settingRepo.setting.value.accentColor.replaceAll("#", "0xFF")))
           .withOpacity(opacity);
     } catch (e) {
-      return Color(0xFFCCCCCC).withOpacity(opacity);
+      return Color(0xffcf830c).withOpacity(opacity);
     }
   }
 
@@ -75,7 +75,7 @@ class AppColors {
               settingRepo.setting.value.mainDarkColor.replaceAll("#", "0xFF")))
           .withOpacity(opacity);
     } catch (e) {
-      return Color(0xFFCCCCCC).withOpacity(opacity);
+      return Color(0xffcf830c).withOpacity(opacity);
     }
   }
 

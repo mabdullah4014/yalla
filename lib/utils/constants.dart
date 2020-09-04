@@ -1,5 +1,9 @@
+import 'dart:io';
+
+import 'package:arbi/controller/user_controller.dart';
 import 'package:arbi/model/cat_response.dart';
 import 'package:arbi/model/place_order_request.dart';
+import 'package:arbi/repo/settings_repository.dart';
 import 'package:arbi/ui/service_buy.dart';
 import 'package:arbi/ui/service_detail.dart';
 import 'package:arbi/ui/service_target.dart';
@@ -14,7 +18,15 @@ class Constants {
   static const int PHONE_LENGTH = 8;
   static const int STATUS_SOMETHING_WENT_WRONG = 500;
   static PlaceOrderRequest placeOrderRequest = PlaceOrderRequest();
-  static const List<String> PHONE_CODES = ['73', '74', '75', '76', '77', '78', '79'];
+  static const List<String> PHONE_CODES = [
+    '73',
+    '74',
+    '75',
+    '76',
+    '77',
+    '78',
+    '79'
+  ];
 
   static InputDecoration getInputDecoration(
       BuildContext context, String hintText, String labelText,
@@ -63,5 +75,17 @@ class Constants {
               services: serviceValue,
               price: serviceValue.price));
     }
+  }
+
+  static Map<String, String> getHeader() {
+    Map<String, String> headerMap = Map();
+    headerMap[HttpHeaders.contentTypeHeader] = 'application/json';
+    headerMap['locale'] = setting.value.mobileLanguage.value.countryCode;
+
+    if (currentUser.value != null && currentUser.value.auth_token != null) {
+      headerMap[HttpHeaders.authorizationHeader] =
+          'Bearer ${currentUser.value.auth_token}';
+    }
+    return headerMap;
   }
 }

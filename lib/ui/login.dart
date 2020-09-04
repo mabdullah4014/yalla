@@ -42,6 +42,13 @@ class _LoginPageState extends StateMVC<LoginPage> {
   }
 
   @override
+  void dispose() {
+    _emailController.dispose();
+    _passController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext buildContext) {
     final height = MediaQuery.of(buildContext).size.height;
     final width = MediaQuery.of(buildContext).size.width;
@@ -70,6 +77,7 @@ class _LoginPageState extends StateMVC<LoginPage> {
                                 AppUtils.submitButton(
                                     buildContext, S.of(buildContext).login, () {
                                   FocusScope.of(buildContext).unfocus();
+                                  _con.user.provider = User.PROVIDER_EMAIL;
                                   if (_isValidForm()) {
                                     _doLogin();
                                   }
@@ -264,6 +272,7 @@ class _LoginPageState extends StateMVC<LoginPage> {
             FacebookUser facebookUser =
                 FacebookUser.fromJson(json.decode(graphResponse.body));
             _con.user.email = facebookUser.email;
+            _con.user.provider = User.PROVIDER_FB;
             AppUtils.onLoading(context);
             _doLogin();
 //            _con.exists(UserExistRequest(facebookUser.email),

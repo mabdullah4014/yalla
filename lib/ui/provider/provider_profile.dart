@@ -41,6 +41,17 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
   String currentCategories = '';
   List<ProviderCategory> _myActivities;
 
+  @override
+  void dispose() {
+    _detailController.dispose();
+    _companyNameController.dispose();
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _passController.dispose();
+    super.dispose();
+  }
+
   _ProviderProfilePageState() {
     _con = UserController();
     _myActivities = [];

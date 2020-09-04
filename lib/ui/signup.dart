@@ -7,6 +7,7 @@ import 'package:arbi/generated/l10n.dart';
 import 'package:arbi/model/facebook_user.dart';
 import 'package:arbi/model/user.dart';
 import 'package:arbi/model/user_exist_request.dart';
+import 'package:arbi/ui/image_picker_example.dart';
 import 'package:arbi/utils/app_colors.dart';
 import 'package:arbi/utils/constants.dart';
 import 'package:arbi/utils/app_utils.dart';
@@ -14,10 +15,12 @@ import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:http/http.dart' as http;
 
 import '../route_generator.dart';
+import 'image_picker_example.dart';
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key key, this.signUpPageParam}) : super(key: key);
@@ -42,6 +45,10 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
 
+  PickedFile profilePic;
+  PickedFile idCardFront;
+  PickedFile idCardBack;
+
   _SignUpPageState(SignUpPageParam signUpPageParam) {
     _con = UserController();
     isCustomer = signUpPageParam.isCustomer;
@@ -53,6 +60,16 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
     if (signUpPageParam.email != null) {
       _emailController.text = signUpPageParam.email;
     }
+  }
+
+  @override
+  void dispose() {
+    _companyNameController.dispose();
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _passController.dispose();
+    super.dispose();
   }
 
   @override
@@ -92,6 +109,8 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
                                       }
                                     }),
 //                                    _facebookButton(),
+                                    SizedBox(height: _defaultPaddingMargin),
+                                    _imageLayout()
                                   ])),
                           childBgColor: Colors.white,
                           imageProvider: AssetImage(
@@ -402,8 +421,8 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
             style: TextStyle(color: Theme.of(context).primaryColor),
             maxLength: Constants.PHONE_LENGTH,
             controller: _phoneController,
-            onSaved: (input) =>
-                _con.user.phone_no = '${Constants.defaultPhoneCode}$codeDropdownValue$input',
+            onSaved: (input) => _con.user.phone_no =
+                '${Constants.defaultPhoneCode}$codeDropdownValue$input',
             textAlignVertical: TextAlignVertical.center,
             keyboardType: TextInputType.phone,
             decoration: InputDecoration(
@@ -456,6 +475,15 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
         _passController.text.length < 3) {
       AppUtils.showMessage(context, S.of(context).error,
           S.of(context).should_be_more_than_3_characters);
+      return false;
+    } else if (profilePic == null) {
+      AppUtils.showMessage(context, S.of(context).error, 'Select image1');
+      return false;
+    } else if (idCardFront == null) {
+      AppUtils.showMessage(context, S.of(context).error, 'Select image2');
+      return false;
+    } else if (idCardBack == null) {
+      AppUtils.showMessage(context, S.of(context).error, 'Select image3');
       return false;
     }
     return true;
@@ -538,6 +566,29 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
     await facebookSignIn.logOut();
     AppUtils.showMessage(context, S.of(context).login_fb, 'Logged out.');
   }
+
+  Widget _imageLayout() {
+    return Container(
+        padding: EdgeInsets.all(5),
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          ImagePickerExamplePage(
+              imageTitle: S.of(context).profile_pic,
+              callback: (PickedFile file) {
+                profilePic = file;
+              }),
+          ImagePickerExamplePage(
+              imageTitle: S.of(context).id_front_pic,
+              callback: (PickedFile file) {
+                idCardFront = file;
+              }),
+          ImagePickerExamplePage(
+              imageTitle: S.of(context).id_back_pic,
+              callback: (PickedFile file) {
+                idCardBack = file;
+              })
+        ]));
+  }
 }
 
 class SignUpPageParam {
@@ -546,4 +597,15 @@ class SignUpPageParam {
   final bool isCustomer;
   final String name;
   final String email;
+}
+
+class UploadImageObject {
+  String fieldName;
+  String path;
+  String imageName;
+
+  @override
+  String toString() {
+    return 'UploadImageObject{fieldName: $fieldName, path: $path, imageName: $imageName}';
+  }
 }
