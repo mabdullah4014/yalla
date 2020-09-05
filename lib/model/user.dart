@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:arbi/model/provider_categories_response.dart';
+import 'package:arbi/repo/settings_repository.dart';
 import 'package:arbi/utils/pref_util.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:package_info/package_info.dart';
 
 class User {
-
   static const String PROVIDER_EMAIL = 'email';
   static const String PROVIDER_FB = 'facebook';
 
@@ -27,10 +31,23 @@ class User {
   List<ProviderCategory> categories;
   bool auth = false;
   String provider = PROVIDER_EMAIL;
+  String picture_link; //facebook link
+  String locale = 'en';
+  String profile_pic_path;
+  String id_front_path;
+  String id_back_path;
 
   User() {
     this.auth = false;
-    provider_categories = null;
+    PackageInfo.fromPlatform().then((value) {
+//      push_notification_token =
+//          PreferenceUtils.getString(PreferenceUtils.push_token);
+      app_version = value.version;
+      if (Platform.isIOS)
+        device = 'ios';
+      else
+        device = 'android';
+    });
   }
 
   User.status(int status) {
@@ -67,6 +84,15 @@ class User {
         categories.add(ProviderCategory.fromJson(v));
       });
     }
+    picture_link = jsonMap['picture_link'];
+    profile_pic_path = jsonMap['profile_pic_path'];
+    id_front_path = jsonMap['id_front_path'];
+    id_back_path = jsonMap['id_back_path'];
+
+    locale = jsonMap['locale'];
+    setting.value.mobileLanguage.value = Locale(locale ?? 'en');
+    setDefaultLanguage(locale ?? 'en');
+    setting.notifyListeners();
     auth = true;
   }
 
@@ -98,8 +124,16 @@ class User {
       map["provider_categories"] = provider_categories;
     if (categories != null && categories.isNotEmpty)
       map["categories"] = categories;
-    if (provider != null && provider.isNotEmpty)
-      map["provider"] = provider;
+    if (provider != null && provider.isNotEmpty) map["provider"] = provider;
+    if (picture_link != null && picture_link.isNotEmpty)
+      map["picture_link"] = picture_link;
+    if (locale != null && locale.isNotEmpty) map["locale"] = locale;
+    if (profile_pic_path != null && profile_pic_path.isNotEmpty)
+      map["profile_pic_path"] = profile_pic_path;
+    if (id_front_path != null && id_front_path.isNotEmpty)
+      map["id_front_path"] = id_front_path;
+    if (id_back_path != null && id_back_path.isNotEmpty)
+      map["id_back_path"] = id_back_path;
     if (auth != null) map["auth"] = auth;
     return map;
   }
@@ -127,6 +161,16 @@ class User {
     if (user_type != null && user_type.isNotEmpty) map["user_type"] = user_type;
     if (latitude != null && latitude.isNotEmpty) map["latitude"] = latitude;
     if (longitude != null && longitude.isNotEmpty) map["longitude"] = longitude;
+    if (picture_link != null && picture_link.isNotEmpty)
+      map["picture_link"] = picture_link;
+    if (provider != null && provider.isNotEmpty) map["provider"] = provider;
+    if (locale != null && locale.isNotEmpty) map["locale"] = locale;
+    if (profile_pic_path != null && profile_pic_path.isNotEmpty)
+      map["profile_pic_path"] = profile_pic_path;
+    if (id_front_path != null && id_front_path.isNotEmpty)
+      map["id_front_path"] = id_front_path;
+    if (id_back_path != null && id_back_path.isNotEmpty)
+      map["id_back_path"] = id_back_path;
     return map;
   }
 
@@ -175,6 +219,11 @@ class User {
     categories = null;
     auth = false;
     provider = null;
+    picture_link = null;
+    locale = null;
+    id_back_path = null;
+    id_front_path = null;
+    profile_pic_path = null;
     PreferenceUtils.setString('current_user', "");
     return this;
   }

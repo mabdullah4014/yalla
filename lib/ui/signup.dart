@@ -1,23 +1,17 @@
-import 'dart:convert';
 import 'dart:ui';
 
 import 'package:arbi/controller/user_controller.dart';
 import 'package:arbi/elements/circleWidgetOnTop.dart';
 import 'package:arbi/generated/l10n.dart';
-import 'package:arbi/model/facebook_user.dart';
 import 'package:arbi/model/user.dart';
-import 'package:arbi/model/user_exist_request.dart';
 import 'package:arbi/ui/image_picker_example.dart';
 import 'package:arbi/utils/app_colors.dart';
-import 'package:arbi/utils/constants.dart';
 import 'package:arbi/utils/app_utils.dart';
+import 'package:arbi/utils/constants.dart';
 import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
-import 'package:http/http.dart' as http;
 
 import '../route_generator.dart';
 import 'image_picker_example.dart';
@@ -97,6 +91,8 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
                                     SizedBox(height: _defaultPaddingMargin),
                                     _form(),
                                     SizedBox(height: _defaultPaddingMargin),
+                                    _imageLayout(),
+                                    SizedBox(height: _defaultPaddingMargin),
                                     AppUtils.submitButton(
                                         context,
                                         isCustomer
@@ -109,8 +105,6 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
                                       }
                                     }),
 //                                    _facebookButton(),
-                                    SizedBox(height: _defaultPaddingMargin),
-                                    _imageLayout()
                                   ])),
                           childBgColor: Colors.white,
                           imageProvider: AssetImage(
@@ -140,7 +134,7 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
         ));
   }
 
-  Widget _facebookButton() {
+  /*Widget _facebookButton() {
     return InkWell(
         onTap: () {
           _fbLogin();
@@ -172,7 +166,7 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
                             fontWeight: FontWeight.w400)),
                   ))
             ])));
-  }
+  }*/
 
   Widget _createAccountLabel() {
     return InkWell(
@@ -477,13 +471,16 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
           S.of(context).should_be_more_than_3_characters);
       return false;
     } else if (profilePic == null) {
-      AppUtils.showMessage(context, S.of(context).error, 'Select image1');
+      AppUtils.showMessage(context, S.of(context).error,
+          '${S.of(context).capture} ${S.of(context).profile_pic} ${S.of(context).picture}');
       return false;
-    } else if (idCardFront == null) {
-      AppUtils.showMessage(context, S.of(context).error, 'Select image2');
+    } else if (!isCustomer && idCardFront == null) {
+      AppUtils.showMessage(context, S.of(context).error,
+          '${S.of(context).capture} ${S.of(context).id_front_pic} ${S.of(context).picture}');
       return false;
-    } else if (idCardBack == null) {
-      AppUtils.showMessage(context, S.of(context).error, 'Select image3');
+    } else if (!isCustomer && idCardBack == null) {
+      AppUtils.showMessage(context, S.of(context).error,
+          '${S.of(context).capture} ${S.of(context).id_back_pic} ${S.of(context).picture}');
       return false;
     }
     return true;
@@ -491,7 +488,17 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
 
   void _doRegister(BuildContext scaffoldContext, BuildContext buildContext) {
     AppUtils.onLoading(buildContext);
-    _con.register(onUserRegister: (User value) {
+    List<UploadImageObject> pickedFiles = List();
+    pickedFiles.add(
+        UploadImageObject('profile_pic', profilePic.path, 'profile_pic.jpeg'));
+    if (!isCustomer) {
+      pickedFiles.add(
+          UploadImageObject('id_front', idCardFront.path, 'id_front.jpeg'));
+      pickedFiles
+          .add(UploadImageObject('id_back', idCardBack.path, 'id_back.jpeg'));
+    }
+    //    _con.register(onUserRegister: (User value) {
+    _con.registerForm(pickedFiles, onUserRegister: (User value) {
       Navigator.pop(context);
       if (value != null && value.auth_token != null) {
         Scaffold.of(scaffoldContext).showSnackBar(
@@ -502,10 +509,18 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
           Navigator.of(buildContext)
               .pushReplacementNamed(RouteGenerator.PROVIDER_MAIN);
       } else if (value.status == Constants.STATUS_INVALID) {
-        _showSnackBar(
-            scaffoldContext, S.of(buildContext).wrong_email_or_password);
+        AppUtils.showMessage(context, S.of(context).error,
+            S.of(buildContext).wrong_email_or_password);
+      } else if (value.status == Constants.STATUS_APPROVAL) {
+        AppUtils.showMessage(
+            context, S.of(context).app_name, S.of(buildContext).not_approved,
+            callback: () {
+          Navigator.of(context)
+              .popUntil(ModalRoute.withName(RouteGenerator.LOGIN));
+        });
       } else {
-        _showSnackBar(scaffoldContext, S.of(buildContext).unavailable);
+        AppUtils.showMessage(
+            context, S.of(context).error, S.of(buildContext).unavailable);
       }
     });
   }
@@ -514,7 +529,7 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
     Scaffold.of(scaffoldContext).showSnackBar(SnackBar(content: Text(message)));
   }
 
-  FacebookLogin facebookSignIn = FacebookLogin();
+  /*FacebookLogin facebookSignIn = FacebookLogin();
 
   Future<Null> _fbLogin() async {
     facebookSignIn.loginBehavior = FacebookLoginBehavior.nativeWithFallback;
@@ -565,29 +580,35 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
   Future<Null> _fbLogOut() async {
     await facebookSignIn.logOut();
     AppUtils.showMessage(context, S.of(context).login_fb, 'Logged out.');
-  }
+  }*/
 
   Widget _imageLayout() {
     return Container(
         padding: EdgeInsets.all(5),
-        child:
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          ImagePickerExamplePage(
-              imageTitle: S.of(context).profile_pic,
-              callback: (PickedFile file) {
-                profilePic = file;
-              }),
-          ImagePickerExamplePage(
-              imageTitle: S.of(context).id_front_pic,
-              callback: (PickedFile file) {
-                idCardFront = file;
-              }),
-          ImagePickerExamplePage(
-              imageTitle: S.of(context).id_back_pic,
-              callback: (PickedFile file) {
-                idCardBack = file;
-              })
-        ]));
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: isCustomer ? MainAxisSize.min : MainAxisSize.max,
+            children: [
+              ImagePickerExamplePage(
+                  imageTitle: S.of(context).profile_pic,
+                  callback: (PickedFile file) {
+                    profilePic = file;
+                  }),
+              Visibility(
+                  visible: !isCustomer,
+                  child: ImagePickerExamplePage(
+                      imageTitle: S.of(context).id_front_pic,
+                      callback: (PickedFile file) {
+                        idCardFront = file;
+                      })),
+              Visibility(
+                  visible: !isCustomer,
+                  child: ImagePickerExamplePage(
+                      imageTitle: S.of(context).id_back_pic,
+                      callback: (PickedFile file) {
+                        idCardBack = file;
+                      }))
+            ]));
   }
 }
 
@@ -603,6 +624,8 @@ class UploadImageObject {
   String fieldName;
   String path;
   String imageName;
+
+  UploadImageObject(this.fieldName, this.path, this.imageName);
 
   @override
   String toString() {

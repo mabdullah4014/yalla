@@ -93,5 +93,8 @@
   "delete": "Delete",
   "profile_pic": "Profile Pic",
   "id_front_pic": "ID Card Front",
-  "id_back_pic": "ID Card Back"
+  "id_back_pic": "ID Card Back",
+  "not_approved": "You are not approved yet.",
+  "capture": "Capture",
+  "picture": "Picture"
 }

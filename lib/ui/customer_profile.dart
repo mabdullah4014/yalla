@@ -356,8 +356,8 @@ class _CustomerProfilePageState extends StateMVC<CustomerProfilePage> {
           _con.user.password = _passController.text;
           _con.user.password_confirmation = _passController.text;
         }
-        _con.user.push_notification_token =
-            PreferenceUtils.getString(PreferenceUtils.push_token);
+//        _con.user.push_notification_token =
+//            PreferenceUtils.getString(PreferenceUtils.push_token);
         _con.user.user_type = currentUser.value.user_type;
         AppUtils.onLoading(context, message: S.of(context).updating);
         _con.update(onUpdateUser: (bool updated) {

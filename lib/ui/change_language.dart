@@ -2,6 +2,7 @@ import 'package:arbi/generated/l10n.dart';
 import 'package:arbi/model/language.dart';
 import 'package:flutter/material.dart';
 import 'package:arbi/repo/settings_repository.dart' as settingRepo;
+import 'package:arbi/repo/user_repository.dart' as userRepo;
 
 class ChangeLanguageWidget extends StatefulWidget {
   @override
@@ -50,19 +51,11 @@ class _ChangeLanguageWidgetState extends State<ChangeLanguageWidget> {
                 return SizedBox(height: 10);
               },
               itemBuilder: (context, index) {
-                Language _language = languagesList.languages.elementAt(index);
-                settingRepo
-                    .getDefaultLanguage(settingRepo
-                        .setting.value.mobileLanguage.value.languageCode)
-                    .then((_langCode) {
-                  if (_langCode == _language.code) {
-                    _language.selected = true;
-                  }
-                });
+               Language _language = languagesList.languages[index];
                 return InkWell(
                   onTap: () async {
                     settingRepo.setting.value.mobileLanguage.value =
-                        new Locale(_language.code, _language.country);
+                        new Locale(_language.code);
                     settingRepo.setting.notifyListeners();
                     languagesList.languages.forEach((_l) {
                       setState(() {
@@ -71,6 +64,7 @@ class _ChangeLanguageWidgetState extends State<ChangeLanguageWidget> {
                     });
                     _language.selected = !_language.selected;
                     settingRepo.setDefaultLanguage(_language.code);
+                    userRepo.updateLocale({'locale': _language.code});
                     Navigator.of(context).pop();
                   },
                   child: Container(
@@ -116,8 +110,7 @@ class _ChangeLanguageWidgetState extends State<ChangeLanguageWidget> {
                               child: Icon(
                                 Icons.check,
                                 size: _language.selected ? 24 : 0,
-                                color: Theme.of(context)
-                                    .primaryColor
+                                color: Colors.white
                                     .withOpacity(_language.selected ? 0.85 : 0),
                               ),
                             ),

@@ -476,8 +476,8 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
           _con.user.password = _passController.text;
           _con.user.password_confirmation = _passController.text;
         }
-        _con.user.push_notification_token =
-            currentUser.value.push_notification_token;
+//        _con.user.push_notification_token =
+//            currentUser.value.push_notification_token;
         _con.user.user_type = currentUser.value.user_type;
 
         List<int> list = [];

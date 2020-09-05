@@ -83,16 +83,7 @@ class _LoginPageState extends StateMVC<LoginPage> {
                                   }
                                 }),
                                 SizedBox(height: 10),
-                                Container(
-                                  padding: EdgeInsets.symmetric(vertical: 10),
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                      S.of(buildContext).forgot_password,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500)),
-                                ),
+                                _forgotPassword(),
                                 _facebookButton(),
                                 SizedBox(height: 10),
                                 _createAccountLabel(),
@@ -271,22 +262,12 @@ class _LoginPageState extends StateMVC<LoginPage> {
             print(graphResponse.body);
             FacebookUser facebookUser =
                 FacebookUser.fromJson(json.decode(graphResponse.body));
-            _con.user.email = facebookUser.email;
-            _con.user.provider = User.PROVIDER_FB;
-            AppUtils.onLoading(context);
-            _doLogin();
-//            _con.exists(UserExistRequest(facebookUser.email),
-//                onUserExits: (userExists) {
-//              Navigator.of(context).pop();
-//              if (userExists) {
-//                AppUtils.showMessage(
-//                    context, 'title', 'User exists : ${facebookUser.toJson()}');
-//              } else {
-//                Navigator.of(context).pushNamed(RouteGenerator.SIGNUP_AS,
-//                    arguments: SignUpPageParam(
-//                        name: facebookUser.name, email: facebookUser.email));
-//              }
-//            });
+            User user = User();
+            user.email = facebookUser.email;
+            user.name = facebookUser.name;
+            user.provider = User.PROVIDER_FB;
+            user.picture_link = facebookUser.picture.data.url;
+            _doSocialLogin(user);
           });
           break;
         case FacebookLoginStatus.cancelledByUser:
@@ -354,11 +335,40 @@ class _LoginPageState extends StateMVC<LoginPage> {
       } else if (value.status == Constants.STATUS_INVALID) {
         AppUtils.showMessage(context, S.of(context).error,
             S.of(context).wrong_email_or_password);
+      } else if (value.status == Constants.STATUS_APPROVAL) {
+        AppUtils.showMessage(
+            context, S.of(context).app_name, S.of(context).not_approved);
       } else {
         AppUtils.showMessage(
             context, S.of(context).error, S.of(context).unavailable);
       }
     });
+  }
+
+  void _doSocialLogin(User user) {
+    AppUtils.onLoading(context);
+    _con.socialLogin(user, onUserLogin: (User value) {
+      Navigator.pop(context);
+      if (value != null && value.auth_token != null) {
+        _onLoginSuccess(context, value);
+      } else if (value.status == Constants.STATUS_INVALID) {
+        AppUtils.showMessage(context, S.of(context).error,
+            S.of(context).wrong_email_or_password);
+      } else {
+        AppUtils.showMessage(
+            context, S.of(context).error, S.of(context).unavailable);
+      }
+    });
+  }
+
+  Widget _forgotPassword() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10),
+      alignment: Alignment.center,
+      child: Text(S.of(context).forgot_password,
+          style: TextStyle(
+              color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500)),
+    );
   }
 }
 

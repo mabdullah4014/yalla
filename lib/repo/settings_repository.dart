@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:arbi/model/language.dart';
 import 'package:arbi/model/setting.dart';
 import 'package:arbi/utils/constants.dart';
+import 'package:arbi/utils/pref_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:global_configuration/global_configuration.dart';
@@ -23,10 +25,6 @@ Future<Setting> initSettings() async {
       await prefs.setString(
           'settings', json.encode(json.decode(response.body)['data']));
       _setting = Setting.fromJSON(json.decode(response.body)['data']);
-      if (prefs.containsKey('language')) {
-        _setting.mobileLanguage =
-            new ValueNotifier(Locale(prefs.get('language'), ''));
-      }
       setting.value = _setting;
       setting.notifyListeners();
     }
@@ -36,23 +34,17 @@ Future<Setting> initSettings() async {
 }
 
 void setBrightness(Brightness brightness) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
   brightness == Brightness.dark
-      ? prefs.setBool("isDark", true)
-      : prefs.setBool("isDark", false);
+      ? PreferenceUtils.setBool("isDark", true)
+      : PreferenceUtils.setBool("isDark", false);
 }
 
 Future<void> setDefaultLanguage(String language) async {
   if (language != null) {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('language', language);
+    PreferenceUtils.setString('language', language);
   }
 }
 
 Future<String> getDefaultLanguage(String defaultLanguage) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  if (prefs.containsKey('language')) {
-    defaultLanguage = await prefs.get('language');
-  }
-  return defaultLanguage;
+  return PreferenceUtils.getString('language', defaultLanguage);
 }

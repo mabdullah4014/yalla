@@ -7,6 +7,8 @@ import 'package:arbi/model/user_exist_response.dart';
 import 'package:arbi/ui/signup.dart';
 import 'package:arbi/utils/constants.dart';
 import 'package:global_configuration/global_configuration.dart';
+
+// ignore: implementation_imports
 import 'package:http_parser/src/media_type.dart';
 import 'package:http/http.dart' as http;
 
@@ -26,6 +28,9 @@ Future<User> login(User user) async {
     if (jsonResponse.containsKey('status_code') &&
         jsonResponse['status_code'] == 200) {
       cUser = User.fromJSON(json.decode(response.body)['data']);
+    } else if (jsonResponse.containsKey('status_code') &&
+        jsonResponse['status_code'] == 402) {
+      cUser = User.status(Constants.STATUS_APPROVAL);
     } else {
       cUser = User.status(Constants.STATUS_INVALID);
     }
@@ -33,32 +38,6 @@ Future<User> login(User user) async {
     cUser = User.status(Constants.STATUS_SOMETHING_WENT_WRONG);
   }
   return cUser;
-}
-
-Future<User> register(User user) async {
-  print('Register Request : ${user.toString()}');
-  final String url =
-      '${GlobalConfiguration().getString('api_base_url')}register';
-  final client = new http.Client();
-  final response = await client.post(
-    url,
-    headers: Constants.getHeader(),
-    body: json.encode(user.toJson()),
-  );
-  User currentUser;
-  print('Register Response : ${response.body}');
-  if (response.statusCode == 200) {
-    Map<String, dynamic> jsonResponse = json.decode(response.body);
-    if (jsonResponse.containsKey('status_code') &&
-        jsonResponse['status_code'] == 200) {
-      currentUser = User.fromJSON(json.decode(response.body)['data']);
-    } else {
-      currentUser = User.status(Constants.STATUS_INVALID);
-    }
-  } else {
-    currentUser = User.status(Constants.STATUS_SOMETHING_WENT_WRONG);
-  }
-  return currentUser;
 }
 
 Future<User> multipartRegister(
@@ -88,6 +67,9 @@ Future<User> multipartRegister(
     if (jsonResponse.containsKey('status_code') &&
         jsonResponse['status_code'] == 200) {
       currentUser = User.fromJSON(json.decode(respStr.body)['data']);
+    } else if (jsonResponse.containsKey('status_code') &&
+        jsonResponse['status_code'] == 402) {
+      currentUser = User.status(Constants.STATUS_APPROVAL);
     } else {
       currentUser = User.status(Constants.STATUS_INVALID);
     }
@@ -147,6 +129,21 @@ Future<User> update(User updatedUser) async {
     cUser = User.status(Constants.STATUS_SOMETHING_WENT_WRONG);
   }
   return cUser;
+}
+
+void updateLocale(Map<String, dynamic> updateThis) async {
+  final String url =
+      '${GlobalConfiguration().getString('api_base_url')}users/updateUser/${currentUser.value.id}';
+  final client = new http.Client();
+  await client.post(
+    url,
+    headers: Constants.getHeader(),
+    body: json.encode(updateThis),
+  );
+
+  User user = currentUser.value;
+  user.locale = updateThis['locale'];
+  UserController.setCurrentUser(user);
 }
 
 Future<bool> resetPassword(User user) async {

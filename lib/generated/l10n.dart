@@ -982,6 +982,36 @@ class S {
       args: [],
     );
   }
+
+  /// `You are not approved yet.`
+  String get not_approved {
+    return Intl.message(
+      'You are not approved yet.',
+      name: 'not_approved',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Capture`
+  String get capture {
+    return Intl.message(
+      'Capture',
+      name: 'capture',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Picture`
+  String get picture {
+    return Intl.message(
+      'Picture',
+      name: 'picture',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

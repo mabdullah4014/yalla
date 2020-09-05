@@ -8,42 +8,29 @@ import 'package:flutter/material.dart';
 
 import '../CircularLoadingWidget.dart';
 
-class ServicesCarouselWidget extends StatefulWidget {
-  List<ServiceValue> servicesList;
-  String heroTag;
+class ServicesCarouselWidget extends StatelessWidget {
+  final List<ServiceValue> servicesList;
 
-  ServicesCarouselWidget({Key key, this.servicesList, this.heroTag})
-      : super(key: key);
-
-  @override
-  _ServicesCarouselWidgetState createState() => _ServicesCarouselWidgetState();
-}
-
-class _ServicesCarouselWidgetState extends State<ServicesCarouselWidget> {
-  @override
-  void initState() {
-    super.initState();
-  }
+  ServicesCarouselWidget({this.servicesList});
 
   @override
   Widget build(BuildContext context) {
-    return (widget.servicesList == null || widget.servicesList.isEmpty)
+    return (servicesList == null || servicesList.isEmpty)
         ? CircularLoadingWidget(height: 150)
         : Container(
             height: 150,
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: widget.servicesList.length,
+                itemCount: servicesList.length,
                 itemBuilder: (context, index) {
                   return InkWell(
                       onTap: () {
-                        ServiceValue serviceValue = widget.servicesList[index];
+                        ServiceValue serviceValue = servicesList[index];
                         Constants.onServiceItemClick(
                             context, DetailPageData(), serviceValue);
                       },
                       child: ServiceWidget(
-                          service: widget.servicesList.elementAt(index),
-                          heroTag: widget.heroTag));
+                          service: servicesList.elementAt(index)));
                 }));
   }
 }

@@ -1,12 +1,11 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:arbi/model/user.dart';
 import 'package:arbi/model/user_exist_request.dart';
+import 'package:arbi/ui/signup.dart';
 import 'package:arbi/utils/pref_util.dart';
 import 'package:flutter/material.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
-import 'package:package_info/package_info.dart';
 
 import '../repo/user_repository.dart' as repository;
 
@@ -21,15 +20,6 @@ class UserController extends ControllerMVC {
   UserController() {
     loginFormKey = new GlobalKey<FormState>();
     this.scaffoldKey = new GlobalKey<ScaffoldState>();
-    PackageInfo.fromPlatform().then((value) {
-      user.push_notification_token =
-          PreferenceUtils.getString(PreferenceUtils.push_token);
-      user.app_version = value.version;
-      if (Platform.isIOS)
-        user.device = 'ios';
-      else
-        user.device = 'android';
-    });
   }
 
   void login({Function(User) onUserLogin}) async {
@@ -43,9 +33,20 @@ class UserController extends ControllerMVC {
     });
   }
 
-  void register({Function(User) onUserRegister}) async {
+  void socialLogin(User user,{Function(User) onUserLogin}) async {
+    repository.login(user).then((value) {
+      if (value.status == 200) {
+        value.auth = true;
+        setCurrentUser(value);
+      }
+      onUserLogin(value);
+    });
+  }
+
+  void registerForm(List<UploadImageObject> pickedFiles,
+      {Function(User) onUserRegister}) async {
     loginFormKey.currentState.save();
-    repository.register(user).then((value) {
+    repository.multipartRegister(user, pickedFiles).then((value) {
       if (value.status == 200) {
         value.auth = true;
         setCurrentUser(value);

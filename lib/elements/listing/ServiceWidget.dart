@@ -4,10 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ServiceWidget extends StatelessWidget {
-  ServiceValue service;
-  String heroTag;
+  final ServiceValue service;
 
-  ServiceWidget({Key key, this.service, this.heroTag}) : super(key: key);
+  ServiceWidget({this.service});
 
   @override
   Widget build(BuildContext context) {
@@ -36,14 +35,13 @@ class ServiceWidget extends StatelessWidget {
                     ),
                     Positioned(
                         bottom: 10,
-                        left: 10,
-                        child: Column(children: <Widget>[
-                          Text(service.name,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600))
-                        ]))
+                        child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Text(service.name,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600))))
                   ])))
         ]));
   }

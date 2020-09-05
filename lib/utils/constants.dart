@@ -13,10 +13,12 @@ import 'package:flutter/material.dart';
 import '../route_generator.dart';
 
 class Constants {
-  static const String defaultPhoneCode = '+964';
   static const int STATUS_INVALID = 401;
-  static const int PHONE_LENGTH = 8;
+  static const int STATUS_APPROVAL = 402;
   static const int STATUS_SOMETHING_WENT_WRONG = 500;
+
+  static const String defaultPhoneCode = '+964';
+  static const int PHONE_LENGTH = 8;
   static PlaceOrderRequest placeOrderRequest = PlaceOrderRequest();
   static const List<String> PHONE_CODES = [
     '73',
@@ -80,7 +82,7 @@ class Constants {
   static Map<String, String> getHeader() {
     Map<String, String> headerMap = Map();
     headerMap[HttpHeaders.contentTypeHeader] = 'application/json';
-    headerMap['locale'] = setting.value.mobileLanguage.value.countryCode;
+    headerMap['locale'] = setting.value.mobileLanguage.value.languageCode;
 
     if (currentUser.value != null && currentUser.value.auth_token != null) {
       headerMap[HttpHeaders.authorizationHeader] =

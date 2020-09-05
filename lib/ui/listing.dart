@@ -1,7 +1,10 @@
 import 'package:arbi/controller/listing_controller.dart';
 import 'package:arbi/elements/listing/ServiceCarouselWidget.dart';
 import 'package:arbi/generated/l10n.dart';
+import 'package:arbi/model/cat_response.dart';
+import 'package:arbi/ui/service_detail.dart';
 import 'package:arbi/utils/app_utils.dart';
+import 'package:arbi/utils/constants.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -90,14 +93,19 @@ class _ListingWidgetState extends StateMVC<ListingWidget> {
                       builder: (BuildContext context) {
                         return Container(
                             width: MediaQuery.of(context).size.width,
-                            child: CachedNetworkImage(
-                                fit: BoxFit.fitWidth,
-                                imageUrl: banner.path,
-                                placeholder: (context, url) => Image.asset(
-                                    'assets/images/loading.gif',
-                                    fit: BoxFit.fitWidth),
-                                errorWidget: (context, url, error) =>
-                                    Icon(Icons.error)));
+                            child: InkWell(
+                                onTap: () {
+                                  Constants.onServiceItemClick(context,
+                                      DetailPageData(), banner.service);
+                                },
+                                child: CachedNetworkImage(
+                                    fit: BoxFit.fitWidth,
+                                    imageUrl: banner.path,
+                                    placeholder: (context, url) => Image.asset(
+                                        'assets/images/loading.gif',
+                                        fit: BoxFit.fitWidth),
+                                    errorWidget: (context, url, error) =>
+                                        Icon(Icons.error))));
                       },
                     );
                   }).toList(),
