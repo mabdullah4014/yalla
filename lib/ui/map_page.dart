@@ -153,4 +153,10 @@ class MapPageState extends State<MapPage> {
       });
     }
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.future.then((value) => value.dispose());
+  }
 }

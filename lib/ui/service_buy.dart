@@ -4,6 +4,7 @@ import 'package:arbi/controller/cat_buy_controller.dart';
 import 'package:arbi/controller/user_controller.dart';
 import 'package:arbi/generated/l10n.dart';
 import 'package:arbi/model/cat_response.dart';
+import 'package:arbi/model/check_service_response.dart';
 import 'package:arbi/route_generator.dart';
 import 'package:arbi/ui/service_detail.dart';
 import 'package:arbi/utils/app_utils.dart';
@@ -117,9 +118,19 @@ class _ServiceBuyPageState extends StateMVC<ServiceBuyPage> {
       Text('${S.of(context).service}: ${widget.params.services.name}',
           style: TextStyle(fontSize: 25, color: Theme.of(context).accentColor)),
       SizedBox(height: 10),
-      Text('${S.of(context).price}: ${widget.params.price}',
-          style:
-              TextStyle(fontSize: 25, color: Theme.of(context).primaryColor)),
+      Visibility(
+          visible: widget.params.price != null && widget.params.price != 0,
+          child: Text('${S.of(context).price}: ${widget.params.price}',
+              style: TextStyle(
+                  fontSize: 25, color: Theme.of(context).primaryColor))),
+      SizedBox(height: 10),
+      Visibility(
+        visible: _showDistance().isNotEmpty,
+        child: Text('${S.of(context).distance}: ${_showDistance()}',
+            style:
+                TextStyle(fontSize: 25, color: Theme.of(context).primaryColor)),
+      ),
+      SizedBox(height: 10),
       _showTargetValues(),
       Container(
           padding: EdgeInsets.only(left: 5),
@@ -281,17 +292,32 @@ class _ServiceBuyPageState extends StateMVC<ServiceBuyPage> {
     }
     return true;
   }
+
+  String _showDistance() {
+    if (widget.params.checkServiceResponse != null &&
+        widget.params.checkServiceResponse.distance != null) {
+      return '${widget.params.checkServiceResponse.distance.toStringAsFixed(2)} '
+          '${S.of(context).km}';
+    }
+    return "";
+  }
 }
 
 class ServiceBuyPageParam {
   ServiceBuyPageParam(
-      {this.services, this.detailPageData, this.price, this.targetValues});
+      {this.services,
+      this.detailPageData,
+      this.price,
+      this.checkServiceResponse,
+      this.targetValues});
 
   final DetailPageData detailPageData;
 
   final ServiceValue services;
 
   final double price;
+
+  final CheckServiceResponse checkServiceResponse;
 
   final Map<String, String> targetValues;
 }

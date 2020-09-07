@@ -85,9 +85,9 @@ class _HomePageScreenState extends State<HomePageScreen> {
           // this will be set when a new tab is tapped
           items: [
             BottomNavigationBarItem(
-                icon: Icon(Icons.home), title: Text('Home')),
+                icon: Icon(Icons.home), title: Text(S.of(context).home)),
             BottomNavigationBarItem(
-                icon: Icon(Icons.person), title: Text('Profile'))
+                icon: Icon(Icons.person), title: Text(S.of(context).profile))
           ],
         ),
       ),

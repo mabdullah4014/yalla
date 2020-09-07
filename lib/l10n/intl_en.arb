@@ -96,5 +96,7 @@
   "id_back_pic": "ID Card Back",
   "not_approved": "You are not approved yet.",
   "capture": "Capture",
-  "picture": "Picture"
+  "picture": "Picture",
+  "distance": "Distance",
+  "km": "km"
 }

@@ -32,15 +32,15 @@ class SplashScreenState extends StateMVC<SplashScreen> {
       UserController.getCurrentUser().then((value) {
         if (value.auth) {
           if (value.user_type == User.CUSTOMER) {
-            Navigator.of(context).popAndPushNamed(RouteGenerator.MAIN);
+            Navigator.of(context).pushReplacementNamed(RouteGenerator.MAIN);
           } else if (value.user_type == User.SERVICE_PROVIDER) {
-            Navigator.of(context).popAndPushNamed(RouteGenerator.PROVIDER_MAIN);
+            Navigator.of(context).pushReplacementNamed(RouteGenerator.PROVIDER_MAIN);
           } else {
             AppUtils.showMessage(context, S.of(context).app_name,
                 S.of(context).unable_to_proceed);
           }
         } else {
-          Navigator.of(context).popAndPushNamed(RouteGenerator.LOGIN,
+          Navigator.of(context).pushReplacementNamed(RouteGenerator.LOGIN,
               arguments: LoginPageParam(comingFrom: LoginPage.FROM_SPLASH));
         }
       });

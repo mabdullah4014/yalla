@@ -1012,6 +1012,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Distance`
+  String get distance {
+    return Intl.message(
+      'Distance',
+      name: 'distance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `km`
+  String get km {
+    return Intl.message(
+      'km',
+      name: 'km',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

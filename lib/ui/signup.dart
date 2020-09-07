@@ -515,8 +515,7 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
         AppUtils.showMessage(
             context, S.of(context).app_name, S.of(buildContext).not_approved,
             callback: () {
-          Navigator.of(context)
-              .popUntil(ModalRoute.withName(RouteGenerator.LOGIN));
+          Navigator.of(context).popUntil((route) => route.isFirst);
         });
       } else {
         AppUtils.showMessage(

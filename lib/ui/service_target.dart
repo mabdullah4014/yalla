@@ -195,14 +195,14 @@ class _ServiceTargetPageState extends StateMVC<ServiceTargetPage> {
       }
       if (allValuesDone) {
         AppUtils.onLoading(context, message: S.of(context).calculating_price);
-        Map<String,String> copiedTargets = Map.from(targetValuesMap);
+        Map<String, String> copiedTargets = Map.from(targetValuesMap);
         checkServiceController.checkPrice(
             CheckServiceRequest(
                 widget.params.services.id,
                 widget.params.detailPageData.valuesIdList,
-                copiedTargets), onPriceCheck: (price, checkRequest) {
+                copiedTargets), onPriceCheck: (checkResponse, checkRequest) {
           Navigator.of(context).pop();
-          if (price == 0) {
+          if (checkResponse == null) {
             AppUtils.showMessage(
                 context, S.of(context).error, S.of(context).price_zero);
           } else {
@@ -210,7 +210,8 @@ class _ServiceTargetPageState extends StateMVC<ServiceTargetPage> {
                 arguments: ServiceBuyPageParam(
                     detailPageData: widget.params.detailPageData,
                     services: widget.params.services,
-                    price: price,
+                    price: checkResponse.price,
+                    checkServiceResponse: checkResponse,
                     targetValues: checkRequest.target));
           }
         });

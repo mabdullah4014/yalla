@@ -6,6 +6,7 @@ import 'package:arbi/model/update_job_request.dart';
 import 'package:arbi/repo/settings_repository.dart' as settingsRepo;
 import 'package:arbi/ui/provider/provider_drawer.dart';
 import 'package:arbi/utils/app_utils.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
@@ -74,6 +75,21 @@ class _ProviderHomePageScreenState extends StateMVC<ProviderHomePageScreen> {
       color: Theme.of(context).primaryColor,
       child: Row(
         children: [
+          /*CachedNetworkImage(
+              width: 100,
+              height: 70,
+              fit: BoxFit.cover,
+              imageUrl: currentUser.value.profile_pic_path,
+              placeholder: (context, url) => Image.asset(
+                  'assets/images/logo_circle.png',
+                  fit: BoxFit.contain,
+                  width: 100,
+                  height: 70),
+              errorWidget: (context, url, error) => Image.asset(
+                  'assets/images/logo_circle.png',
+                  fit: BoxFit.contain,
+                  width: 100,
+                  height: 70)),*/
           Container(
               child: Image.asset('assets/images/logo_circle.png',
                   fit: BoxFit.contain, width: 100, height: 70)),

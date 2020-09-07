@@ -1,16 +1,12 @@
 import 'dart:ui';
 
-import 'package:arbi/generated/l10n.dart';
 import 'package:arbi/model/cat_response.dart';
-import 'package:arbi/ui/service_buy.dart';
-import 'package:arbi/ui/service_target.dart';
 import 'package:arbi/utils/constants.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 
 import '../repo/settings_repository.dart' as settingsRepo;
-import '../route_generator.dart';
 
 class ServiceDetailPage extends StatefulWidget {
   ServiceDetailPage({Key key, this.params}) : super(key: key);

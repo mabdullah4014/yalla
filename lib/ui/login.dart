@@ -11,6 +11,7 @@ import 'package:arbi/utils/app_colors.dart';
 import 'package:arbi/utils/app_utils.dart';
 import 'package:arbi/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -52,54 +53,57 @@ class _LoginPageState extends StateMVC<LoginPage> {
   Widget build(BuildContext buildContext) {
     final height = MediaQuery.of(buildContext).size.height;
     final width = MediaQuery.of(buildContext).size.width;
-    return Scaffold(
-        resizeToAvoidBottomPadding: false,
-        body: Builder(
-            builder: (scaffoldContext) => SafeArea(
-                    child: Container(
-                  height: height,
-                  child: Stack(
-                    children: <Widget>[
-                      AppUtils.cityBg(buildContext),
-                      AppUtils.cityblur(),
-                      Container(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          child: SingleChildScrollView(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                SizedBox(height: height * .2),
-                                _title(),
-                                SizedBox(height: 50),
-                                _emailPasswordWidget(),
-                                SizedBox(height: 10),
-                                AppUtils.submitButton(
-                                    buildContext, S.of(buildContext).login, () {
-                                  FocusScope.of(buildContext).unfocus();
-                                  _con.user.provider = User.PROVIDER_EMAIL;
-                                  if (_isValidForm()) {
-                                    _doLogin();
-                                  }
-                                }),
-                                SizedBox(height: 10),
-                                _forgotPassword(),
-                                _facebookButton(),
-                                SizedBox(height: 10),
-                                _createAccountLabel(),
-                              ],
-                            ),
-                          )),
-                      Positioned(top: 10, right: 10, child: _backButton()),
-                    ],
-                  ),
-                ))));
+    return WillPopScope(
+        onWillPop: () async => true,
+        child: Scaffold(
+            resizeToAvoidBottomPadding: false,
+            body: Builder(
+                builder: (scaffoldContext) => SafeArea(
+                        child: Container(
+                      height: height,
+                      child: Stack(
+                        children: <Widget>[
+                          AppUtils.cityBg(buildContext),
+                          AppUtils.cityblur(),
+                          Container(
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    SizedBox(height: height * .2),
+                                    _title(),
+                                    SizedBox(height: 50),
+                                    _emailPasswordWidget(),
+                                    SizedBox(height: 10),
+                                    AppUtils.submitButton(
+                                        buildContext, S.of(buildContext).login,
+                                        () {
+                                      FocusScope.of(buildContext).unfocus();
+                                      _con.user.provider = User.PROVIDER_EMAIL;
+                                      if (_isValidForm()) {
+                                        _doLogin();
+                                      }
+                                    }),
+                                    SizedBox(height: 10),
+                                    _forgotPassword(),
+                                    _facebookButton(),
+                                    SizedBox(height: 10),
+                                    _createAccountLabel(),
+                                  ],
+                                ),
+                              )),
+                          Positioned(top: 10, right: 10, child: _backButton()),
+                        ],
+                      ),
+                    )))));
   }
 
   Widget _backButton() {
     return InkWell(
         onTap: () {
-          Navigator.pop(context);
+          SystemChannels.platform.invokeMethod('SystemNavigator.pop');
         },
         child: Icon(
           Icons.clear,

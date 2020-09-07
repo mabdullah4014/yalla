@@ -34,6 +34,6 @@ class PlaceOrderRequest {
 
   @override
   String toString() {
-    return toJson().toString();
+    return 'PlaceOrderRequest{category_id: $category_id, cat_values: $cat_values, target: $target, price: $price, notes: $notes, user_id: $user_id, latitude: $latitude, longitude: $longitude}';
   }
 }

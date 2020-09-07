@@ -21,4 +21,9 @@ class CheckServiceRequest {
     }
     return map;
   }
+
+  @override
+  String toString() {
+    return 'CheckServiceRequest{cat_id: $cat_id, cat_values: $cat_values, target: $target}';
+  }
 }

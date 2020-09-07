@@ -1,17 +1,19 @@
 import 'package:arbi/model/check_service_request.dart';
+import 'package:arbi/model/check_service_response.dart';
 import 'package:arbi/model/place_order_request.dart';
 import 'package:arbi/repo/category_repository.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 
 class CheckServiceController extends ControllerMVC {
   void checkPrice(CheckServiceRequest checkServiceRequest,
-      {Function(double, CheckServiceRequest) onPriceCheck}) async {
+      {Function(CheckServiceResponse, CheckServiceRequest)
+          onPriceCheck}) async {
     await getServicePrice(checkServiceRequest).then((checkResponse) {
       if (checkResponse != null && checkResponse.status == 200) {
         checkServiceRequest.target = checkResponse.target;
-        onPriceCheck(checkResponse.price, checkServiceRequest);
+        onPriceCheck(checkResponse, checkServiceRequest);
       } else {
-        onPriceCheck(0, null);
+        onPriceCheck(null, null);
       }
     });
   }
