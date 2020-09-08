@@ -490,7 +490,11 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
           Navigator.of(context).pop();
           if (updated) {
             AppUtils.showMessage(
-                context, S.of(context).app_name, S.of(context).user_updated);
+                context, S.of(context).app_name, S.of(context).user_updated,
+                callback: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pop(1);
+            });
           } else {
             AppUtils.showMessage(
                 context, S.of(context).error, S.of(context).unavailable);
@@ -545,7 +549,9 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
   }
 
   void setPhone(String phoneNumber) {
-    if (phoneNumber.length == 14) {
+    if (phoneNumber == null || phoneNumber.isEmpty) {
+      _phoneController.text = '';
+    } else if (phoneNumber.length == 14) {
       String code = phoneNumber.substring(4, 6);
       String number = phoneNumber.substring(6);
       codeDropdownValue = code;
