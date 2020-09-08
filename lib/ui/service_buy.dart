@@ -207,13 +207,17 @@ class _ServiceBuyPageState extends StateMVC<ServiceBuyPage> {
     if (widget.params.targetValues != null &&
         widget.params.targetValues.isNotEmpty &&
         widget.params.services.targets != null &&
-        widget.params.services.targets.isNotEmpty) {
+        widget.params.services.targets.isNotEmpty &&
+        widget.params.services.targets
+            .where((element) => element.type != 'Location')
+            .isNotEmpty) {
       List<Widget> widgets = [];
       widgets.add(SizedBox(height: 10));
       widgets.add(
           Text('Values', style: TextStyle(fontSize: 25, color: Colors.black)));
       widgets.add(SizedBox(height: 10));
-      for (ServiceTarget serviceTarget in widget.params.services.targets) {
+      for (ServiceTarget serviceTarget in widget.params.services.targets
+          .where((element) => element.type != 'Location')) {
         String label = serviceTarget.label;
         String value = widget.params.targetValues[serviceTarget.target_value];
         widgets.add(targetView(label, value));
@@ -267,13 +271,11 @@ class _ServiceBuyPageState extends StateMVC<ServiceBuyPage> {
             child: Row(children: <Widget>[
               Flexible(
                   fit: FlexFit.tight,
-                  child: Text(
-                    currentLocation,
-                    style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w800,
-                        color: Theme.of(context).primaryColor),
-                  ),
+                  child: Text(currentLocation,
+                      style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w800,
+                          color: Theme.of(context).primaryColor)),
                   flex: 5),
               Flexible(
                   fit: FlexFit.tight,

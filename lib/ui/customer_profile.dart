@@ -119,7 +119,7 @@ class _CustomerProfilePageState extends StateMVC<CustomerProfilePage> {
                   Container(
                       padding: EdgeInsets.all(_defaultPaddingMargin),
                       child: Text(
-                        'Location',
+                        S.of(context).location,
                         style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w800,
@@ -225,11 +225,12 @@ class _CustomerProfilePageState extends StateMVC<CustomerProfilePage> {
 
   Widget _countryCodeDropDown() {
     return Container(
-        padding: EdgeInsets.only(left: 5),
+        padding: EdgeInsets.symmetric(horizontal: 5),
         decoration: BoxDecoration(
             border: Border(
                 bottom: BorderSide(color: AppColors.darkGreyColor, width: 1.0),
-                right: BorderSide(color: AppColors.darkGreyColor, width: 1.0))),
+                right: BorderSide(color: AppColors.darkGreyColor, width: 1.0),
+                left: BorderSide(color: AppColors.darkGreyColor, width: 1.0))),
         child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
           value: codeDropdownValue,

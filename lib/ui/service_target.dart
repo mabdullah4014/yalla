@@ -117,19 +117,18 @@ class _ServiceTargetPageState extends StateMVC<ServiceTargetPage> {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
             SizedBox(height: 5),
-            Visibility(
-                visible: (targetValuesMap[target.target_value] != null &&
-                    targetValuesMap[target.target_value].isNotEmpty),
-                child: Text(
-                    (targetValuesMap[target.target_value] != null &&
-                            targetValuesMap[target.target_value].isNotEmpty)
-                        ? targetValuesMap[target.target_value]
-                        : "",
-                    style: TextStyle(fontSize: 14)))
           ]),
           IconButton(
-              icon: Icon(Icons.add_location,
-                  size: 30, color: Theme.of(context).primaryColor),
+              icon: Icon(
+                  (targetValuesMap[target.target_value] != null &&
+                          targetValuesMap[target.target_value].isNotEmpty)
+                      ? Icons.location_on
+                      : Icons.not_listed_location,
+                  size: 30,
+                  color: (targetValuesMap[target.target_value] != null &&
+                          targetValuesMap[target.target_value].isNotEmpty)
+                      ? Colors.greenAccent
+                      : Colors.redAccent),
               onPressed: () {
                 showCupertinoModalBottomSheet(
                     barrierColor: Theme.of(context).primaryColor,
