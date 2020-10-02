@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:arbi/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AppUtils {
   static Color getColorFromHash(String color) {
@@ -138,5 +139,14 @@ class AppUtils {
         child: Container(
             decoration:
                 new BoxDecoration(color: Colors.black.withOpacity(0.5))));
+  }
+
+  static Future<void> openMap(String latitude, String longitude) async {
+    String googleUrl = 'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
+    if (await canLaunch(googleUrl)) {
+      await launch(googleUrl);
+    } else {
+      throw 'Could not open the map.';
+    }
   }
 }

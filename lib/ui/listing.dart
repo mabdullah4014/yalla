@@ -80,6 +80,9 @@ class _ListingWidgetState extends StateMVC<ListingWidget> {
               children: [
                 CarouselSlider(
                   options: CarouselOptions(
+                      autoPlay: true,
+                      autoPlayInterval: Duration(
+                          seconds: settingsRepo.setting.value.sliderDuration),
                       viewportFraction: 1,
                       height: 150.0,
                       enableInfiniteScroll: false,

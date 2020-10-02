@@ -47,7 +47,7 @@ class MapPageState extends State<MapPage> {
     if (latitude != null && longitude != null) {
       _initialLocation = CameraPosition(
           target: LatLng(double.parse(latitude), double.parse(longitude)),
-          zoom: 9);
+          zoom: 17);
     } else {
       _initialLocation =
           CameraPosition(target: LatLng(33.048134, 43.001309), zoom: 9);
@@ -136,20 +136,24 @@ class MapPageState extends State<MapPage> {
     while (locationController.getLocation() == null) {
       locationController.initState();
     }
-    if (locationController.getLocation() != null) {
-      locationController
-          .getLocation()
-          .onLocationChanged()
-          .listen((LocationData currentLatLng) {
-        if (currentLatLng != null) {
-          _controller.future.then((mapController) => {
-                mapController.moveCamera(CameraUpdate.newCameraPosition(
-                    CameraPosition(
-                        target: LatLng(
-                            currentLatLng.latitude, currentLatLng.longitude),
-                        zoom: 17.0)))
-              });
-        }
+    if (locationController.getLocation() != null &&
+        latitude == null &&
+        longitude == null) {
+//      locationController
+//          .getLocation()
+//          .onLocationChanged()
+//          .listen((LocationData currentLatLng) {
+//        if (currentLatLng != null) {
+//
+//        }
+//      });
+      locationController.getLocation().getLocation().then((value) {
+        _controller.future.then((mapController) => {
+              mapController.moveCamera(CameraUpdate.newCameraPosition(
+                  CameraPosition(
+                      target: LatLng(value.latitude, value.longitude),
+                      zoom: 17.0)))
+            });
       });
     }
   }

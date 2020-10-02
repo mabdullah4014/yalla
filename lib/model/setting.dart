@@ -14,6 +14,10 @@ class Setting {
   String googleMapsKey;
   ValueNotifier<Locale> mobileLanguage = new ValueNotifier(Locale('en', ''));
   String appVersion;
+  int sliderDuration = 4;
+  String how_it_works;
+  String about;
+  String terms_and_conditions;
 
   Setting();
 
@@ -31,6 +35,10 @@ class Setting {
     mobileLanguage.value = Locale(jsonMap['mobile_language'] ?? "en", '');
     appVersion = jsonMap['app_version'] ?? '';
     defaultCurrency = jsonMap['default_currency'] ?? '';
+    sliderDuration = int.parse(jsonMap['slider_duration']) ?? 4;
+    how_it_works = jsonMap['how_it_works'] ?? '';
+    about = jsonMap['about'] ?? '';
+    terms_and_conditions = jsonMap['terms_and_conditions'] ?? '';
   }
 
   Map toMap() {

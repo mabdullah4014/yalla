@@ -308,10 +308,6 @@ class _LoginPageState extends StateMVC<LoginPage> {
     return true;
   }
 
-  void _showSnackBar(BuildContext scaffoldContext, String message) {
-    Scaffold.of(scaffoldContext).showSnackBar(SnackBar(content: Text(message)));
-  }
-
   void _onLoginSuccess(BuildContext buildContext, User user) {
     if (user.user_type == User.CUSTOMER) {
       if (widget.loginPageParam.comingFrom == LoginPage.FROM_PLACE_ORDER) {

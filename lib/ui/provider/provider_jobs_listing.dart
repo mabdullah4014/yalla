@@ -1,14 +1,14 @@
-import 'package:arbi/controller/customer_order_listing_controller.dart';
 import 'package:arbi/controller/provider_job_controller.dart';
 import 'package:arbi/controller/user_controller.dart';
 import 'package:arbi/generated/l10n.dart';
-import 'package:arbi/model/cat_response.dart';
 import 'package:arbi/model/customer_order_response.dart';
 import 'package:arbi/model/update_job_request.dart';
-import 'package:arbi/repo/category_repository.dart';
+import 'package:arbi/repo/settings_repository.dart' as settingsRepo;
 import 'package:arbi/utils/app_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
+
+import '../../route_generator.dart';
 
 class ProviderJobsListingPage extends StatefulWidget {
   ProviderJobsListingPage({Key key}) : super(key: key);
@@ -65,9 +65,13 @@ class _ProviderJobsListingPageState extends StateMVC<ProviderJobsListingPage> {
 
   Widget _listItem(int index) {
     Order order = _con.orders[index];
-    return Card(
-      child: Column(
-        children: <Widget>[
+    return InkWell(
+        onTap: () {
+          Navigator.of(context)
+              .pushNamed(RouteGenerator.PROVIDER_JOB_DETAIL, arguments: order);
+        },
+        child: Card(
+            child: Column(children: <Widget>[
           ListTile(
               title: Text(order.category_name),
               subtitle: Column(
@@ -79,7 +83,8 @@ class _ProviderJobsListingPageState extends StateMVC<ProviderJobsListingPage> {
                             order.service_provider_name.isNotEmpty),
                         child: Text(
                             '${S.of(context).provider_name} : ${order.service_provider_name}')),
-                    Text('${S.of(context).price} : ${order.amount}')
+                    Text(
+                        '${S.of(context).price} : ${order.amount}  ${settingsRepo.setting.value.defaultCurrency}')
                   ]),
               trailing: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -92,17 +97,14 @@ class _ProviderJobsListingPageState extends StateMVC<ProviderJobsListingPage> {
                         margin: EdgeInsets.symmetric(vertical: 5),
                         height: 30,
                         child: RaisedButton(
-                          color: Theme.of(context).primaryColor,
-                          child: Text(S.of(context).change_status,
-                              style: TextStyle(color: Colors.white)),
-                          onPressed: () {
-                            changeOrderStatus(order);
-                          },
-                        ))
+                            color: Theme.of(context).primaryColor,
+                            child: Text(S.of(context).change_status,
+                                style: TextStyle(color: Colors.white)),
+                            onPressed: () {
+                              changeOrderStatus(order);
+                            }))
                   ]))
-        ],
-      ),
-    );
+        ])));
   }
 
   void changeOrderStatus(Order order) {

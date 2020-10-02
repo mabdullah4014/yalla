@@ -95,34 +95,13 @@ class _ServiceBuyPageState extends StateMVC<ServiceBuyPage> {
 
   Widget _showDetail() {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Visibility(
-        visible: (widget.params.services.image_path != null &&
-            widget.params.services.image_path.isNotEmpty),
-        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Container(
-              width: 100,
-              height: 100,
-              decoration: ShapeDecoration(
-                  shape: CircleBorder(), color: Colors.grey.shade200),
-              child: DecoratedBox(
-                decoration: ShapeDecoration(
-                    shape: CircleBorder(),
-                    image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image:
-                            NetworkImage(widget.params.services.image_path))),
-              ))
-        ]),
-      ),
+      _serviceImage(),
       SizedBox(height: 10),
-      Text('${S.of(context).service}: ${widget.params.services.name}',
-          style: TextStyle(fontSize: 25, color: Theme.of(context).accentColor)),
+      _serviceName(),
       SizedBox(height: 10),
-      Visibility(
-          visible: widget.params.price != null && widget.params.price != 0,
-          child: Text('${S.of(context).price}: ${widget.params.price}',
-              style: TextStyle(
-                  fontSize: 25, color: Theme.of(context).primaryColor))),
+      _serviceDesc(),
+      SizedBox(height: 10),
+      _servicePrice(),
       SizedBox(height: 10),
       Visibility(
         visible: _showDistance().isNotEmpty,
@@ -213,8 +192,11 @@ class _ServiceBuyPageState extends StateMVC<ServiceBuyPage> {
             .isNotEmpty) {
       List<Widget> widgets = [];
       widgets.add(SizedBox(height: 10));
-      widgets.add(
-          Text('Values', style: TextStyle(fontSize: 25, color: Colors.black)));
+      widgets.add(Text('Values',
+          style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).primaryColor)));
       widgets.add(SizedBox(height: 10));
       for (ServiceTarget serviceTarget in widget.params.services.targets
           .where((element) => element.type != 'Location')) {
@@ -302,6 +284,51 @@ class _ServiceBuyPageState extends StateMVC<ServiceBuyPage> {
           '${S.of(context).km}';
     }
     return "";
+  }
+
+  Widget _serviceImage() {
+    return Visibility(
+      visible: (widget.params.services.image_path != null &&
+          widget.params.services.image_path.isNotEmpty),
+      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Container(
+            width: 100,
+            height: 100,
+            decoration: ShapeDecoration(
+                shape: CircleBorder(), color: Colors.grey.shade200),
+            child: DecoratedBox(
+              decoration: ShapeDecoration(
+                  shape: CircleBorder(),
+                  image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: NetworkImage(widget.params.services.image_path))),
+            ))
+      ]),
+    );
+  }
+
+  Widget _serviceName() {
+    return Text('${S.of(context).service}: ${widget.params.services.name}',
+        style: TextStyle(fontSize: 25, color: Theme.of(context).accentColor));
+  }
+
+  Widget _servicePrice() {
+    return Visibility(
+        visible: widget.params.price != null && widget.params.price != 0,
+        child: Text(
+            '${S.of(context).price}: ${widget.params.price} ${settingsRepo.setting.value.defaultCurrency}',
+            style: TextStyle(
+                fontSize: 25, color: Theme.of(context).primaryColor)));
+  }
+
+  Widget _serviceDesc() {
+    return Visibility(
+        visible: widget.params.services.description != null &&
+            widget.params.services.description.isNotEmpty,
+        child: Text(
+            '${S.of(context).description}: ${widget.params.services.description}',
+            style: TextStyle(
+                fontSize: 25, color: Theme.of(context).primaryColor)));
   }
 }
 

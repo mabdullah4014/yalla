@@ -1,3 +1,7 @@
+import 'package:arbi/model/cat_response.dart';
+import 'package:arbi/model/user.dart';
+import 'package:flutter/foundation.dart';
+
 /// status_code : "200"
 /// orders : [{"id":1,"status":"100","amount":"12500","notes":"pop smoek","latitude":"11.10000000","longitude":"43.60000000","service_provider_id":null,"category_id":24,"user_id":7}]
 /// message : ""
@@ -12,8 +16,7 @@ class CustomerOrderResponse {
     this.status = status;
   }
 
-  CustomerOrderResponse(
-      {int statusCode, List<Order> orders, String message}) {
+  CustomerOrderResponse({int statusCode, List<Order> orders, String message}) {
     this.status_code = statusCode;
     this.orders = orders;
     this.message = message;
@@ -64,33 +67,10 @@ class Order {
   String service_provider_name;
   String status_name;
   String category_name;
-
-  Order(
-      {int id,
-      String status,
-      String amount,
-      String notes,
-      String latitude,
-      String longitude,
-      int serviceProviderId,
-      int categoryId,
-      int userId,
-      String service_provider_name,
-      String status_name,
-      String category_name}) {
-    this.id = id;
-    this.status = status;
-    this.amount = amount;
-    this.notes = notes;
-    this.latitude = latitude;
-    this.longitude = longitude;
-    this.service_provider_id = serviceProviderId;
-    this.category_id = categoryId;
-    this.user_id = userId;
-    this.service_provider_name = service_provider_name;
-    this.status_name = status_name;
-    this.category_name = category_name;
-  }
+  String user_name;
+  User service_provider;
+  ServiceValue category;
+  User user;
 
   Order.fromJson(dynamic json) {
     id = json["id"];
@@ -105,6 +85,12 @@ class Order {
     service_provider_name = json["service_provider_name"];
     status_name = json["status_name"];
     category_name = json["category_name"];
+    user_name = json["category_name"];
+    if (json['category'] != null)
+      category = ServiceValue.fromJson(json['category']);
+    if (json['user'] != null) user = User.fromJSON(json['user']);
+    if (json['service_provider'] != null)
+      service_provider = User.fromJSON(json['service_provider']);
   }
 
   Map<String, dynamic> toJson() {

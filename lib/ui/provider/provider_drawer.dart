@@ -1,14 +1,14 @@
 import 'package:arbi/controller/user_controller.dart';
+import 'package:arbi/controller/user_controller.dart' as userCont;
 import 'package:arbi/generated/l10n.dart';
-import 'package:arbi/model/user.dart';
+import 'package:arbi/repo/settings_repository.dart' as settingsRepo;
 import 'package:arbi/route_generator.dart';
+import 'package:arbi/ui/app_detail.dart';
 import 'package:arbi/ui/login.dart';
 import 'package:arbi/utils/app_colors.dart';
 import 'package:arbi/utils/app_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import 'package:arbi/controller/user_controller.dart' as userCont;
 
 class ProviderDrawerWidget extends StatelessWidget {
   ProviderDrawerWidget({Key key}) : super(key: key);
@@ -55,27 +55,30 @@ class ProviderDrawerWidget extends StatelessWidget {
             style: TextStyle(color: _DrawerItemColor),
           ),
           onTap: () {
-//                Navigator.pop(context);
-            Navigator.of(context).pushNamed(RouteGenerator.PROVIDER_JOBS);
+            Navigator.of(context).pushNamed(RouteGenerator.APP_DETAIL,
+                arguments: AppDetailObject(
+                    text: settingsRepo.setting.value.about,
+                    title: S.of(context).about));
           },
-        ),
-        ListTile(
-          title: Text(S.of(context).blog,
-              style: TextStyle(color: _DrawerItemColor)),
-          onTap: () {},
         ),
         ListTile(
           title: Text(S.of(context).how_it_works,
               style: TextStyle(color: _DrawerItemColor)),
           onTap: () {
-            Navigator.pop(context);
+            Navigator.of(context).pushNamed(RouteGenerator.APP_DETAIL,
+                arguments: AppDetailObject(
+                    text: settingsRepo.setting.value.how_it_works,
+                    title: S.of(context).how_it_works));
           },
         ),
         ListTile(
           title: Text(S.of(context).terms_and_condition,
               style: TextStyle(color: _DrawerItemColor)),
           onTap: () {
-            Navigator.pop(context);
+            Navigator.of(context).pushNamed(RouteGenerator.APP_DETAIL,
+                arguments: AppDetailObject(
+                    text: settingsRepo.setting.value.terms_and_conditions,
+                    title: S.of(context).terms_and_condition));
           },
         ),
         ListTile(

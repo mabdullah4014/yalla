@@ -1,9 +1,11 @@
+import 'package:arbi/ui/app_detail.dart';
 import 'package:arbi/ui/change_language.dart';
 import 'package:arbi/ui/customer_order_listing.dart';
 import 'package:arbi/ui/home.dart';
 import 'package:arbi/ui/image_picker_example.dart';
 import 'package:arbi/ui/login.dart';
 import 'package:arbi/ui/map_place_picker.dart';
+import 'package:arbi/ui/provider/provider_job_detail.dart';
 import 'package:arbi/ui/provider/provider_jobs_listing.dart';
 import 'package:arbi/ui/provider/provider_home.dart';
 import 'package:arbi/ui/provider/provider_profile.dart';
@@ -14,6 +16,8 @@ import 'package:arbi/ui/service_target.dart';
 import 'package:arbi/ui/signup.dart';
 import 'package:arbi/ui/splash.dart';
 import 'package:flutter/material.dart';
+
+import 'model/customer_order_response.dart';
 
 class RouteGenerator {
   static const String SPLASH = '/Splash';
@@ -31,6 +35,8 @@ class RouteGenerator {
   static const String CUSTOMER_ORDER = '/CustomerOrders';
   static const String LANGUAGE = '/Language';
   static const String IMAGE = '/Image';
+  static const String PROVIDER_JOB_DETAIL = '/ProviderJobDetail';
+  static const String APP_DETAIL = '/AppDetail';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     // Getting arguments passed in while calling Navigator.pushNamed
@@ -75,6 +81,13 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => ChangeLanguageWidget());
       case IMAGE:
         return MaterialPageRoute(builder: (_) => ImagePickerExamplePage());
+      case PROVIDER_JOB_DETAIL:
+        return MaterialPageRoute(
+            builder: (_) => ProviderJobDetailPage(order: args as Order));
+      case APP_DETAIL:
+        return MaterialPageRoute(
+            builder: (_) =>
+                AppDetailPage(appDetailObject: args as AppDetailObject));
     }
   }
 

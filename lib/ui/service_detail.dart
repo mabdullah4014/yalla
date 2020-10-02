@@ -86,12 +86,23 @@ class _ServiceDetailPageState extends StateMVC<ServiceDetailPage> {
     return Card(
         child: Column(children: <Widget>[
       ListTile(
+          leading: Container(
+              width: 50,
+              height: 50,
+              decoration: ShapeDecoration(
+                  shape: CircleBorder(), color: Colors.grey.shade200),
+              child: DecoratedBox(
+                decoration: ShapeDecoration(
+                    shape: CircleBorder(),
+                    image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: NetworkImage(serviceValue.image_path))),
+              )),
           title: Text(serviceValue.name),
           subtitle: Visibility(
               visible: (serviceValue.description != null &&
                   serviceValue.description.isNotEmpty),
-              child: Text(
-                  '${serviceValue.description}')))
+              child: Text('${serviceValue.description}')))
     ]));
   }
 
@@ -105,11 +116,10 @@ class _ServiceDetailPageState extends StateMVC<ServiceDetailPage> {
             child: Card(
                 color: Colors.white,
                 elevation: 5,
-                child: SizedBox(
-                    child: Column(children: [
+                child: Column(children: [
                   Container(
                       width: MediaQuery.of(context).size.width / 2,
-                      height: MediaQuery.of(context).size.height / 6,
+                      height: MediaQuery.of(context).size.height / 5,
                       child: CachedNetworkImage(
                           fit: BoxFit.cover,
                           imageUrl: serviceValue.image_path,
@@ -121,15 +131,17 @@ class _ServiceDetailPageState extends StateMVC<ServiceDetailPage> {
                   Container(
                       child: Padding(
                           padding: EdgeInsets.all(5),
-                          child: Text(serviceValue.name,
-                              textAlign: TextAlign.center,
-                              maxLines: 1,
-                              softWrap: true,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                  fontSize: 15))))
-                ])))));
+                          child: Flexible(
+                              child: Text(serviceValue.name,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: true,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                      fontSize: 15)))))
+                ]))));
   }
 
   void itemTap(ServiceValue serviceValue) {

@@ -98,5 +98,8 @@
   "capture": "Capture",
   "picture": "Picture",
   "distance": "Distance",
-  "km": "km"
+  "km": "km",
+  "order_detail": "Order Detail",
+  "customer_name": "Customer Name",
+  "job_type": "Category Name"
 }
