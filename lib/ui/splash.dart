@@ -49,6 +49,7 @@ class SplashScreenState extends StateMVC<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    precacheImage(AssetImage('assets/images/logo_square.gif'), context);
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -65,7 +66,7 @@ class SplashScreenState extends StateMVC<SplashScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                Image.asset('assets/images/logo_square.png', fit: BoxFit.cover),
+                Image.asset('assets/images/logo_square.gif', fit: BoxFit.cover),
                 SizedBox(height: 50),
                 CircularProgressIndicator(
                     strokeWidth: 2.0,

@@ -20,6 +20,8 @@ class ServiceDetailPage extends StatefulWidget {
 class _ServiceDetailPageState extends StateMVC<ServiceDetailPage> {
   final double _defaultPaddingMargin = 10;
 
+  static final double gridItemDimension = 170;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,10 +59,13 @@ class _ServiceDetailPageState extends StateMVC<ServiceDetailPage> {
   }
 
   Widget generateGrid({List<ServiceValue> values}) {
+//    double width = MediaQuery.of(context).size.width / 3;
+//    double height = MediaQuery.of(context).size.height / 5;
+//    print(
+//        '${MediaQuery.of(context).size.width},${MediaQuery.of(context).size.height},'
+//        '$width,$height,${width / height}');
     return GridView.count(
         crossAxisCount: 2,
-        mainAxisSpacing: 10,
-        crossAxisSpacing: 10,
         scrollDirection: Axis.vertical,
         children: List.generate(values.length, (index) {
           return getGridItem(values[index]);
@@ -95,14 +100,14 @@ class _ServiceDetailPageState extends StateMVC<ServiceDetailPage> {
                 decoration: ShapeDecoration(
                     shape: CircleBorder(),
                     image: DecorationImage(
-                        fit: BoxFit.cover,
+                        fit: BoxFit.contain,
                         image: NetworkImage(serviceValue.image_path))),
               )),
-          title: Text(serviceValue.name),
-          subtitle: Visibility(
+          title: Text(serviceValue.name))
+      /*subtitle: Visibility(
               visible: (serviceValue.description != null &&
                   serviceValue.description.isNotEmpty),
-              child: Text('${serviceValue.description}')))
+              child: Text('${serviceValue.description}')))*/
     ]));
   }
 
@@ -111,37 +116,34 @@ class _ServiceDetailPageState extends StateMVC<ServiceDetailPage> {
         onTap: () {
           itemTap(serviceValue);
         },
-        child: ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-            child: Card(
-                color: Colors.white,
-                elevation: 5,
-                child: Column(children: [
-                  Container(
-                      width: MediaQuery.of(context).size.width / 2,
-                      height: MediaQuery.of(context).size.height / 5,
-                      child: CachedNetworkImage(
-                          fit: BoxFit.cover,
-                          imageUrl: serviceValue.image_path,
-                          placeholder: (context, url) => Image.asset(
-                              'assets/images/loading.gif',
-                              fit: BoxFit.contain),
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.error))),
-                  Container(
-                      child: Padding(
-                          padding: EdgeInsets.all(5),
-                          child: Flexible(
-                              child: Text(serviceValue.name,
-                                  textAlign: TextAlign.center,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  softWrap: true,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                      fontSize: 15)))))
-                ]))));
+        child: Container(
+            child: Column(children: <Widget>[
+          // Image of the card
+          ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              child: Container(
+                  height: gridItemDimension,
+                  width: gridItemDimension,
+                  child: Stack(fit: StackFit.expand, children: <Widget>[
+                    CachedNetworkImage(
+                        imageUrl: serviceValue.image_path,
+                        fit: BoxFit.cover,
+                        width: gridItemDimension),
+                    Positioned(child: Container(color: Colors.black38)),
+                    Positioned(
+                        bottom: 5,
+                        left: 10,
+                        right: 10,
+                        child: Text(serviceValue.name,
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: true,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold)))
+                  ])))
+        ])));
   }
 
   void itemTap(ServiceValue serviceValue) {

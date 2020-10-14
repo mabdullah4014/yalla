@@ -43,6 +43,8 @@ class ProviderCategoriesResponse {
 class ProviderCategory {
   int id;
   String name;
+  String image_path;
+  String description;
   bool isSelected = false;
 
   ProviderCategory(this.id);
@@ -50,12 +52,16 @@ class ProviderCategory {
   ProviderCategory.fromJson(dynamic json) {
     id = json["id"];
     name = json["name"];
+    name = json["image_path"];
+    name = json["description"];
   }
 
   Map<String, dynamic> toJson() {
     var map = <String, dynamic>{};
     map["id"] = id;
     map["name"] = name;
+    map["image_path"] = image_path;
+    map["description"] = description;
     return map;
   }
 

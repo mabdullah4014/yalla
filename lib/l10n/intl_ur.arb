@@ -98,5 +98,11 @@
   "capture": "گرتن",
   "picture": "وێنە",
   "distance": "دووری",
-  "km": "کم"
+  "km": "کم",
+  "order_detail": "Order Detail",
+  "customer_name": "Customer Name",
+  "job_type": "Category Name",
+  "contact_us": "Contact Us",
+  "search": "Search",
+  "search_categories" : "Search Categories"
 }

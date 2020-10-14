@@ -326,9 +326,9 @@ class _ServiceBuyPageState extends StateMVC<ServiceBuyPage> {
         visible: widget.params.services.description != null &&
             widget.params.services.description.isNotEmpty,
         child: Text(
-            '${S.of(context).description}: ${widget.params.services.description}',
+            '${S.of(context).description}:\n${widget.params.services.description}',
             style: TextStyle(
-                fontSize: 25, color: Theme.of(context).primaryColor)));
+                fontSize: 25, color: AppUtils.getColorFromHash('#C5C5C5'))));
   }
 }
 

@@ -7,6 +7,7 @@ import 'package:arbi/utils/app_colors.dart';
 import 'package:arbi/utils/app_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../controller/user_controller.dart' as userCont;
 import 'app_detail.dart';
@@ -42,65 +43,76 @@ class CustomerDrawerWidget extends StatelessWidget {
                       .pushNamed(RouteGenerator.CUSTOMER_ORDER);
                 })),
         ListTile(
-          title: Text(
-            S.of(context).about,
-            style: TextStyle(color: _DrawerItemColor),
-          ),
-          onTap: () {
-            Navigator.of(context).pushNamed(RouteGenerator.APP_DETAIL,
-                arguments: AppDetailObject(
-                    text: settingsRepo.setting.value.about,
-                    title: S.of(context).about));
-          },
-        ),
+            title: Text(
+              S.of(context).about,
+              style: TextStyle(color: _DrawerItemColor),
+            ),
+            onTap: () {
+              Navigator.of(context).pushNamed(RouteGenerator.APP_DETAIL,
+                  arguments: AppDetailObject(
+                      text: settingsRepo.setting.value.about,
+                      title: S.of(context).about));
+            }),
         ListTile(
-          title: Text(S.of(context).how_it_works,
-              style: TextStyle(color: _DrawerItemColor)),
-          onTap: () {
-            Navigator.of(context).pushNamed(RouteGenerator.APP_DETAIL,
-                arguments: AppDetailObject(
-                    text: settingsRepo.setting.value.how_it_works,
-                    title: S.of(context).how_it_works));
-          },
-        ),
+            title: Text(S.of(context).how_it_works,
+                style: TextStyle(color: _DrawerItemColor)),
+            onTap: () {
+              Navigator.of(context).pushNamed(RouteGenerator.APP_DETAIL,
+                  arguments: AppDetailObject(
+                      text: settingsRepo.setting.value.how_it_works,
+                      title: S.of(context).how_it_works));
+            }),
         ListTile(
-          title: Text(S.of(context).terms_and_condition,
-              style: TextStyle(color: _DrawerItemColor)),
-          onTap: () {
-            Navigator.of(context).pushNamed(RouteGenerator.APP_DETAIL,
-                arguments: AppDetailObject(
-                    text: settingsRepo.setting.value.terms_and_conditions,
-                    title: S.of(context).terms_and_condition));
-          },
-        ),
+            title: Text(S.of(context).terms_and_condition,
+                style: TextStyle(color: _DrawerItemColor)),
+            onTap: () {
+              Navigator.of(context).pushNamed(RouteGenerator.APP_DETAIL,
+                  arguments: AppDetailObject(
+                      text: settingsRepo.setting.value.terms_and_conditions,
+                      title: S.of(context).terms_and_condition));
+            }),
         ListTile(
-          title: Text(S.of(context).change_language,
-              style: TextStyle(color: _DrawerItemColor)),
-          onTap: () {
-            Navigator.of(context).pushNamed(RouteGenerator.LANGUAGE);
-          },
-        ),
+            title: Text(S.of(context).change_language,
+                style: TextStyle(color: _DrawerItemColor)),
+            onTap: () {
+              Navigator.of(context).pushNamed(RouteGenerator.LANGUAGE);
+            }),
+        ListTile(
+            title: Text(S.of(context).contact_us,
+                style: TextStyle(color: _DrawerItemColor)),
+            onTap: () {
+              Navigator.of(context).pushNamed(RouteGenerator.APP_DETAIL,
+                  arguments: AppDetailObject(
+                      text: settingsRepo.setting.value.contact_us,
+                      title: S.of(context).contact_us));
+            }),
         Row(children: <Widget>[
           Flexible(
               fit: FlexFit.tight,
               child: IconButton(
                   icon: FaIcon(FontAwesomeIcons.facebook,
                       color: _DrawerItemColor),
-                  onPressed: () {}),
+                  onPressed: () {
+                    launch(settingsRepo.setting.value.fb);
+                  }),
               flex: 1),
           Flexible(
               fit: FlexFit.tight,
               child: IconButton(
                   icon:
                       FaIcon(FontAwesomeIcons.twitter, color: _DrawerItemColor),
-                  onPressed: () {}),
+                  onPressed: () {
+                    launch(settingsRepo.setting.value.twitter);
+                  }),
               flex: 1),
           Flexible(
               fit: FlexFit.tight,
               child: IconButton(
                   icon: FaIcon(FontAwesomeIcons.instagram,
                       color: _DrawerItemColor),
-                  onPressed: () {}),
+                  onPressed: () {
+                    launch(settingsRepo.setting.value.insta);
+                  }),
               flex: 1)
         ])
       ])),

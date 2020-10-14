@@ -9,6 +9,7 @@ import 'package:arbi/utils/app_colors.dart';
 import 'package:arbi/utils/app_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProviderDrawerWidget extends StatelessWidget {
   ProviderDrawerWidget({Key key}) : super(key: key);
@@ -88,27 +89,42 @@ class ProviderDrawerWidget extends StatelessWidget {
             Navigator.of(context).pushNamed(RouteGenerator.LANGUAGE);
           },
         ),
+        ListTile(
+            title: Text(S.of(context).contact_us,
+                style: TextStyle(color: _DrawerItemColor)),
+            onTap: () {
+              Navigator.of(context).pushNamed(RouteGenerator.APP_DETAIL,
+                  arguments: AppDetailObject(
+                      text: settingsRepo.setting.value.contact_us,
+                      title: S.of(context).contact_us));
+            }),
         Row(children: <Widget>[
           Flexible(
               fit: FlexFit.tight,
               child: IconButton(
                   icon: FaIcon(FontAwesomeIcons.facebook,
                       color: _DrawerItemColor),
-                  onPressed: () {}),
+                  onPressed: () {
+                    launch(settingsRepo.setting.value.fb);
+                  }),
               flex: 1),
           Flexible(
               fit: FlexFit.tight,
               child: IconButton(
                   icon:
                       FaIcon(FontAwesomeIcons.twitter, color: _DrawerItemColor),
-                  onPressed: () {}),
+                  onPressed: () {
+                    launch(settingsRepo.setting.value.twitter);
+                  }),
               flex: 1),
           Flexible(
               fit: FlexFit.tight,
               child: IconButton(
                   icon: FaIcon(FontAwesomeIcons.instagram,
                       color: _DrawerItemColor),
-                  onPressed: () {}),
+                  onPressed: () {
+                    launch(settingsRepo.setting.value.insta);
+                  }),
               flex: 1)
         ])
       ])),

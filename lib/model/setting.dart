@@ -18,6 +18,10 @@ class Setting {
   String how_it_works;
   String about;
   String terms_and_conditions;
+  String contact_us;
+  String fb;
+  String insta;
+  String twitter;
 
   Setting();
 
@@ -39,6 +43,10 @@ class Setting {
     how_it_works = jsonMap['how_it_works'] ?? '';
     about = jsonMap['about'] ?? '';
     terms_and_conditions = jsonMap['terms_and_conditions'] ?? '';
+    contact_us = jsonMap['contact_us'] ?? '';
+    fb = jsonMap['fb'] ?? '';
+    insta = jsonMap['insta'] ?? '';
+    twitter = jsonMap['twitter'] ?? '';
   }
 
   Map toMap() {
