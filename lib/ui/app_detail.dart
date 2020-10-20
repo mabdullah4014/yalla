@@ -1,14 +1,8 @@
 import 'dart:ui';
 
-import 'package:arbi/generated/l10n.dart';
-import 'package:arbi/model/cat_response.dart';
-import 'package:arbi/model/customer_order_response.dart';
-import 'package:arbi/utils/app_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:arbi/repo/settings_repository.dart' as settingsRepo;
 
 class AppDetailPage extends StatefulWidget {
   AppDetailPage({Key key, this.appDetailObject}) : super(key: key);

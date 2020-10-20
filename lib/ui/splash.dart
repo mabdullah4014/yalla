@@ -57,7 +57,7 @@ class SplashScreenState extends StateMVC<SplashScreen> {
         body: SafeArea(
             child: Stack(children: [
           Container(
-              color: AppUtils.getColorFromHash('#1196A7'),
+              color: AppUtils.getColorFromHash('#1F99A8'),
               height: height,
               width: width),
           Center(

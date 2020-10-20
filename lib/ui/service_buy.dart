@@ -107,7 +107,7 @@ class _ServiceBuyPageState extends StateMVC<ServiceBuyPage> {
         visible: _showDistance().isNotEmpty,
         child: Text('${S.of(context).distance}: ${_showDistance()}',
             style:
-                TextStyle(fontSize: 25, color: Theme.of(context).primaryColor)),
+                TextStyle(fontSize: 20, color: Theme.of(context).primaryColor)),
       ),
       SizedBox(height: 10),
       _showTargetValues(),
@@ -191,13 +191,6 @@ class _ServiceBuyPageState extends StateMVC<ServiceBuyPage> {
             .where((element) => element.type != 'Location')
             .isNotEmpty) {
       List<Widget> widgets = [];
-      widgets.add(SizedBox(height: 10));
-      widgets.add(Text('Values',
-          style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).primaryColor)));
-      widgets.add(SizedBox(height: 10));
       for (ServiceTarget serviceTarget in widget.params.services.targets
           .where((element) => element.type != 'Location')) {
         String label = serviceTarget.label;
@@ -309,7 +302,7 @@ class _ServiceBuyPageState extends StateMVC<ServiceBuyPage> {
 
   Widget _serviceName() {
     return Text('${S.of(context).service}: ${widget.params.services.name}',
-        style: TextStyle(fontSize: 25, color: Theme.of(context).accentColor));
+        style: TextStyle(fontSize: 20, color: Theme.of(context).accentColor));
   }
 
   Widget _servicePrice() {
@@ -318,7 +311,7 @@ class _ServiceBuyPageState extends StateMVC<ServiceBuyPage> {
         child: Text(
             '${S.of(context).price}: ${widget.params.price} ${settingsRepo.setting.value.defaultCurrency}',
             style: TextStyle(
-                fontSize: 25, color: Theme.of(context).primaryColor)));
+                fontSize: 20, color: Theme.of(context).primaryColor)));
   }
 
   Widget _serviceDesc() {
@@ -328,7 +321,7 @@ class _ServiceBuyPageState extends StateMVC<ServiceBuyPage> {
         child: Text(
             '${S.of(context).description}:\n${widget.params.services.description}',
             style: TextStyle(
-                fontSize: 25, color: AppUtils.getColorFromHash('#C5C5C5'))));
+                fontSize: 20, color: AppUtils.getColorFromHash('#C5C5C5'))));
   }
 }
 
