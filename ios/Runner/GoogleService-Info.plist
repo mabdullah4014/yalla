@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>786615582384-e0ircu5gh15qg92952i0ih2gqnpeqm2a.apps.googleusercontent.com</string>
+	<string>786615582384-fq8r12vtcaalfithcurknd924m92ho54.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.786615582384-e0ircu5gh15qg92952i0ih2gqnpeqm2a</string>
+	<string>com.googleusercontent.apps.786615582384-fq8r12vtcaalfithcurknd924m92ho54</string>
 	<key>API_KEY</key>
-	<string>AIzaSyB6XdR7RIazlz8YqrdJB4ATY36uWCKthW4</string>
+	<string>AIzaSyBh6OYgS2QlGDLuPsSX2scFRN4Lzhu49pc</string>
 	<key>GCM_SENDER_ID</key>
 	<string>786615582384</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.yallah.arbi</string>
+	<string>com.yalla.erbil</string>
 	<key>PROJECT_ID</key>
 	<string>yalla-286410</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,7 +29,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:786615582384:ios:c2d6809e33e0c539b9c575</string>
+	<string>1:786615582384:ios:76758f208ac4e80eb9c575</string>
 	<key>DATABASE_URL</key>
 	<string>https://yalla-286410.firebaseio.com</string>
 </dict>

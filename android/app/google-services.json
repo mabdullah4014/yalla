@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:786615582384:android:e0f7200d4002f4c5b9c575",
+        "mobilesdk_app_id": "1:786615582384:android:d31cef50d1346145b9c575",
         "android_client_info": {
-          "package_name": "com.yallah.arbi"
+          "package_name": "com.yalla.erbil"
         }
       },
       "oauth_client": [
@@ -21,7 +21,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB6XurAgkWJFl1lClfpb1HDMXCrtPNIxtY"
+          "current_key": "AIzaSyBiDSmB-LkA4jipOwUPMRiHaAk-mIEQBDk"
         }
       ],
       "services": {
@@ -30,6 +30,13 @@
             {
               "client_id": "786615582384-pceomi7v90tgrdiradmr1ag7j047trjm.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "786615582384-fq8r12vtcaalfithcurknd924m92ho54.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.yalla.erbil"
+              }
             }
           ]
         }

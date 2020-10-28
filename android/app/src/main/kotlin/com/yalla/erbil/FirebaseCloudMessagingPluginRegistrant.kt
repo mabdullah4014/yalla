@@ -1,4 +1,4 @@
-package com.yallah.arbi
+package com.yalla.erbil
 
 import io.flutter.plugin.common.PluginRegistry
 //import io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin

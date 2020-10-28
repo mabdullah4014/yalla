@@ -96,7 +96,19 @@
                     <key>NSExceptionAllowsInsecureHTTPLoads</key>
                     <true/>
                 </dict>
+                <key>portal.yallaerbil.com</key>
+                <dict>
+                    <key>NSExceptionAllowsInsecureHTTPLoads</key>
+                    <true/>
+                </dict>
                 <key>yella.dotdropit.com</key>
+                <dict>
+                    <key>NSIncludesSubdomains</key>
+                    <true/>
+                    <key>NSExceptionAllowsInsecureHTTPLoads</key>
+                    <true/>
+                </dict>
+                <key>portal.yallaerbil.com</key>
                 <dict>
                     <key>NSIncludesSubdomains</key>
                     <true/>

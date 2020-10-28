@@ -1,4 +1,4 @@
-package com.yallah.arbi
+package com.yalla.erbil
 
 import io.flutter.embedding.android.FlutterActivity
 
