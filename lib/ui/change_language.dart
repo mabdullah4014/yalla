@@ -29,7 +29,7 @@ class _ChangeLanguageWidgetState extends State<ChangeLanguageWidget> {
           backgroundColor: Theme.of(context).primaryColor,
           elevation: 0,
           title: Text(
-            S.of(context).confirm_order,
+            S.of(context).change_language,
             style: Theme.of(context)
                 .textTheme
                 .headline6
