@@ -59,17 +59,18 @@ class _ServiceDetailPageState extends StateMVC<ServiceDetailPage> {
   }
 
   Widget generateGrid({List<ServiceValue> values}) {
-//    double width = MediaQuery.of(context).size.width / 3;
-//    double height = MediaQuery.of(context).size.height / 5;
-//    print(
-//        '${MediaQuery.of(context).size.width},${MediaQuery.of(context).size.height},'
-//        '$width,$height,${width / height}');
-    return GridView.count(
-        crossAxisCount: 2,
-        scrollDirection: Axis.vertical,
-        children: List.generate(values.length, (index) {
-          return getGridItem(values[index]);
-        }));
+    List<Widget> widgetsList = [];
+    for (var i = 0; i < values.length; i += 2) {
+      ServiceValue item1 = values[i];
+      ServiceValue item2;
+      int j = (i + 1);
+      if (j < values.length) {
+        item2 = values[j];
+      }
+      widgetsList.add(createRow(item1, item2));
+      widgetsList.add(SizedBox(height: 10));
+    }
+    return SingleChildScrollView(child: Column(children: widgetsList));
   }
 
   Widget generateList({List<ServiceValue> values}) {
@@ -117,33 +118,30 @@ class _ServiceDetailPageState extends StateMVC<ServiceDetailPage> {
           itemTap(serviceValue);
         },
         child: Container(
-            child: Column(children: <Widget>[
-          // Image of the card
-          ClipRRect(
+          width: MediaQuery.of(context).size.width / 2.2,
+          height: 180,
+          child: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(10)),
-              child: Container(
-                  height: gridItemDimension,
-                  width: gridItemDimension,
-                  child: Stack(fit: StackFit.expand, children: <Widget>[
-                    CachedNetworkImage(
-                        imageUrl: serviceValue.image_path,
-                        fit: BoxFit.cover,
-                        width: gridItemDimension),
-                    Positioned(child: Container(color: Colors.black38)),
-                    Positioned(
-                        bottom: 5,
-                        left: 10,
-                        right: 10,
-                        child: Text(serviceValue.name,
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
-                            softWrap: true,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold)))
-                  ])))
-        ])));
+              child: Stack(fit: StackFit.expand, children: <Widget>[
+                CachedNetworkImage(
+                    imageUrl: serviceValue.image_path,
+                    fit: BoxFit.contain,
+                    width: gridItemDimension),
+                Positioned(child: Container(color: Colors.black38)),
+                Positioned(
+                    bottom: 5,
+                    left: 10,
+                    right: 10,
+                    child: Text(serviceValue.name,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: true,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold)))
+              ])),
+        ));
   }
 
   void itemTap(ServiceValue serviceValue) {
@@ -153,6 +151,17 @@ class _ServiceDetailPageState extends StateMVC<ServiceDetailPage> {
     }
     detailPageData.valuesIdList.add(serviceValue.id);
     Constants.onServiceItemClick(context, detailPageData, serviceValue);
+  }
+
+  Widget createRow(ServiceValue item1, ServiceValue item2) {
+    List<Widget> widgetsList = [];
+    if (item1 != null) widgetsList.add(getGridItem(item1));
+    if (item2 != null) widgetsList.add(getGridItem(item2));
+    return Row(
+        mainAxisAlignment: widgetsList.length == 2
+            ? MainAxisAlignment.spaceBetween
+            : MainAxisAlignment.start,
+        children: widgetsList);
   }
 }
 
