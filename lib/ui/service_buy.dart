@@ -217,7 +217,7 @@ class _ServiceBuyPageState extends StateMVC<ServiceBuyPage> {
               useRootNavigator: true,
               context: context,
               enableDrag: false,
-              builder: (context, scrollController) {
+              builder: (context) {
                 String latitude, longitude;
                 if (currentLocation != null &&
                     currentLocation.isNotEmpty &&

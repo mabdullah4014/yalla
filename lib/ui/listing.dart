@@ -57,7 +57,7 @@ class _ListingWidgetState extends StateMVC<ListingWidget> {
                       useRootNavigator: true,
                       context: context,
                       enableDrag: false,
-                      builder: (context, scrollController) {
+                      builder: (context) {
                         return SearchServicePage(
                             services: _con.services,
                             onCategoriesSelected: (ServiceValue serviceValue) {
@@ -73,7 +73,7 @@ class _ListingWidgetState extends StateMVC<ListingWidget> {
             valueListenable: settingsRepo.setting,
             builder: (context, value, child) {
               return Text(
-                value.appName ?? S.of(context).home,
+                S.of(context).app_name,
                 style: Theme.of(context)
                     .textTheme
                     .headline6

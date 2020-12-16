@@ -21,7 +21,7 @@ class LanguagesList {
           selected: currentUser.value.locale == 'en'),
       new Language("ar", "Arabic", "العربية", "assets/images/logo_circle.png",
           selected: currentUser.value.locale == 'ar'),
-      new Language("ur", "Kurdish", "کورد", "assets/images/logo_circle.png",
+      new Language("ur", "Kurdish", "کوردی", "assets/images/logo_circle.png",
           selected: currentUser.value.locale == 'ur')
     ];
   }

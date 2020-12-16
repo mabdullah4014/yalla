@@ -1,6 +1,7 @@
 //import 'package:arbi/controller/user_controller.dart';
 import 'package:arbi/utils/pref_util.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
+
 //import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -151,7 +152,8 @@ class MyApp extends AppMVC {
                         color: config.ApplicationColors().secondDarkColor(1)),
                     caption: TextStyle(
                         fontSize: 12.0,
-                        color: config.ApplicationColors().secondDarkColor(0.6))));
+                        color:
+                            config.ApplicationColors().secondDarkColor(0.6))));
           }
         },
         themedWidgetBuilder: (context, theme) {

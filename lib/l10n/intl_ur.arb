@@ -99,10 +99,10 @@
   "picture": "وێنە",
   "distance": "دووری",
   "km": "کم",
-  "order_detail": "Order Detail",
-  "customer_name": "Customer Name",
-  "job_type": "Category Name",
-  "contact_us": "Contact Us",
-  "search": "Search",
-  "search_categories" : "Search Categories"
+  "order_detail": "زانیاری داواکارییەکە",
+  "customer_name": "ناوی هاوبەش",
+  "job_type": "ناوی هاوپۆل",
+  "contact_us": "پەیوەندیمان پێوەبکە",
+  "search": "گەڕان",
+  "search_categories" : "گەڕان بەناو هاوپۆلەکان"
 }

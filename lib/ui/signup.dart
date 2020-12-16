@@ -470,7 +470,7 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
       AppUtils.showMessage(context, S.of(context).error,
           S.of(context).should_be_more_than_3_characters);
       return false;
-    } else if (profilePic == null) {
+    } else if (!isCustomer && profilePic == null) {
       AppUtils.showMessage(context, S.of(context).error,
           '${S.of(context).capture} ${S.of(context).profile_pic} ${S.of(context).picture}');
       return false;
@@ -489,8 +489,10 @@ class _SignUpPageState extends StateMVC<SignUpPage> {
   void _doRegister(BuildContext scaffoldContext, BuildContext buildContext) {
     AppUtils.onLoading(buildContext);
     List<UploadImageObject> pickedFiles = List();
-    pickedFiles.add(
-        UploadImageObject('profile_pic', profilePic.path, 'profile_pic.jpeg'));
+    if (profilePic!=null && profilePic.path != null && profilePic.path.isNotEmpty) {
+      pickedFiles.add(UploadImageObject(
+          'profile_pic', profilePic.path, 'profile_pic.jpeg'));
+    }
     if (!isCustomer) {
       pickedFiles.add(
           UploadImageObject('id_front', idCardFront.path, 'id_front.jpeg'));

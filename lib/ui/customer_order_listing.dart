@@ -37,7 +37,7 @@ class _CustomerOrderListingPageState
           elevation: 0,
           centerTitle: true,
           title: Text(
-            S.of(context).jobs,
+            S.of(context).my_order,
             style: Theme.of(context)
                 .textTheme
                 .headline6

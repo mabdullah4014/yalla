@@ -383,7 +383,7 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
               useRootNavigator: true,
               context: context,
               enableDrag: false,
-              builder: (context, scrollController) {
+              builder: (context) {
                 String latitude, longitude;
                 if (currentLocation != null &&
                     currentLocation.isNotEmpty &&
@@ -433,7 +433,7 @@ class _ProviderProfilePageState extends StateMVC<ProviderProfilePage> {
               useRootNavigator: true,
               context: context,
               enableDrag: false,
-              builder: (context, scrollController) {
+              builder: (context) {
                 return ProviderCategoryPage(
                     selectedItems: _myActivities,
                     onCategoriesSelected: (List<ProviderCategory> list) {

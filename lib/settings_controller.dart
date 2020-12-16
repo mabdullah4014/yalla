@@ -4,7 +4,7 @@ import 'package:mvc_pattern/mvc_pattern.dart';
 
 import 'repo/settings_repository.dart' as settingRepo;
 
-class SettingsController extends ControllerMVC {
+class SettingsController extends AppConMVC {
   GlobalKey<ScaffoldState> scaffoldKey;
   SettingsController() {
     this.scaffoldKey = new GlobalKey<ScaffoldState>();

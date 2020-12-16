@@ -301,7 +301,7 @@ class _CustomerProfilePageState extends StateMVC<CustomerProfilePage> {
               useRootNavigator: true,
               context: context,
               enableDrag: false,
-              builder: (context, scrollController) {
+              builder: (context) {
                 String latitude, longitude;
                 if (currentLocation != null &&
                     currentLocation.isNotEmpty &&

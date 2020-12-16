@@ -76,7 +76,9 @@ class _SelectSignUpPageState extends StateMVC<SelectSignUpPage> {
 
   Widget _createAccountLabel() {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Navigator.of(context).pop();
+      },
       child: Container(
         padding: EdgeInsets.all(15),
         alignment: Alignment.bottomCenter,

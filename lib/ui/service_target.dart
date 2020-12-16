@@ -135,7 +135,7 @@ class _ServiceTargetPageState extends StateMVC<ServiceTargetPage> {
                     useRootNavigator: true,
                     context: context,
                     enableDrag: false,
-                    builder: (context, scrollController) {
+                    builder: (context) {
                       String latitude, longitude;
                       String currentLocation =
                           targetValuesMap[target.target_value];
