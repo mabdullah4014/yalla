@@ -164,7 +164,7 @@ class MyApp extends AppMVC {
                     title: 'Yalla',
                     initialRoute: RouteGenerator.SPLASH,
                     onGenerateRoute: RouteGenerator.generateRoute,
-                    debugShowCheckedModeBanner: true,
+                    debugShowCheckedModeBanner: false,
                     locale: _setting.mobileLanguage.value,
                     localizationsDelegates: [
                       S.delegate,
