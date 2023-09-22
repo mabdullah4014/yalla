@@ -1,16 +1,12 @@
-# arbi
+# Yalla Arbil
 
-Service Provider Application for Qatar
+Service Provider Application for Iraq. Customer can choose the services from mobile app he needs and then can get the best service providers for that particular service near by.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Social Logins
+- Google Map Integration
+- Service Provider and Customer Portal
+- Profile Management
+- Messaging and Call Mechanism between Customer and Service Provider
+- Push Notifications
+- Dynamic Screen Creation without new build to Google and Playstore
+- Backend APIs with PHP Laravel
